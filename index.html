@@ -10,6 +10,7 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 20px;
+            background-color: #f4f4f4;
         }
         h1 {
             color: #333;
@@ -23,6 +24,11 @@
             padding: 10px;
             font-size: 16px;
             margin: 5px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: #fff;
         }
         #qr-code {
             max-width: 300px;
@@ -35,9 +41,13 @@
     <h1>2024 Crescendo Game Tracker</h1>
     
     <div id="tracker">
-        <button onclick="recordScore('autonomous')">Record Autonomous Score</button>
-        <button onclick="recordScore('teleop')">Record Teleop Score</button>
-        <!-- Add more buttons for other actions as needed -->
+        <button onclick="updateScore('autonomous', 1)">+</button>
+        <p>Autonomous Score: <span id="autonomous-score">0</span></p>
+        <button onclick="updateScore('autonomous', -1)">-</button>
+
+        <button onclick="updateScore('teleop', 1)">+</button>
+        <p>Teleop Score: <span id="teleop-score">0</span></p>
+        <button onclick="updateScore('teleop', -1)">-</button>
     </div>
 
     <div id="qr-code">
@@ -53,16 +63,16 @@
         };
 
         // Function to update game data and QR code
-        function recordScore(type) {
-            let score = parseInt(prompt(`Enter ${type} score:`));
+        function updateScore(type, value) {
+            gameData[`${type}Score`] += value;
+            updateDisplay(type);
+            updateQRCode();
+        }
 
-            // Validate input to be a number
-            if (!isNaN(score)) {
-                gameData[`${type}Score`] += score;
-                updateQRCode();
-            } else {
-                alert('Please enter a valid number.');
-            }
+        // Function to update the display with current scores
+        function updateDisplay(type) {
+            const scoreElement = document.getElementById(`${type}-score`);
+            scoreElement.textContent = gameData[`${type}Score`];
         }
 
         // Function to update the QR code with current game data
