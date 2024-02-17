@@ -35,30 +35,34 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: space-around;
+            align-items: flex-start; /* Align items to the start of the cross-axis (top) */
         }
         .widget {
             margin: 20px;
             padding: 10px;
-			background-color: #f5f5f5;
+            background-color: #f5f5f5;
             width: 300px;
-			border-radius: 10px;
-			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .mini-box {
             margin: 10px;
             padding: 0px;
             border-radius: 5px;
             background-color: #ffffff;
-			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			display: flex;
+			flex-direction: column;
+			align-items: strech;
         }
         h3 {
-			font-family: tahoma, sans-serif;
+            font-family: tahoma, sans-serif;
             font-size: 15px;
-			background-color: #d3d3d3;
+            background-color: #d3d3d3;
             padding: 2px;
             text-align: left;
-			margin-top: 0;
-			border-radius: 3px;
+            margin-top: 0;
+            border-radius: 3px;
         }
         button {
             padding: 5px;
@@ -70,6 +74,15 @@
             border-radius: 5px;
             background-color: #0000ff;
             color: #ffffff;
+        }
+        input, select, input[type="checkbox"] {
+            width: calc(100% - 0px);
+			height: 100%;
+            padding: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-top: 0px;
         }
         #qr-code {
             max-width: 300px;
@@ -119,47 +132,65 @@
     <h1>QRScout 4063</h1>
 
     <div class="dashboard">
-        <!-- Existing Tracker Widget -->
-        <div class="widget" id="tracker">
-            <button onclick="updateScore('autonomous', 1)">+</button>
-            <span id="autonomous-score">0</span>
-            <button onclick="updateScore('autonomous', -1)">-</button>
+        <!-- New Teleop Widget -->
+        <div class="widget" id="prematch-widget">
+            <h2>Prematch</h2>
+            <div class="mini-box">
+                <h3>Scouter Initials</h3>
+                <input type="text" id="prematch-scout-initials">
+            </div>
 
-            <button onclick="updateScore('teleop', 1)">+</button>
-            <span id="teleop-score">0</span>
-            <button onclick="updateScore('teleop', -1)">-</button>
+            <div class="mini-box">
+                <h3>Match Number</h3>
+                <input type="number" id="prematch-match-number">
+            </div>
+
+            <div class="mini-box">
+                <h3>Robot</h3>
+                <select id="prematch-robot">
+                    <option value="Red 1">Red 1</option>
+                    <option value="Red 2">Red 2</option>
+                    <option value="Red 3">Red 3</option>
+                    <option value="Blue 1">Blue 1</option>
+                    <option value="Blue 2">Blue 2</option>
+                    <option value="Blue 3">Blue 3</option>
+                </select>
+            </div>
+
+            <div class="mini-box">
+                <h3>Team Number</h3>
+                <input type="number" id="prematch-team-number">
+            </div>
+
+            <div class="mini-box">
+                <h3>Human Player at AMP</h3>
+                <input type="checkbox" id="prematch-human-player">
+            </div>
+
+            <div class="mini-box">
+                <h3>No Show</h3>
+                <input type="checkbox" id="prematch-no-show">
+            </div>
         </div>
 
-        <!-- New Teleop Widget -->
-        <div class="widget" id="teleop-widget">
-            <h2>Teleop</h2>
-            <div class="mini-box">
-                <h3>Scores</h3>
-                <button onclick="updateTeleopVariable('scores', -1)">-</button>
-                <span id="teleop-scores">0</span>
-                <button onclick="updateTeleopVariable('scores', 1)">+</button>
-            </div>
+        <!-- Duplicate Teleop Widget 1 -->
+        <div class="widget" id="teleop-widget1">
+            <!-- Content is duplicated for Teleop Widget 1 -->
+        </div>
 
-            <div class="mini-box">
-                <h3>Loses</h3>
-                <button onclick="updateTeleopVariable('loses', -1)">-</button>
-                <span id="teleop-loses">0</span>
-                <button onclick="updateTeleopVariable('loses', 1)">+</button>
-            </div>
+        <!-- Duplicate Teleop Widget 2 -->
+        <div class="widget" id="teleop-widget2">
+            <!-- Content is duplicated for Teleop Widget 2 -->
+        </div>
 
-            <div class="mini-box">
-                <h3>Tipovers</h3>
-                <button onclick="updateTeleopVariable('tipovers', -1)">-</button>
-                <span id="teleop-tipovers">0</span>
-                <button onclick="updateTeleopVariable('tipovers', 1)">+</button>
-            </div>
+        <!-- Duplicate Teleop Widget 3 -->
+        <div class="widget" id="teleop-widget3">
+            <!-- Content is duplicated for Teleop Widget 3 -->
+        </div>
 
-            <div class="mini-box">
-                <h3>Sigmas</h3>
-                <button onclick="updateTeleopVariable('sigmas', -1)">-</button>
-                <span id="teleop-sigmas">0</span>
-                <button onclick="updateTeleopVariable('sigmas', 1)">+</button>
-            </div>
+        <!-- Duplicate Teleop Widget 4 -->
+        <div class="widget" id="teleop-widget4">
+            <!-- Content is duplicated for Teleop Widget 4 -->
         </div>
     </div>
 
@@ -167,11 +198,8 @@
         <!-- Placeholder for the QR code image -->
     </div>
 
-    <!-- Adding an image -->
-    
-
     <!-- Submit Info Button -->
-    <button id="submit-button" onclick="generateQRCode()">Submit Info</button>
+    <button id="submit-button" onclick="updateQRCodeOnSubmit()">Submit Info</button>
 
     <!-- Popup Panel -->
     <div class="popup" id="popup">
@@ -189,6 +217,14 @@
                 loses: 0,
                 tipovers: 0,
                 sigmas: 0,
+            },
+            prematchWidget: {
+                scoutInitials: "",
+                matchNumber: 0,
+                robot: "Red 1",
+                teamNumber: 0,
+                humanPlayer: false,
+                noShow: false,
             },
         };
 
@@ -212,6 +248,21 @@
         function updateDisplay(type) {
             const scoreElement = document.getElementById(`${type}-score`);
             scoreElement.textContent = gameData[`${type}Score`];
+        }
+
+        function updateGameData(section, key, value) {
+            gameData[section][key] = value;
+        }
+
+        function updateQRCodeOnSubmit() {
+            gameData.prematchWidget.scoutInitials = document.getElementById('prematch-scout-initials').value;
+            gameData.prematchWidget.matchNumber = parseInt(document.getElementById('prematch-match-number').value);
+            gameData.prematchWidget.robot = document.getElementById('prematch-robot').value;
+            gameData.prematchWidget.teamNumber = parseInt(document.getElementById('prematch-team-number').value);
+            gameData.prematchWidget.humanPlayer = document.getElementById('prematch-human-player').checked;
+            gameData.prematchWidget.noShow = document.getElementById('prematch-no-show').checked;
+
+            generateQRCode();
         }
 
         function generateQRCode() {
