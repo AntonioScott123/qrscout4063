@@ -31,16 +31,41 @@
             font-size: 64px;
             margin: 20px;
         }
-        #tracker {
+        .dashboard {
             display: flex;
-            margin: 0px;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .widget {
+            margin: 20px;
+            padding: 10px;
+			background-color: #f5f5f5;
+            width: 300px;
+			border-radius: 10px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .mini-box {
+            margin: 10px;
+            padding: 0px;
+            border-radius: 5px;
+            background-color: #ffffff;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h3 {
+			font-family: tahoma, sans-serif;
+            font-size: 15px;
+			background-color: #d3d3d3;
+            padding: 2px;
+            text-align: left;
+			margin-top: 0;
+			border-radius: 3px;
         }
         button {
-            padding: 0px;
-            margin: 10px;
+            padding: 5px;
+            margin: 5px;
             height: 32px;
             width: 32px;
-            font-size: 24px;
+            font-size: 16px;
             cursor: pointer;
             border-radius: 5px;
             background-color: #0000ff;
@@ -56,7 +81,7 @@
         }
         #submit-button {
             padding: 10px;
-			width: 100px;
+            width: 100px;
             font-size: 20px;
             cursor: pointer;
             border: none;
@@ -92,15 +117,50 @@
 <body>
 
     <h1>QRScout 4063</h1>
-    
-    <div id="tracker">
-        <button onclick="updateScore('autonomous', 1)">+</button>
-        <span id="autonomous-score">0</span>
-        <button onclick="updateScore('autonomous', -1)">-</button>
 
-        <button onclick="updateScore('teleop', 1)">+</button>
-        <span id="teleop-score">0</span>
-        <button onclick="updateScore('teleop', -1)">-</button>
+    <div class="dashboard">
+        <!-- Existing Tracker Widget -->
+        <div class="widget" id="tracker">
+            <button onclick="updateScore('autonomous', 1)">+</button>
+            <span id="autonomous-score">0</span>
+            <button onclick="updateScore('autonomous', -1)">-</button>
+
+            <button onclick="updateScore('teleop', 1)">+</button>
+            <span id="teleop-score">0</span>
+            <button onclick="updateScore('teleop', -1)">-</button>
+        </div>
+
+        <!-- New Teleop Widget -->
+        <div class="widget" id="teleop-widget">
+            <h2>Teleop</h2>
+            <div class="mini-box">
+                <h3>Scores</h3>
+                <button onclick="updateTeleopVariable('scores', -1)">-</button>
+                <span id="teleop-scores">0</span>
+                <button onclick="updateTeleopVariable('scores', 1)">+</button>
+            </div>
+
+            <div class="mini-box">
+                <h3>Loses</h3>
+                <button onclick="updateTeleopVariable('loses', -1)">-</button>
+                <span id="teleop-loses">0</span>
+                <button onclick="updateTeleopVariable('loses', 1)">+</button>
+            </div>
+
+            <div class="mini-box">
+                <h3>Tipovers</h3>
+                <button onclick="updateTeleopVariable('tipovers', -1)">-</button>
+                <span id="teleop-tipovers">0</span>
+                <button onclick="updateTeleopVariable('tipovers', 1)">+</button>
+            </div>
+
+            <div class="mini-box">
+                <h3>Sigmas</h3>
+                <button onclick="updateTeleopVariable('sigmas', -1)">-</button>
+                <span id="teleop-sigmas">0</span>
+                <button onclick="updateTeleopVariable('sigmas', 1)">+</button>
+            </div>
+        </div>
     </div>
 
     <div id="qr-code">
@@ -108,7 +168,7 @@
     </div>
 
     <!-- Adding an image -->
-    <img src="assets/Pictures/markiplierLongFace.png" alt="Markiplier Long Face">
+    
 
     <!-- Submit Info Button -->
     <button id="submit-button" onclick="generateQRCode()">Submit Info</button>
@@ -124,11 +184,27 @@
         const gameData = {
             autonomousScore: 0,
             teleopScore: 0,
+            teleopVariables: {
+                scores: 0,
+                loses: 0,
+                tipovers: 0,
+                sigmas: 0,
+            },
         };
+
+        function updateTeleopVariable(variable, value) {
+            gameData.teleopVariables[variable] += value;
+            gameData.teleopVariables[variable] = Math.max(gameData.teleopVariables[variable], 0);
+            updateTeleopDisplay(variable);
+        }
+
+        function updateTeleopDisplay(variable) {
+            const variableElement = document.getElementById(`teleop-${variable}`);
+            variableElement.textContent = gameData.teleopVariables[variable];
+        }
 
         function updateScore(type, value) {
             gameData[`${type}Score`] += value;
-            // Ensure the score does not go below zero
             gameData[`${type}Score`] = Math.max(gameData[`${type}Score`], 0);
             updateDisplay(type);
         }
@@ -141,24 +217,20 @@
         function generateQRCode() {
             const qrCodeData = JSON.stringify(gameData);
             const qrCodeContainer = document.getElementById('qr-code-popup');
-            
-            // Clear previous QR code if any
+
             qrCodeContainer.innerHTML = '';
 
-            // Generate new QR code
             const qrCode = new QRCode(qrCodeContainer, {
                 text: qrCodeData,
                 width: 300,
                 height: 300,
             });
 
-            // Show the popup and overlay
             document.getElementById('popup').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
         }
 
         function closePopup() {
-            // Hide the popup and overlay
             document.getElementById('popup').style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
         }
