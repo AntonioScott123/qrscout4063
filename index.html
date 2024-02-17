@@ -34,6 +34,12 @@
             max-width: 300px;
             margin: 20px auto;
         }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            text-align: center;
+            width: 50px;
+        }
     </style>
 </head>
 <body>
@@ -42,10 +48,12 @@
     
     <div id="tracker">
         <button onclick="updateScore('autonomous', 1)">+</button>
+        <input type="text" id="autonomous-input" placeholder="Autonomous" oninput="validateInput('autonomous-input')" />
         <p>Autonomous Score: <span id="autonomous-score">0</span></p>
         <button onclick="updateScore('autonomous', -1)">-</button>
 
         <button onclick="updateScore('teleop', 1)">+</button>
+        <input type="text" id="teleop-input" placeholder="Teleop" oninput="validateInput('teleop-input')" />
         <p>Teleop Score: <span id="teleop-score">0</span></p>
         <button onclick="updateScore('teleop', -1)">-</button>
     </div>
@@ -55,40 +63,42 @@
     </div>
 
     <script>
-        // Object to store game data
         const gameData = {
             autonomousScore: 0,
             teleopScore: 0,
-            // Add more properties for other game data as needed
         };
 
-        // Function to update game data and QR code
         function updateScore(type, value) {
             gameData[`${type}Score`] += value;
+            // Ensure the score does not go below zero
+            gameData[`${type}Score`] = Math.max(gameData[`${type}Score`], 0);
             updateDisplay(type);
             updateQRCode();
         }
 
-        // Function to update the display with current scores
         function updateDisplay(type) {
             const scoreElement = document.getElementById(`${type}-score`);
+            const inputElement = document.getElementById(`${type}-input`);
             scoreElement.textContent = gameData[`${type}Score`];
+            inputElement.value = ''; // Clear the input field after updating the score
         }
 
-        // Function to update the QR code with current game data
         function updateQRCode() {
             const qrCodeData = JSON.stringify(gameData);
             const qrCodeContainer = document.getElementById('qr-code');
-
-            // Clear previous QR code if any
             qrCodeContainer.innerHTML = '';
 
-            // Generate new QR code
             const qrCode = new QRCode(qrCodeContainer, {
                 text: qrCodeData,
-                width: 100,
-                height: 100,
+                width: 300,
+                height: 300,
             });
+        }
+
+        // Function to validate input and allow only positive integers
+        function validateInput(inputId) {
+            const inputElement = document.getElementById(inputId);
+            inputElement.value = inputElement.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
         }
     </script>
 
