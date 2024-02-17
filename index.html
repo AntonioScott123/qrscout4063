@@ -1,70 +1,86 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My SigmaPage</title>
+    <title>2024 Crescendo Game Tracker</title>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 0;
             text-align: center;
+            margin: 20px;
         }
-        nav {
-            background-color: #444;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
+        h1 {
+            color: #333;
         }
-        nav a {
-            text-decoration: none;
-            color: #fff;
-            padding: 0 10px;
+        #tracker {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px;
         }
-        nav a:hover {
-            color: #ccc;
+        button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
         }
-        section {
-            padding: 20px;
-        }
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 10px 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+        #qr-code {
+            max-width: 300px;
+            margin: 20px auto;
         }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>Welcome to My SigmaSite</h1>
-</header>
+    <h1>2024 Crescendo Game Tracker</h1>
+    
+    <div id="tracker">
+        <button onclick="recordScore('autonomous')">Record Autonomous Score</button>
+        <button onclick="recordScore('teleop')">Record Teleop Score</button>
+        <!-- Add more buttons for other actions as needed -->
+    </div>
 
-<nav>
-    <a href="#">Home</a>
-    <a href="#">AboutSigmas</a>
-    <a href="#">ServicesForSigmasBySigmas</a>
-    <a href="#">ContactingTheUpperSigma</a>
-</nav>
+    <div id="qr-code">
+        <!-- Placeholder for the QR code image -->
+    </div>
 
-<section>
-    <h2>About SigmaSite</h2>
-    <p>this is a page for sigmas but not alphas.</p>
-</section>
+    <script>
+        // Object to store game data
+        const gameData = {
+            autonomousScore: 0,
+            teleopScore: 0,
+            // Add more properties for other game data as needed
+        };
 
-<footer>
-    <p>&copy; 2024 SigmaSite. All Rights Reserved.</p>
-</footer>
+        // Function to update game data and QR code
+        function recordScore(type) {
+            let score = parseInt(prompt(`Enter ${type} score:`));
+
+            // Validate input to be a number
+            if (!isNaN(score)) {
+                gameData[`${type}Score`] += score;
+                updateQRCode();
+            } else {
+                alert('Please enter a valid number.');
+            }
+        }
+
+        // Function to update the QR code with current game data
+        function updateQRCode() {
+            const qrCodeData = JSON.stringify(gameData);
+            const qrCodeContainer = document.getElementById('qr-code');
+
+            // Clear previous QR code if any
+            qrCodeContainer.innerHTML = '';
+
+            // Generate new QR code
+            const qrCode = new QRCode(qrCodeContainer, {
+                text: qrCodeData,
+                width: 300,
+                height: 300,
+            });
+        }
+    </script>
 
 </body>
 </html>
