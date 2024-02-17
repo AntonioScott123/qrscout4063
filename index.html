@@ -4,48 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4063 Crescendo QRScout</title>
-    <h2 class="font-rhr-ns text-2xl uppercase text-white dark:text-black">Postmatch</h2>
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <style>
+        @font-face {
+            font-family: 'SF Sports Night';
+            src: url('assets/Fonts/SF-Sports-Night.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'SF Sports Night NS';
+            src: url('assets/Fonts/SF-Sports-Night-NS.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'SF Sports Night NS', sans-serif;
             text-align: center;
             margin: 20px;
             background-color: #ffffff;
+            font-size: 24px;
         }
         h1 {
-            color: #333;
+            font-family: 'SF Sports Night', sans-serif;
+            color: #FF69B4;
+            font-size: 64px;
+            margin: 20px;
         }
         #tracker {
             display: flex;
-            justify-content: space-around;
-            margin: 2px;
+            margin: 0px;
         }
         button {
-            padding: 10px;
-            font-size: 16px;
-            margin: 5px;
+            padding: 0px;
+            margin: 10px;
+            height: 32px;
+            width: 32px;
+            font-size: 24px;
             cursor: pointer;
-            border: none;
             border-radius: 5px;
-            background-color: #FF69B4;
+            background-color: #0000ff;
             color: #ffffff;
         }
         #qr-code {
             max-width: 300px;
             margin: 20px auto;
         }
-        <!-- TEXTBOX -->
-        input {
-            padding: 10px;
-            font-size: 16px;
-            text-align: center;
-            width: 50px;
-            height: 100px
-        }
         img {
             max-width: 100%;
             height: auto;
+        }
+        #submit-button {
+            padding: 10px;
+			width: 100px;
+            font-size: 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff0000;
+            color: #ffffff;
+            margin-top: 20px;
+        }
+        /* Popup styling */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
         }
     </style>
 </head>
@@ -55,13 +95,11 @@
     
     <div id="tracker">
         <button onclick="updateScore('autonomous', 1)">+</button>
-        <input type="text" id="autonomous-input" placeholder="Autonomous" oninput="validateInput('autonomous-input')" />
-        <p>Autonomous Score: <span id="autonomous-score">0</span></p>
+        <span id="autonomous-score">0</span>
         <button onclick="updateScore('autonomous', -1)">-</button>
 
         <button onclick="updateScore('teleop', 1)">+</button>
-        <input type="text" id="teleop-input" placeholder="Teleop" oninput="validateInput('teleop-input')" />
-        <p>Teleop Score: <span id="teleop-score">0</span></p>
+        <span id="teleop-score">0</span>
         <button onclick="updateScore('teleop', -1)">-</button>
     </div>
 
@@ -70,7 +108,17 @@
     </div>
 
     <!-- Adding an image -->
-    <img src="assets/markiplierLongFace.png" alt="Makripleiree longdf face">
+    <img src="assets/Pictures/markiplierLongFace.png" alt="Markiplier Long Face">
+
+    <!-- Submit Info Button -->
+    <button id="submit-button" onclick="generateQRCode()">Submit Info</button>
+
+    <!-- Popup Panel -->
+    <div class="popup" id="popup">
+        <div id="qr-code-popup"></div>
+        <button onclick="closePopup()">X</button>
+    </div>
+    <div class="overlay" id="overlay"></div>
 
     <script>
         const gameData = {
@@ -83,32 +131,36 @@
             // Ensure the score does not go below zero
             gameData[`${type}Score`] = Math.max(gameData[`${type}Score`], 0);
             updateDisplay(type);
-            updateQRCode();
         }
 
         function updateDisplay(type) {
             const scoreElement = document.getElementById(`${type}-score`);
-            const inputElement = document.getElementById(`${type}-input`);
             scoreElement.textContent = gameData[`${type}Score`];
-            inputElement.value = ''; // Clear the input field after updating the score
         }
 
-        function updateQRCode() {
+        function generateQRCode() {
             const qrCodeData = JSON.stringify(gameData);
-            const qrCodeContainer = document.getElementById('qr-code');
+            const qrCodeContainer = document.getElementById('qr-code-popup');
+            
+            // Clear previous QR code if any
             qrCodeContainer.innerHTML = '';
 
+            // Generate new QR code
             const qrCode = new QRCode(qrCodeContainer, {
                 text: qrCodeData,
                 width: 300,
                 height: 300,
             });
+
+            // Show the popup and overlay
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
         }
 
-        // Function to validate input and allow only positive integers
-        function validateInput(inputId) {
-            const inputElement = document.getElementById(inputId);
-            inputElement.value = inputElement.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+        function closePopup() {
+            // Hide the popup and overlay
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
         }
     </script>
 
