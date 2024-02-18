@@ -107,8 +107,7 @@
             margin: 20px auto;
         }
         img {
-            max-width: 100%;
-            height: auto;
+			vertical-align: bottom;
         }
         #submit-button {
             padding: 2px;
@@ -170,6 +169,9 @@
             box-shadow: 0 0 5px rgba(81, 203, 238, 1);
             border-color: rgba(81, 203, 238, 1);
         }
+		#myFooter {
+    color: #FF69B4;
+	}
     </style>
 </head>
 <body>
@@ -381,14 +383,24 @@ n>                </select>
             </div>
 		</div>
     </div>
-
     <div id="qr-code">
         <!-- Placeholder for the QR code image -->
     </div>
 
     <!-- Submit Info Button -->
     <button id="submit-button" onclick="updateQRCodeOnSubmit()">Submit Info</button>
-
+	
+	<div style="width: 100%; overflow: hidden;">
+		<div style="display: inline-block; float: left;">
+			<img src="assets/pictures/4063.png" style="display: block; margin-left: 0;" alt="4063 Logo">
+		</div>
+		<div style="display: inline-block; float: right; margin-left: 10px;">
+			<img src="assets/pictures/Crescendo.png" style="height: 147px; width: 346px;" alt="Crescendo Logo">
+		</div>
+	</div>
+	<footer id="myFooter">
+    <p>Made By Michael Cariaga And Antonio Scott</p>
+	</footer>
     <!-- Popup Panel -->
     <div class="popup" id="popup">
         <div id="qr-code-popup"></div>
