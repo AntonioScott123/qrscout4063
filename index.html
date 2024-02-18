@@ -31,6 +31,11 @@
             font-size: 64px;
             margin: 20px;
         }
+		h2 {
+			margin: 10px;
+			color: #ffffff;
+			letter-spacing: 2px;
+		}
         .dashboard {
             display: flex;
             flex-wrap: wrap;
@@ -40,10 +45,11 @@
         .widget {
             margin: 20px;
             padding: 10px;
-            background-color: #f5f5f5;
-            width: 300px;
+            background: linear-gradient(to top, #f5f5f5 1%, #FF69B4 100%);
+            width: 275px;
+			height: 625px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         .mini-box {
             margin: 10px;
@@ -51,39 +57,51 @@
             border-radius: 5px;
             background-color: #ffffff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-			display: flex;
 			flex-direction: column;
-			align-items: strech;
         }
         h3 {
+			margin: 0px;
             font-family: tahoma, sans-serif;
-            font-size: 15px;
+            font-size: 12px;
             background-color: #d3d3d3;
             padding: 2px;
             text-align: left;
             margin-top: 0;
-            border-radius: 3px;
+            border-radius: 0px;
         }
         button {
             padding: 5px;
-            margin: 5px;
+            margin: 10px;
             height: 32px;
             width: 32px;
             font-size: 16px;
             cursor: pointer;
             border-radius: 5px;
-            background-color: #0000ff;
+            background-color: #FF69B4;
             color: #ffffff;
         }
-        input, select, input[type="checkbox"] {
-            width: calc(100% - 0px);
-			height: 100%;
-            padding: 15px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            margin-top: 0px;
-        }
+		.checkbox-container {
+			text-align: center;
+		}
+		.custom-checkbox {
+			display: none;
+		}
+
+		.custom-checkbox + label {
+			margin-top: 15px;
+			margin-bottom: 10px;
+			position: relative;
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+			background-color: #ccc;
+			border-radius: 50%;
+			cursor: pointer;
+		}
+
+		.custom-checkbox:checked + label {
+			background-color: #FF69B4;
+		}
         #qr-code {
             max-width: 300px;
             margin: 20px auto;
@@ -93,15 +111,16 @@
             height: auto;
         }
         #submit-button {
-            padding: 10px;
-            width: 100px;
+            padding: 2px;
+            width: 200px;
             font-size: 20px;
             cursor: pointer;
-            border: none;
+            border: 2px solid black;
             border-radius: 5px;
             background-color: #ff0000;
             color: #ffffff;
-            margin-top: 20px;
+            margin-top: 0px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
         /* Popup styling */
         .popup {
@@ -125,6 +144,32 @@
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 999;
         }
+		input {
+			height: 40px;
+			width: 97%;
+		}
+		select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            appearance: none; 
+            -webkit-appearance: none; 
+            background-color: #ffffff;
+            color: #333;
+            cursor: pointer;
+			width: 100%;
+        }
+        select option {
+            padding: 10px;
+            background-color: #ffffff;
+            color: #333;
+        }
+        select:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+            border-color: rgba(81, 203, 238, 1);
+        }
     </style>
 </head>
 <body>
@@ -136,17 +181,17 @@
         <div class="widget" id="prematch-widget">
             <h2>Prematch</h2>
             <div class="mini-box">
-                <h3>Scouter Initials</h3>
+                <h3>SCOUTER INITIALS</h3>
                 <input type="text" id="prematch-scout-initials">
             </div>
 
             <div class="mini-box">
-                <h3>Match Number</h3>
+                <h3>MATCH NUMBER</h3>
                 <input type="number" id="prematch-match-number">
             </div>
 
             <div class="mini-box">
-                <h3>Robot</h3>
+                <h3>ROBOT</h3>
                 <select id="prematch-robot">
                     <option value="Red 1">Red 1</option>
                     <option value="Red 2">Red 2</option>
@@ -158,39 +203,113 @@
             </div>
 
             <div class="mini-box">
-                <h3>Team Number</h3>
+                <h3>TEAM NUMBER</h3>
                 <input type="number" id="prematch-team-number">
             </div>
 
             <div class="mini-box">
-                <h3>Human Player at AMP</h3>
-                <input type="checkbox" id="prematch-human-player">
+                <h3>HUMAN PLAYER AT AMP</h3>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="prematch-human-player">
+                    <label for="prematch-human-player"></label>
+                </div>
             </div>
 
             <div class="mini-box">
-                <h3>No Show</h3>
-                <input type="checkbox" id="prematch-no-show">
+                <h3>NO SHOW</h3>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="prematch-no-show">
+                    <label for="prematch-no-show"></label>
+                </div>
             </div>
         </div>
 
-        <!-- Duplicate Teleop Widget 1 -->
-        <div class="widget" id="teleop-widget1">
-            <!-- Content is duplicated for Teleop Widget 1 -->
+        <!-- Autonomous Widget -->
+        <div class="widget" id="Autonomous-Widget">
+            <h2>Autonomous</h2>
+            <div class="mini-box">
+                <h3>MOBILITY?</h3>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="Mobility">
+                    <label for="Mobility"></label>
+                </div>
+            </div>
+            <div class="mini-box">
+                <h3>AMP SCORED</h3>
+                <button type="button">-</button>
+                <span>0</span>
+                <button type="button">+</button>
+            </div>
+            <div class="mini-box">
+                <h3>AMP MISSED</h3> <!-- Fixed closing tag -->
+                <button type="button">-</button>
+                <span>0</span>
+                <button type="button">+</button>
+            </div>
+			<div class="mini-box">
+				<h3>SPEAKER SCORED</h3>
+				<button type="button">-</button>
+				<span>0</span>
+				<button type="button">+</button>
+			</div>
+			<div class="mini-box">
+				<h3>SPEAKER MISSED</h3>
+				<button type="button">-</button>
+				<span>0</span>
+				<button type="button">+</button>
+			</div>
+			<div class="mini-box">
+				<h3>AUTO FOUL</h3>
+				<button type="button">-</button>
+				<span>0</span>
+				<button type="button">+</button>
+			</div>
         </div>
-
-        <!-- Duplicate Teleop Widget 2 -->
-        <div class="widget" id="teleop-widget2">
-            <!-- Content is duplicated for Teleop Widget 2 -->
-        </div>
-
-        <!-- Duplicate Teleop Widget 3 -->
-        <div class="widget" id="teleop-widget3">
-            <!-- Content is duplicated for Teleop Widget 3 -->
-        </div>
-
-        <!-- Duplicate Teleop Widget 4 -->
-        <div class="widget" id="teleop-widget4">
-            <!-- Content is duplicated for Teleop Widget 4 -->
+		<div class="widget" id="TeleOp-Widget">
+            <h2>teleop</h2>
+            <div class="mini-box">
+                <h3>COOPERTITION</h3>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="Coopertition">
+                    <label for="Coopertition"></label>
+                </div>
+            </div>
+            <div class="mini-box">
+                <h3>AMP SCORED</h3>
+                <button type="button">-</button>
+                <span>0</span>
+                <button type="button">+</button>
+            </div>
+            <div class="mini-box">
+                <h3>AMP MISSED</h3> <!-- Fixed closing tag -->
+                <button type="button">-</button>
+                <span>0</span>
+                <button type="button">+</button>
+            </div>
+			<div class="mini-box">
+				<h3>SPEAKER SCORED</h3>
+				<button type="button">-</button>
+				<span>0</span>
+				<button type="button">+</button>
+			</div>
+			<div class="mini-box">
+				<h3>SPEAKER MISSED</h3>
+				<button type="button">-</button>
+				<span>0</span>
+				<button type="button">+</button>
+			</div>
+			<div class="mini-box">
+				<h3>NOTE IN TRAP?</h3>
+				<button type="button">-</button>
+				<span>0</span>
+				<button type="button">+</button>
+			</div>
+			<div class="mini-box">
+				<h3>TELEOP FOUL</h3>
+				<button type="button">-</button>
+				<span>0</span>
+				<button type="button">+</button>
+			</div>
         </div>
     </div>
 
@@ -204,7 +323,17 @@
     <!-- Popup Panel -->
     <div class="popup" id="popup">
         <div id="qr-code-popup"></div>
-        <button onclick="closePopup()">X</button>
+        <button 
+		style="padding: 5px; 
+			height: 32px;
+			width: 75px;
+			font-size: 16px; 
+			cursor: pointer; 
+			border-radius: 5px; 
+			background-color: #ff0000; 
+			color: #ffffff;" 
+		onclick="closePopup()">Close
+		</button>
     </div>
     <div class="overlay" id="overlay"></div>
 
