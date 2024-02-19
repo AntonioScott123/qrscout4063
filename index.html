@@ -523,8 +523,8 @@ n>                </select>
 
          function generateQRCode() {
     if (
-        document.getElementById('prematch-scout-initials').value === "" &&
-        document.getElementById('prematch-match-number').value === "" &&
+        document.getElementById('prematch-scout-initials').value === "" ||
+        document.getElementById('prematch-match-number').value === "" ||
         document.getElementById('prematch-team-number').value === ""
     ) {
         // Fields are empty
