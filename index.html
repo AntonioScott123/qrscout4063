@@ -322,6 +322,13 @@
 		<div class="widget" id="Endgame-Widget">
 			<h2>Endgame</h2>
 			<div class="mini-box">
+			<h3>SPOTLIGHT</h3>
+			<div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="Spotlight">
+                    <label for="Spotlight"></label>
+			</div>
+            </div>
+			<div class="mini-box">
 				<h3>END POSITION</h3>
                 <select id="End-Position">
                     <option value="No Climb">No Climb</option>
@@ -484,13 +491,14 @@ n>                </select>
 		gameData.mobility = document.getElementById('Mobility').checked;
 		gameData.died = document.getElementById('Died').checked;
 		gameData.tippedOver = document.getElementById('Tipped-Over').checked;
-		gameData.coopertition = document.getElementById('Tipped-Over').checked;
+		gameData.coopertition = document.getElementById('Coopertition').checked;
 		gameData.endPos = document.getElementById('End-Position').value;
 		gameData.harmony = document.getElementById('Harmony').value;
 		gameData.offSkill = document.getElementById('Offensive Skill').value;
 		gameData.defSkill = document.getElementById('Defensive Skill').value;
 		gameData.card = document.getElementById('Card').value;
 		gameData.comments = document.getElementById('Comments').value;
+		gameData.spotlight = document.getElementById('Spotlight').checked;
 		// Update other fields similarly
 		
 		const initialsInput = document.getElementById('prematch-scout-initials');
@@ -529,7 +537,7 @@ n>                </select>
     ) {
         // Fields are empty
     } else {
-        const qrCodeData = `${gameData.initials} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.humanAtAmp} ${gameData.noShow} ${gameData.mobility} ${gameData.ampScored} ${gameData.ampMissed} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.autoFoul} ${gameData.coopertition} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.teleopFoul} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.died} ${gameData.tippedOver} ${gameData.card} ${gameData.comments}`;
+        const qrCodeData = `${gameData.initials} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.humanAtAmp} ${gameData.noShow} ${gameData.mobility} ${gameData.ampScored} ${gameData.ampMissed} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.autoFoul} ${gameData.coopertition} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.teleopFoul} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.died} ${gameData.tippedOver} ${gameData.card} ${gameData.comments}`;
         const qrCodeContainer = document.getElementById('qr-code-popup');
         qrCodeContainer.innerHTML = '';
 
