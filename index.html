@@ -214,12 +214,12 @@
             <div class="mini-box">
                 <h3>ROBOT</h3>
                 <select id="prematch-robot">
-                    <option value="Red 1">Red 1</option>
-                    <option value="Red 2">Red 2</option>
-                    <option value="Red 3">Red 3</option>
-                    <option value="Blue 1">Blue 1</option>
-                    <option value="Blue 2">Blue 2</option>
-                    <option value="Blue 3">Blue 3</option>
+                    <option value="Red_1">Red 1</option>
+                    <option value="Red_2">Red 2</option>
+                    <option value="Red_3">Red 3</option>
+                    <option value="Blue_1">Blue 1</option>
+                    <option value="Blue_2">Blue 2</option>
+                    <option value="Blue_3">Blue 3</option>
                 </select>
             </div>
 
@@ -344,7 +344,7 @@
 			<div class="mini-box">
 				<h3>END POSITION</h3>
                 <select id="End-Position">
-                    <option value="No Climb">No Climb</option>
+                    <option value="No_Climb">No Climb</option>
                     <option value="Failed Climb">Failed Climb</option>
                     <option value="Parked">Parked</option>
                     <option value="Onstage">Onstage</option>
@@ -354,10 +354,10 @@
 			<div class="mini-box">
 				<h3>HARMONY</h3>
 				<select id="Harmony">
-                    <option value="Not Completed">Not Completed</option>
-                    <option value="First On Chain">First On Chain</option>
-                    <option value="Second On Chain">Second On Chain</option>
-                    <option value="Third On Change">Third On Chain</option>
+                    <option value="Not_Completed">Not Completed</option>
+                    <option value="First_On_Chain">First On Chain</option>
+                    <option value="Second_On_Chain">Second On Chain</option>
+                    <option value="Third_On_Change">Third On Chain</option>
                 </select>
 			</div>
 		</div>
@@ -366,19 +366,19 @@
 			<div class="mini-box">
 				<h3>OFFENSIVE SKILL</h3>
 				<select id="Offensive Skill">
-                    <option value="Not Effective">Not Effective</option>
+                    <option value="Not_Effective">Not Effective</option>
                     <option value="Average">Average</option>
-                    <option value="Very Effective">Very Effective</option>
-                    <option value="Not Observed">Not Observed</option>
+                    <option value="Very_Effective">Very Effective</option>
+                    <option value="Not_Observed">Not Observed</option>
                 </select>
 			</div>
 			<div class="mini-box">
 			<h3>DEFENSIVE SKILL</h3>
 				<select id="Defensive Skill">
-                    <option value="Not Effective">Not Effective</option>
+                    <option value="Not_Effective">Not Effective</option>
                     <option value="Average">Average</option>
-                    <option value="Very Effective">Very Effective</option>
-                    <option value="Not Observed">Not Observed</option>
+                    <option value="Very_Effective">Very Effective</option>
+                    <option value="Not_Observed">Not Observed</option>
                 </select>
 			</div>
 			<div class="mini-box">
@@ -398,9 +398,9 @@
 		<div class="mini-box">
 			<h3>CARD</h3>
 				<select id="Card">
-                    <option value="Yellow Card">Yellow Card</option>
-                    <option value="Red Card">Red Card</option>
-                    <option value="No Card">No Card</option>
+                    <option value="Yellow_Card">Yellow Card</option>
+                    <option value="Red_Card">Red Card</option>
+                    <option value="No_Card">No Card</option>
 n>                </select>
 			</div>
             <div class="mini-box">
@@ -615,12 +615,14 @@ n>                </select>
     ) {
         // Fields are empty
     } else {
-        const qrCodeData = `${gameData.initials} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.humanAtAmp} ${gameData.noShow} ${gameData.mobility} ${gameData.ampScored} ${gameData.ampMissed} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.autoFoul} ${gameData.coopertition} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.teleopFoul} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.died} ${gameData.tippedOver} ${gameData.card} ${gameData.comments}`;
+        const qrCodeData = `${gameData.initials} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.humanAtAmp} ${gameData.noShow} ${gameData.mobility} ${gameData.ampScored} ${gameData.ampMissed} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.autoFoul} ${gameData.coopertition} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.teleopFoul} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.died} ${gameData.tippedOver} ${gameData.card}`;
+		const qrCodeDataWithCommas = qrCodeData.split(' ').join(',');
+		const qrCodeDataWithCommasWithComment = qrCodeDataWithCommas + ',' + gameData.comments;
         const qrCodeContainer = document.getElementById('qr-code-popup');
         qrCodeContainer.innerHTML = '';
 
         const qrCode = new QRCode(qrCodeContainer, {
-            text: qrCodeData,
+            text: qrCodeDataWithCommasWithComment,
             width: 300,
             height: 300,
         });
