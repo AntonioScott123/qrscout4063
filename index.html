@@ -22,7 +22,7 @@
             font-family: 'SF Sports Night NS', sans-serif;
             text-align: center;
             margin: 20px;
-            background-color: #ffffff;
+            background: linear-gradient(to bottom, #ffffff, #ffffff 75%, #FF69B4);
             font-size: 24px;
         }
         h1 {
@@ -147,6 +147,9 @@
 			height: 40px;
 			width: 97%;
 		}
+		textarea {
+			resize: none;
+		}
 		select {
             padding: 10px;
             font-size: 16px;
@@ -170,8 +173,11 @@
             border-color: rgba(81, 203, 238, 1);
         }
 		#myFooter {
-    color: #FF69B4;
+    color: #FFFFFF;
 	}
+	.error {
+    border: 2px solid red;
+}
     </style>
 </head>
 <body>
@@ -184,12 +190,12 @@
             <h2>Prematch</h2>
             <div class="mini-box">
                 <h3>SCOUTER INITIALS</h3>
-                <input type="text" id="prematch-scout-initials">
+                <input type="text" id="prematch-scout-initials" placeholder="Required">
             </div>
 
             <div class="mini-box">
                 <h3>MATCH NUMBER</h3>
-                <input type="number" id="prematch-match-number">
+                <input type="number" id="prematch-match-number" placeholder="Required">
             </div>
 
             <div class="mini-box">
@@ -206,7 +212,7 @@
 
             <div class="mini-box">
                 <h3>TEAM NUMBER</h3>
-                <input type="number" id="prematch-team-number">
+                <input type="number" id="prematch-team-number" placeholder="Required">
             </div>
 
             <div class="mini-box">
@@ -238,33 +244,33 @@
             </div>
             <div class="mini-box">
                 <h3>AMP SCORED</h3>
-                <button type="button">-</button>
-                <span>0</span>
-                <button type="button">+</button>
+                <button type="button" onclick="updateButtonNum('ampScored', -1)">-</button>
+                <span id="ampScored">0</span>
+                <button type="button" onclick="updateButtonNum('ampScored', 1)">+</button>
             </div>
             <div class="mini-box">
                 <h3>AMP MISSED</h3> <!-- Fixed closing tag -->
-                <button type="button">-</button>
-                <span>0</span>
-                <button type="button">+</button>
+                <button type="button" onclick="updateButtonNum('ampMissed', -1)">-</button>
+                <span id="ampMissed">0</span>
+                <button type="button" onclick="updateButtonNum('ampMissed', 1)">+</button>
             </div>
 			<div class="mini-box">
 				<h3>SPEAKER SCORED</h3>
-				<button type="button">-</button>
-				<span>0</span>
-				<button type="button">+</button>
+				<button type="button" onclick="updateButtonNum('speakerScored', -1)">-</button>
+				<span id="speakerScored">0</span>
+				<button type="button" onclick="updateButtonNum('speakerScored', 1)">+</button>
 			</div>
 			<div class="mini-box">
 				<h3>SPEAKER MISSED</h3>
-				<button type="button">-</button>
-				<span>0</span>
-				<button type="button">+</button>
+				<button type="button" onclick="updateButtonNum('speakerMissed', -1)">-</button>
+				<span id="speakerMissed">0</span>
+				<button type="button" onclick="updateButtonNum('speakerMissed', 1)">+</button>
 			</div>
 			<div class="mini-box">
 				<h3>AUTO FOUL</h3>
-				<button type="button">-</button>
-				<span>0</span>
-				<button type="button">+</button>
+				<button type="button" onclick="updateButtonNum('autoFoul', -1)">-</button>
+				<span id="autoFoul">0</span>
+				<button type="button" onclick="updateButtonNum('autoFoul', 1)">+</button>
 			</div>
         </div>
 		<div class="widget" id="TeleOp-Widget">
@@ -278,39 +284,39 @@
             </div>
             <div class="mini-box">
                 <h3>AMP SCORED</h3>
-                <button type="button">-</button>
-                <span>0</span>
-                <button type="button">+</button>
+                <button type="button" onclick="updateButtonNum('tampScored', -1)">-</button>
+                <span id="tampScored">0</span>
+                <button type="button" onclick="updateButtonNum('tampScored', 1)">+</button>
             </div>
             <div class="mini-box">
                 <h3>AMP MISSED</h3> <!-- Fixed closing tag -->
-                <button type="button">-</button>
-                <span>0</span>
-                <button type="button">+</button>
+                <button type="button" onclick="updateButtonNum('tampMissed', -1)">-</button>
+                <span id="tampMissed">0</span>
+                <button type="button" onclick="updateButtonNum('tampMissed', 1)">+</button>
             </div>
 			<div class="mini-box">
 				<h3>SPEAKER SCORED</h3>
-				<button type="button">-</button>
-				<span>0</span>
-				<button type="button">+</button>
+				<button type="button" onclick="updateButtonNum('tspeakerScored', -1)">-</button>
+				<span id="tspeakerScored">0</span>
+				<button type="button" onclick="updateButtonNum('tspeakerScored', 1)">+</button>
 			</div>
 			<div class="mini-box">
 				<h3>SPEAKER MISSED</h3>
-				<button type="button">-</button>
-				<span>0</span>
-				<button type="button">+</button>
+				<button type="button" onclick="updateButtonNum('tspeakerMissed', -1)">-</button>
+				<span id="tspeakerMissed">0</span>
+				<button type="button" onclick="updateButtonNum('tspeakerMissed', 1)">+</button>
 			</div>
 			<div class="mini-box">
 				<h3>NOTE IN TRAP?</h3>
-				<button type="button">-</button>
-				<span>0</span>
-				<button type="button">+</button>
+				<button type="button" onclick="updateButtonNum('noteTrap', -1)">-</button>
+				<span id="noteTrap">0</span>
+				<button type="button" onclick="updateButtonNum('noteTrap', 1)">+</button>
 			</div>
 			<div class="mini-box">
 				<h3>TELEOP FOUL</h3>
-				<button type="button">-</button>
-				<span>0</span>
-				<button type="button">+</button>
+				<button type="button" onclick="updateButtonNum('teleopFoul', -1)">-</button>
+				<span id="teleopFoul">0</span>
+				<button type="button" onclick="updateButtonNum('teleopFoul', 1)">+</button>
 			</div>
         </div>
 		<div class="widget" id="Endgame-Widget">
@@ -379,7 +385,7 @@ n>                </select>
 			</div>
             <div class="mini-box">
                 <h3>COMMENTS</h3>
-                <input type="text" style="height: 168px;" id="Comments">
+                <textarea id="Comments" rows="10" cols="30"></textarea>
             </div>
 		</div>
     </div>
@@ -392,7 +398,7 @@ n>                </select>
 	
 	<div style="width: 100%; overflow: hidden;">
 		<div style="display: inline-block; float: left;">
-			<img src="assets/Pictures/4063.png" style="display: block; margin-left: 0;" alt="4063 Logo">
+			<img src="assets/Pictures/4063.png" style="height: 147px; width: 346px; display: block; margin-left: 0;" alt="4063 Logo">
 		</div>
 		<div style="display: inline-block; float: right; margin-left: 10px;">
 			<img src="assets/Pictures/Crescendo.png" style="height: 147px; width: 346px;" alt="Crescendo Logo">
@@ -420,82 +426,129 @@ n>                </select>
 
     <script>
         const gameData = {
-            autonomousScore: 0,
-            teleopScore: 0,
-            teleopVariables: {
-                scores: 0,
-                loses: 0,
-                tipovers: 0,
-                sigmas: 0,
-            },
-            prematchWidget: {
-                scoutInitials: "",
-                matchNumber: 0,
-                robot: "Red 1",
-                teamNumber: 0,
-                humanPlayer: false,
-                noShow: false,
-            },
-        };
+			initials: "",
+			matchNum: 0,
+			robot: "",
+			teamNum: 0,
+			humanAtAmp: false,
+			noShow: false,
+			mobility: false,
+			ampScored: 0,
+			ampMissed: 0,
+			speakerScored: 0,
+			speakerMissed: 0,
+			autoFoul: 0,
+			coopertition: false,
+			tampScored: 0,
+			tampMissed: 0,
+			tspeakerScored: 0,
+			tspeakerMissed: 0,
+			noteTrap: 0,
+			teleopFoul: 0,
+			endPos: "",
+			harmony: "",
+			offSkill: "",
+			defSkill: "",
+			died: false,
+			tippedOver: false,
+			card: "",
+			comments: ""
+		
+			
+            }
 
-        function updateTeleopVariable(variable, value) {
-            gameData.teleopVariables[variable] += value;
-            gameData.teleopVariables[variable] = Math.max(gameData.teleopVariables[variable], 0);
-            updateTeleopDisplay(variable);
-        }
+        function updateButtonNum(variable, value) {
+    gameData[variable] += value;
+    if (variable === 'teleopFoul') {
+        gameData[variable] = Math.max(gameData[variable], -1000);
+    } else {
+        gameData[variable] = Math.max(gameData[variable], 0);
+    }
+    // Update HTML element value
+    document.getElementById(variable).textContent = gameData[variable];
+}
 
-        function updateTeleopDisplay(variable) {
-            const variableElement = document.getElementById(`teleop-${variable}`);
-            variableElement.textContent = gameData.teleopVariables[variable];
-        }
-
-        function updateScore(type, value) {
-            gameData[`${type}Score`] += value;
-            gameData[`${type}Score`] = Math.max(gameData[`${type}Score`], 0);
-            updateDisplay(type);
-        }
-
-        function updateDisplay(type) {
-            const scoreElement = document.getElementById(`${type}-score`);
-            scoreElement.textContent = gameData[`${type}Score`];
-        }
 
         function updateGameData(section, key, value) {
             gameData[section][key] = value;
         }
-
+		
         function updateQRCodeOnSubmit() {
-            gameData.prematchWidget.scoutInitials = document.getElementById('prematch-scout-initials').value;
-            gameData.prematchWidget.matchNumber = parseInt(document.getElementById('prematch-match-number').value);
-            gameData.prematchWidget.robot = document.getElementById('prematch-robot').value;
-            gameData.prematchWidget.teamNumber = parseInt(document.getElementById('prematch-team-number').value);
-            gameData.prematchWidget.humanPlayer = document.getElementById('prematch-human-player').checked;
-            gameData.prematchWidget.noShow = document.getElementById('prematch-no-show').checked;
+		// Update all the gameData fields with the form values
+		gameData.initials = document.getElementById('prematch-scout-initials').value;
+		gameData.matchNum = parseInt(document.getElementById('prematch-match-number').value);
+		gameData.robot = document.getElementById('prematch-robot').value;
+		gameData.teamNum = parseInt(document.getElementById('prematch-team-number').value);
+		gameData.humanAtAmp = document.getElementById('prematch-human-player').checked;
+		gameData.noShow = document.getElementById('prematch-no-show').checked;
+		gameData.mobility = document.getElementById('Mobility').checked;
+		gameData.died = document.getElementById('Died').checked;
+		gameData.tippedOver = document.getElementById('Tipped-Over').checked;
+		gameData.coopertition = document.getElementById('Tipped-Over').checked;
+		gameData.endPos = document.getElementById('End-Position').value;
+		gameData.harmony = document.getElementById('Harmony').value;
+		gameData.offSkill = document.getElementById('Offensive Skill').value;
+		gameData.defSkill = document.getElementById('Defensive Skill').value;
+		gameData.card = document.getElementById('Card').value;
+		gameData.comments = document.getElementById('Comments').value;
+		// Update other fields similarly
+		
+		const initialsInput = document.getElementById('prematch-scout-initials');
+		const matchNumInput = document.getElementById('prematch-match-number');
+		const teamNumInput = document.getElementById('prematch-team-number');
+		
+		if (initialsInput.value === '') {
+			initialsInput.classList.add('error');
+		} 
+		else {
+			initialsInput.classList.remove('error');
+		}
 
-            generateQRCode();
-        }
+		if (matchNumInput.value === '') {
+			matchNumInput.classList.add('error');
+		} 
+		else {
+			matchNumInput.classList.remove('error');
+		}
 
-        function generateQRCode() {
-            const qrCodeData = JSON.stringify(gameData);
-            const qrCodeContainer = document.getElementById('qr-code-popup');
+		if (teamNumInput.value === '') {
+			teamNumInput.classList.add('error');
+		} 
+		else {
+			teamNumInput.classList.remove('error');
+		}
+		// Generate QR code with updated gameData
+		generateQRCode();
+		}
 
-            qrCodeContainer.innerHTML = '';
+         function generateQRCode() {
+    if (
+        document.getElementById('prematch-scout-initials').value === "" &&
+        document.getElementById('prematch-match-number').value === "" &&
+        document.getElementById('prematch-team-number').value === ""
+    ) {
+        // Fields are empty
+    } else {
+        const qrCodeData = `${gameData.initials} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.humanAtAmp} ${gameData.noShow} ${gameData.mobility} ${gameData.ampScored} ${gameData.ampMissed} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.autoFoul} ${gameData.coopertition} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.teleopFoul} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.died} ${gameData.tippedOver} ${gameData.card} ${gameData.comments}`;
+        const qrCodeContainer = document.getElementById('qr-code-popup');
+        qrCodeContainer.innerHTML = '';
 
-            const qrCode = new QRCode(qrCodeContainer, {
-                text: qrCodeData,
-                width: 300,
-                height: 300,
-            });
+        const qrCode = new QRCode(qrCodeContainer, {
+            text: qrCodeData,
+            width: 300,
+            height: 300,
+        });
 
-            document.getElementById('popup').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
+        document.getElementById('popup').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+}
 
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-    </script>
+		function closePopup() {
+        document.getElementById('popup').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+</script>
 
 </body>
 </html>
