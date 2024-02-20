@@ -629,8 +629,8 @@ n>                </select>
         // Fields are empty
     } else {
         const qrCodeData = `${gameData.initials} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.humanAtAmp} ${gameData.noShow} ${gameData.mobility} ${gameData.ampScored} ${gameData.ampMissed} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.autoFoul} ${gameData.coopertition} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.teleopFoul} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.died} ${gameData.tippedOver} ${gameData.card}`;
-		const qrCodeDataWithCommas = qrCodeData.split(' ').join(',"');
-		const qrCodeDataWithCommasWithComment = qrCodeDataWithCommas + ',"' + gameData.comments;
+		const qrCodeDataWithCommas = qrCodeData.split(' ').join('\');
+		const qrCodeDataWithCommasWithComment = qrCodeDataWithCommas + '\' + gameData.comments;
         const qrCodeContainer = document.getElementById('qr-code-popup');
         qrCodeContainer.innerHTML = '';
 
