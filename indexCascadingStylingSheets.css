@@ -37,11 +37,11 @@
             align-items: flex-start; /* Align items to the start of the cross-axis (top) */
         }
         .widget {
-            margin: 20px;
-            padding: 10px;
-            background: linear-gradient(to top, #00000000 1%, #FF69B4 100%);
-            width: 275px;
-			height: 625px;
+        margin: 5px;
+        padding: 10px;
+        background: linear-gradient(to top, #00000000 1%, #FF69B4 100%);
+		width: 275px;
+		height: 625px;
             border-radius: 10px;
             box-shadow: 5 4px 8px rgba(0, 0, 0, 0.2);
         }
