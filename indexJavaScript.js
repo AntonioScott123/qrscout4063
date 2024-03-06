@@ -102,8 +102,8 @@ const gameData = {
 			document.getElementById('teleopFoul').textContent = gameData.teleopFoul;
 			document.getElementById('dampMissed').textContent = gameData.dampMissed
 			document.getElementById('dampScored').textContent = gameData.dampScored;
-			document.getElementById('dampspeakerMissed').textContent = gameData.dspeakerMissed;
-			document.getElementById('speakerScored').textContent = gameData.dspeakerScored;
+			document.getElementById('dspeakerMissed').textContent = gameData.dspeakerMissed;
+			document.getElementById('dspeakerScored').textContent = gameData.dspeakerScored;
 			document.getElementById('dnoteTrap').textContent = gameData.dnoteTrap;
 			document.getElementById('dfouls').textContent = gameData.dfouls;
 			teamNumInput.classList.remove('error');
