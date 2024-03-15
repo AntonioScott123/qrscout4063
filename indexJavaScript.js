@@ -26,12 +26,6 @@ const gameData = {
 			tippedOver: false,
 			card: "",
 			comments: "",
-			dampMissed: 0,
-			dampScored: 0,
-			dspeakerMissed: 0,
-			dspeakerScored: 0,
-			dnoteTrap: 0,
-			dfouls: 0
 			
 		
 			
@@ -82,12 +76,6 @@ const gameData = {
 			gameData.tspeakerMissed = 0;
 			gameData.noteTrap = 0;
 			gameData.teleopFoul = 0;
-			gameData.dampMissed = 0;
-			gameData.dampScored = 0;
-			gameData.dspeakerMissed = 0;
-			gameData.dspeakerScored = 0;
-			gameData.dnoteTrap = 0;
-			gameData.dfouls = 0;
 
 			document.getElementById('ampScored').textContent = gameData.ampScored;
 			document.getElementById('ampMissed').textContent = gameData.ampMissed;
@@ -100,12 +88,6 @@ const gameData = {
 			document.getElementById('tspeakerMissed').textContent = gameData.tspeakerMissed;
 			document.getElementById('noteTrap').textContent = gameData.noteTrap;
 			document.getElementById('teleopFoul').textContent = gameData.teleopFoul;
-			document.getElementById('dampMissed').textContent = gameData.dampMissed
-			document.getElementById('dampScored').textContent = gameData.dampScored;
-			document.getElementById('dspeakerMissed').textContent = gameData.dspeakerMissed;
-			document.getElementById('dspeakerScored').textContent = gameData.dspeakerScored;
-			document.getElementById('dnoteTrap').textContent = gameData.dnoteTrap;
-			document.getElementById('dfouls').textContent = gameData.dfouls;
 			teamNumInput.classList.remove('error');
 			matchNumInput.classList.remove('error');
 			initialsInput.classList.remove('error');
@@ -185,7 +167,7 @@ const gameData = {
     ) {
         // Fields are empty
     } else {
-        const qrCodeData = `${gameData.initials} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.humanAtAmp} ${gameData.noShow} ${gameData.mobility} ${gameData.ampScored} ${gameData.ampMissed} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.autoFoul} ${gameData.coopertition} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.teleopFoul} ${gameData.dampMissed} ${gameData.dampScored} ${gameData.dspeakerMissed} ${gameData.dspeakerScored} ${gameData.dnoteTrap} ${gameData.dfouls} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.died} ${gameData.tippedOver} ${gameData.card}`;
+        const qrCodeData = `${gameData.initials} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.humanAtAmp} ${gameData.noShow} ${gameData.mobility} ${gameData.ampScored} ${gameData.ampMissed} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.autoFoul} ${gameData.coopertition} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.teleopFoul} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.died} ${gameData.tippedOver} ${gameData.card}`;
 		const qrCodeDataWithCommas = qrCodeData.split(' ').join('~');
 		const qrCodeDataWithCommasWithComment = qrCodeDataWithCommas + '~' + gameData.comments;
         const qrCodeContainer = document.getElementById('qr-code-popup');
