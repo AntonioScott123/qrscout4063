@@ -1,3 +1,56 @@
+const cacheName = 'my-site-cache';
+const filesToCache = [
+    '',
+    'index.html',
+    'indexCascadingStylingSheets.css',
+    'indexJavaScript.js'
+	'QR-CodeGen.js'
+];
+
+// Install the service worker
+self.addEventListener('install', event => {
+    event.waitUntil(
+        caches.open(cacheName)
+            .then(cache => {
+                return cache.addAll(filesToCache);
+            })
+    );
+});
+
+// Intercept and cache requests
+self.addEventListener('fetch', event => {
+    event.respondWith(
+        caches.match(event.request)
+            .then(response => {
+                // Cache hit - return response
+                if (response) {
+                    return response;
+                }
+
+                // Clone the request since it's a stream and can only be consumed once
+                const fetchRequest = event.request.clone();
+
+                return fetch(fetchRequest).then(
+                    response => {
+                        // Check if we received a valid response
+                        if (!response || response.status !== 200 || response.type !== 'basic') {
+                            return response;
+                        }
+
+                        // Clone the response since it's a stream and can only be consumed once
+                        const responseToCache = response.clone();
+
+                        caches.open(cacheName)
+                            .then(cache => {
+                                cache.put(event.request, responseToCache);
+                            });
+
+                        return response;
+                    }
+                );
+            })
+    );
+});
 const gameData = {
 			initials: "",
 			matchNum: 0,
