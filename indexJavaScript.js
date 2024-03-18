@@ -3,7 +3,7 @@ const filesToCache = [
     '',
     'index.html',
     'indexCascadingStylingSheets.css',
-    'indexJavaScript.js'
+    'indexJavaScript.js',
 	'QR-CodeGen.js'
 ];
 
