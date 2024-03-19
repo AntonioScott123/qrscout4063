@@ -1,4 +1,6 @@
-var app = {};
+const express = require('express');
+const app = express();
+
 app.get('/manifest.json', function(req, res) {
     res.type('application/json');
     res.sendFile(__dirname + '/manifest.json');
