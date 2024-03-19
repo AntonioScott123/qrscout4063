@@ -10,7 +10,7 @@ var filesToCache = [
   '/indexCascadingStylingSheets.css',
   '/indexJavaScript.js',
   '/assets/Fonts/SF-Sports-Night-NS.ttf',
-  '/assets/Fonts/SF-Sports-Night-NS.ttf',
+  '/assets/Fonts/SF-Sports-Night.ttf',
   '/assets/Pictures/4063_Logo.png',
   '/assets/Pictures/Crescendo_Logo.png',
   '/QR-CodeGen.js',
