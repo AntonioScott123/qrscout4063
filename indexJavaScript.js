@@ -1,3 +1,4 @@
+var app = {};
 app.get('/manifest.json', function(req, res) {
     res.type('application/json');
     res.sendFile(__dirname + '/manifest.json');
