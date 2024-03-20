@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4063 Crescendo QRScout</title>
     <script src="QR-CodeGen.js"></script>
+	<script src="indexJavaScript.js"></script>
+	<script>
+		if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function(err) {
+          console.error('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
+	</script>
 		<link rel="stylesheet" href="indexCascadingStylingSheets.css">
 </head>
 <body>
@@ -265,19 +277,6 @@
 		</button>
     </div>
     <div class="overlay" id="overlay"></div>
-
-    <script src="indexJavaScript.js"></script>
-	<script>
-		if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-          console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }, function(err) {
-          console.error('ServiceWorker registration failed: ', err);
-        });
-      });
-    }
-	</script>
 
 </body>
 </html>
