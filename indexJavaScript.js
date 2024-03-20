@@ -1,23 +1,3 @@
-fetch('/manifest.json')
-  .then(response => response.json())
-  .then(data => {
-    // Do something with the JSON data
-    console.log(data);
-  })
-  .catch(error => {
-    console.error('Error fetching manifest.json:', error);
-  });
-
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-      console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    }, function(err) {
-      console.error('ServiceWorker registration failed: ', err);
-    });
-  });
-}
 const gameData = {
 			initials: "",
 			matchNum: 0,
@@ -50,6 +30,27 @@ const gameData = {
 		
 			
             }
+fetch('/manifest.json')
+  .then(response => response.json())
+  .then(data => {
+    // Do something with the JSON data
+    console.log(data);
+  })
+  .catch(error => {
+    console.error('Error fetching manifest.json:', error);
+  });
+
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }, function(err) {
+      console.error('ServiceWorker registration failed: ', err);
+    });
+  });
+}
+
 		function ClearAll() {
 			document.getElementById('prematch-scout-initials').value = '';
 			document.getElementById('prematch-match-number').value = '';
