@@ -1,10 +1,13 @@
-const express = require('express');
-const app = express();
+fetch('/manifest.json')
+  .then(response => response.json())
+  .then(data => {
+    // Do something with the JSON data
+    console.log(data);
+  })
+  .catch(error => {
+    console.error('Error fetching manifest.json:', error);
+  });
 
-app.get('/manifest.json', function(req, res) {
-    res.type('application/json');
-    res.sendFile(__dirname + '/manifest.json');
-});
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
