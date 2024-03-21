@@ -170,45 +170,47 @@ if ('serviceWorker' in navigator) {
 		generateQRCode();
 		}
 window.addEventListener('beforeinstallprompt', function(event) {
-      // Prevent Chrome 67 and earlier from automatically showing the prompt
-      event.preventDefault();
-      
-      // Show the installation prompt immediately
-      event.prompt();
+	event.preventDefault();
+	// Show the installation prompt immediately
+	event.prompt();
 
-      // Wait for the user to respond to the prompt
-      event.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('User accepted the installation');
-        } else {
-          console.log('User dismissed the installation');
-
-         function generateQRCode() {
-    if (
-        document.getElementById('prematch-scout-initials').value === "" ||
-        document.getElementById('prematch-match-number').value === "" ||
-        document.getElementById('prematch-team-number').value === ""
-    ) {
-        // Fields are empty
-    } else {
-        const qrCodeData = `${gameData.initials} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.humanAtAmp} ${gameData.noShow} ${gameData.mobility} ${gameData.ampScored} ${gameData.ampMissed} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.autoFoul} ${gameData.coopertition} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.teleopFoul} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.died} ${gameData.tippedOver} ${gameData.card}`;
+	// Wait for the user to respond to the prompt
+	event.userChoice.then((choiceResult) => {
+		if (choiceResult.outcome === 'accepted') {
+			console.log('User accepted the installation');
+		} else {
+			console.log('User dismissed the installation');
+		}
+	});
+});
+		
+		// Function to generate QR code
+function generateQRCode() {
+	if (
+		document.getElementById('prematch-scout-initials').value === "" ||
+		document.getElementById('prematch-match-number').value === "" ||
+		document.getElementById('prematch-team-number').value === ""
+	) {
+		// Fields are empty
+	} else {
+		const qrCodeData = `${gameData.initials} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.humanAtAmp} ${gameData.noShow} ${gameData.mobility} ${gameData.ampScored} ${gameData.ampMissed} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.autoFoul} ${gameData.coopertition} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.teleopFoul} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.died} ${gameData.tippedOver} ${gameData.card}`;
 		const qrCodeDataWithCommas = qrCodeData.split(' ').join('~');
 		const qrCodeDataWithCommasWithComment = qrCodeDataWithCommas + '~' + gameData.comments;
-        const qrCodeContainer = document.getElementById('qr-code-popup');
-        qrCodeContainer.innerHTML = '';
-
-        const qrCode = new QRCode(qrCodeContainer, {
-            text: qrCodeDataWithCommasWithComment,
-            width: 300,
-            height: 300,
-        });
-
-        document.getElementById('popup').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-    }
+		const qrCodeContainer = document.getElementById('qr-code-popup');
+		qrCodeContainer.innerHTML = '';
+		
+		const qrCode = new QRCode(qrCodeContainer, {
+			text: qrCodeDataWithCommasWithComment,
+			width: 300,
+			height: 300,
+		});
+		
+		document.getElementById('popup').style.display = 'block';
+		document.getElementById('overlay').style.display = 'block';
+	}
 }
-
-		function closePopup() {
-        document.getElementById('popup').style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-    }
+		
+function closePopup() {
+	document.getElementById('popup').style.display = 'none';
+	document.getElementById('overlay').style.display = 'none';
+}
