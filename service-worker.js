@@ -16,7 +16,8 @@ var filesToCache = [
   '/QR-CodeGen.js',
   '/icon-192.png',
   '/icon-512.png',
-  '/manifest.json'
+  '/manifest.json',
+  '/service-worker.js'
 ];
 
 // Install event
