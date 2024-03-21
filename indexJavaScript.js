@@ -54,7 +54,7 @@ if ('serviceWorker' in navigator) {
 		function ClearAll() {
 			document.getElementById('prematch-scout-initials').value = '';
 			document.getElementById('prematch-match-number').value = '';
-			document.getElementById('prematch-robot').value = 'Red 1';
+			document.getElementById('prematch-robot').value = 'Choose_Answer';
 			document.getElementById('prematch-team-number').value = '';
 			document.getElementById('prematch-human-player').checked = false;
 			document.getElementById('prematch-no-show').checked = false;
@@ -63,16 +63,16 @@ if ('serviceWorker' in navigator) {
 			document.getElementById('Tipped-Over').checked = false;
 			document.getElementById('Coopertition').checked = false;
 			document.getElementById('Spotlight').checked = false;
-			document.getElementById('End-Position').value = 'No Climb';
-			document.getElementById('Harmony').value = 'Not Completed';
-			document.getElementById('Offensive Skill').value = 'Not Effective';
-			document.getElementById('Defensive Skill').value = 'Not Effective';
-			document.getElementById('Card').value = 'Yellow Card';
+			document.getElementById('End-Position').value = 'Choose_Answer';
+			document.getElementById('Harmony').value = 'Choose_Answer';
+			document.getElementById('Offensive Skill').value = 'Not_Observed';
+			document.getElementById('Defensive Skill').value = 'Not_Observed';
+			document.getElementById('Card').value = 'No_Card';
 			document.getElementById('Comments').value = '';
 			
 			gameData.initials = '';
 			gameData.matchNum = 0;
-			gameData.robot = 'Red 1';
+			gameData.robot = 'Choose_Answer';
 			gameData.teamNum = 0;
 			gameData.humanAtAmp = false;
 			gameData.noShow = false;
@@ -80,11 +80,11 @@ if ('serviceWorker' in navigator) {
 			gameData.died = false;
 			gameData.tippedOver = false;
 			gameData.coopertition = false;
-			gameData.endPos = 'No Climb';
-			gameData.harmony = 'Not Completed';
-			gameData.offSkill = 'Not Effective';
-			gameData.defSkill = 'Not Effective';
-			gameData.card = 'Yellow Card';
+			gameData.endPos = 'Choose_Answer';
+			gameData.harmony = 'Choose_Answer';
+			gameData.offSkill = 'Not_Observed';
+			gameData.defSkill = 'Not_Observed';
+			gameData.card = 'No_Card';
 			gameData.comments = '';
 			gameData.ampScored = 0;
 			gameData.ampMissed = 0;
