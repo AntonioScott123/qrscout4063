@@ -169,6 +169,20 @@ if ('serviceWorker' in navigator) {
 		// Generate QR code with updated gameData
 		generateQRCode();
 		}
+window.addEventListener('beforeinstallprompt', function(event) {
+	event.preventDefault();
+	// Show the installation prompt immediately
+	event.prompt();
+
+	// Wait for the user to respond to the prompt
+	event.userChoice.then((choiceResult) => {
+		if (choiceResult.outcome === 'accepted') {
+			console.log('User accepted the installation');
+		} else {
+			console.log('User dismissed the installation');
+		}
+	});
+});
 		
 		// Function to generate QR code
 function generateQRCode() {
