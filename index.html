@@ -6,6 +6,18 @@
     <title>4063 Crescendo QRScout</title>
     <script src="QR-CodeGen.js"></script>
 	<script src="indexJavaScript.js"></script>
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(function(registration) {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+              console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+      }
+    </script>
 	<link rel="manifest" href="/manifest.json">
 	<link rel="icon" type="image/png" href="/icon-192.png">
   	<link rel="apple-touch-icon" href="/icon-512.png">
