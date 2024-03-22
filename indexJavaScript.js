@@ -170,34 +170,6 @@ if ('serviceWorker' in navigator) {
 		generateQRCode();
 		}
 let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', function(event) {
-	event.preventDefault();
-	deferredPrompt = event;
-
-	// Show your install button or other UI element
-	document.getElementById('install-button').style.display = 'block';
-});
-
-// Add a click event listener to your install button
-document.getElementById('install-button').addEventListener('click', function() {
-	if (deferredPrompt) {
-		// Show the prompt
-		deferredPrompt.prompt();
-
-		// Wait for the user to respond to the prompt
-		deferredPrompt.userChoice.then((choiceResult) => {
-			if (choiceResult.outcome === 'accepted') {
-				console.log('User accepted the installation');
-			} else {
-				console.log('User dismissed the installation');
-			}
-		});
-
-		// Reset the deferredPrompt variable
-		deferredPrompt = null;
-	}
-});
 		
 		// Function to generate QR code
 function generateQRCode() {
