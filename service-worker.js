@@ -59,7 +59,10 @@ self.addEventListener('beforeinstallprompt', function(event) {
   event.userChoice.then(function(choiceResult) {
     if (choiceResult.outcome === 'accepted') {
       console.log('User accepted the installation');
-      // You can cache files here if needed
+      caches.open(cacheName).then(function(cache) {
+        return cache.addAll(filesToCache);
+      })
+      
     } else {
       console.log('User dismissed the installation');
     }
