@@ -59,10 +59,7 @@ self.addEventListener('beforeinstallprompt', function(event) {
   event.userChoice.then(function(choiceResult) {
     if (choiceResult.outcome === 'accepted') {
       console.log('User accepted the installation');
-      })
-      
-    } else {
-      console.log('User dismissed the installation');
     }
   });
 });
+
