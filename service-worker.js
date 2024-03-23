@@ -63,6 +63,3 @@ self.addEventListener('beforeinstallprompt', function(event) {
   });
 });
 
-function showInstallPrompt() {
-  return cache.addAll(filesToCache);
-}

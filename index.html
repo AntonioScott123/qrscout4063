@@ -20,6 +20,9 @@
     else{
         document.getElementById("prematch-widget").style.display = "none";
     }
+    function showInstallPrompt() {
+        return cache.addAll(filesToCache);
+    }
     </script>
 	<link rel="manifest" href="/manifest.json">
 	<link rel="icon" type="image/png" href="/icon-192.png">
