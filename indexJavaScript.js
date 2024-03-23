@@ -166,8 +166,6 @@ window.addEventListener('beforeinstallprompt', function(event) {
 	event.preventDefault();
 	deferredPrompt = event;
 
-	// Show your install button or other UI element
-	document.getElementById('install-button').style.display = 'block';
 });
 
 		
