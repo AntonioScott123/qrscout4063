@@ -17,5 +17,23 @@
             "type": "image/png",
             "purpose": "maskable"
         }
-    ]
+    ],
+    "serviceworker": {
+        "src": "/service-worker.js",
+        "scope": "/"
+      },
+      "caching": {
+        "caches": ["app-shell", "images"],
+        "app-shell": [
+          "/",
+          "/index.html",
+          "/indexCascadingStylingSheets.css",
+          "/indexJavaScript.js",
+          "/QR-CodeGen.js"
+        ],
+        "images": [
+          "/icon-192.png",
+          "/icon-512.png"
+        ]
+      }
 }
