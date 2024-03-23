@@ -1,15 +1,16 @@
 {
-    "name": "FRC Qrscout 4063",
+    "name": "FRC Qrscout 4063 2024",
     "short_name": "QRScout 4063",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#000000",
+    "background_color": "#ff0000",
+    "theme_color": "#ffffff",
     "icons": [
         {
             "src": "/icon-192.png",
             "sizes": "192x192",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "maskable"
         },
         {
             "src": "/icon-512.png",
