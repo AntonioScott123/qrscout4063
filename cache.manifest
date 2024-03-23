@@ -1,0 +1,19 @@
+CACHE MANIFEST
+# Version 1.0
+
+CACHE:
+/index.html
+/indexCascadingStylingSheets.css
+/indexJavaScript.js
+/assets/Fonts/SF-Sports-Night-NS.ttf
+/assets/Fonts/SF-Sports-Night.ttf
+/assets/Pictures/4063_Logo.png
+/assets/Pictures/Crescendo_Logo.png
+/QR-CodeGen.js
+/icon-192.png
+/icon-512.png
+/manifest.json
+/service-worker.js
+
+NETWORK:
+*
