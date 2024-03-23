@@ -26,6 +26,7 @@ const gameData = {
 			tippedOver: false,
 			card: "",
 			comments: "",
+			speed: ""
 			
 		
 			
@@ -50,6 +51,7 @@ const gameData = {
 			document.getElementById('Defensive Skill').value = 'Not_Observed';
 			document.getElementById('Card').value = 'No_Card';
 			document.getElementById('Comments').value = '';
+			document.getElementById('Speed').value = "Not_Observed";
 			
 			gameData.initials = '';
 			gameData.matchNum = 0;
@@ -131,6 +133,7 @@ const gameData = {
 		gameData.card = document.getElementById('Card').value;
 		gameData.comments = document.getElementById('Comments').value;
 		gameData.spotlight = document.getElementById('Spotlight').checked;
+		gameData.speed = document.getElementById('Speed').value;
 		// Update other fields similarly
 		
 		const initialsInput = document.getElementById('prematch-scout-initials');
@@ -178,7 +181,7 @@ function generateQRCode() {
 	) {
 		// Fields are empty
 	} else {
-		const qrCodeData = `${gameData.initials} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.humanAtAmp} ${gameData.noShow} ${gameData.mobility} ${gameData.ampScored} ${gameData.ampMissed} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.autoFoul} ${gameData.coopertition} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.teleopFoul} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.died} ${gameData.tippedOver} ${gameData.card}`;
+		const qrCodeData = `${gameData.initials} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.humanAtAmp} ${gameData.noShow} ${gameData.mobility} ${gameData.ampScored} ${gameData.ampMissed} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.autoFoul} ${gameData.coopertition} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.teleopFoul} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.speed} ${gameData.died} ${gameData.tippedOver} ${gameData.card}`;
 		const qrCodeDataWithCommas = qrCodeData.split(' ').join('~');
 		const qrCodeDataWithCommasWithComment = qrCodeDataWithCommas + '~' + gameData.comments;
 		const qrCodeContainer = document.getElementById('qr-code-popup');
