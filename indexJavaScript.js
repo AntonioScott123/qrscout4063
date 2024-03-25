@@ -32,6 +32,17 @@ const gameData = {
 			
 			}
 
+let smallify = {};
+
+smallify["Not_Observed"] = "NOB";
+smallify["Choose_Answer"] = "CAN";
+smallify["false"] = "no";
+smallify["true"] = "yes";
+smallify["NOB"] = "NOB";
+smallify["CAN"] = "CAN";
+smallify["yes"] = "yes";
+smallify["no"] = "no";
+
 
 		function ClearAll() {
 			document.getElementById('prematch-scout-initials').value = '';
@@ -118,22 +129,50 @@ const gameData = {
 		// Update all the gameData fields with the form values
 		gameData.initials = document.getElementById('prematch-scout-initials').value;
 		gameData.matchNum = parseInt(document.getElementById('prematch-match-number').value);
-		gameData.robot = document.getElementById('prematch-robot').value;
+		gameData.robot = smallify[document.getElementById('prematch-robot').value];
+		if(gameData.robot === "undefined")
+		{
+			gameData.robot = document.getElementById('prematch-robot').value;
+		}
 		gameData.teamNum = parseInt(document.getElementById('prematch-team-number').value);
-		gameData.humanAtAmp = document.getElementById('prematch-human-player').checked;
-		gameData.noShow = document.getElementById('prematch-no-show').checked;
-		gameData.mobility = document.getElementById('Mobility').checked;
-		gameData.died = document.getElementById('Died').checked;
-		gameData.tippedOver = document.getElementById('Tipped-Over').checked;
-		gameData.coopertition = document.getElementById('Coopertition').checked;
-		gameData.endPos = document.getElementById('End-Position').value;
-		gameData.harmony = document.getElementById('Harmony').value;
-		gameData.offSkill = document.getElementById('Offensive Skill').value;
-		gameData.defSkill = document.getElementById('Defensive Skill').value;
-		gameData.card = document.getElementById('Card').value;
+		gameData.humanAtAmp = smallify[document.getElementById('prematch-human-player').checked];
+		gameData.noShow = smallify[document.getElementById('prematch-no-show').checked];
+		gameData.mobility = smallify[document.getElementById('Mobility').checked];
+		gameData.died = smallify[document.getElementById('Died').checked];
+		gameData.tippedOver = smallify[document.getElementById('Tipped-Over').checked];
+		gameData.coopertition = smallify[document.getElementById('Coopertition').checked];
+		gameData.endPos = smallify[document.getElementById('End-Position').value];
+		if(gameData.endpos === "undefined")
+		{
+			gameData.endPos = document.getElementById('End-Position').value;
+		}
+		gameData.harmony = smallify[document.getElementById('Harmony').value];
+		if(gameData.harmony === "undefined")
+		{
+			gameData.harmony = document.getElementById('Harmony').value;
+		}
+		gameData.offSkill = smallify[document.getElementById('Offensive Skill').value];
+		if(gameData.offSkill === "undefined")
+		{
+			gameData.offSkill = document.getElementById('Offensive Skill').value;
+		}
+		gameData.defSkill = smallify[document.getElementById('Defensive Skill').value];
+		if(gameData.defSkill === "undefined")
+		{
+			gameData.defSkill = document.getElementById('Defensive Skill').value;
+		}
+		gameData.card = smallify[document.getElementById('Card').value];
+		if(gameData.card === "undefined")
+		{
+			gameData.card = document.getElementById('Card').value;
+		}
 		gameData.comments = document.getElementById('Comments').value;
-		gameData.spotlight = document.getElementById('Spotlight').checked;
-		gameData.speed = document.getElementById('Speed').value;
+		gameData.spotlight = smallify[document.getElementById('Spotlight').checked];
+		gameData.speed = smallify[document.getElementById('Speed').value];
+		if(gameData.speed === "undefined")
+		{
+			gameData.speed = document.getElementById('Speed').value;
+		}
 		// Update other fields similarly
 		
 		const initialsInput = document.getElementById('prematch-scout-initials');
