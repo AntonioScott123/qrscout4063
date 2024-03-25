@@ -129,7 +129,7 @@ smallify["no"] = "no";
 		// Update all the gameData fields with the form values
 		gameData.initials = document.getElementById('prematch-scout-initials').value;
 		gameData.matchNum = parseInt(document.getElementById('prematch-match-number').value);
-		if(gameData.robot in smallify)
+		if(document.getElementById('prematch-robot').value in smallify)
 		{
 			gameData.robot = smallify[document.getElementById('prematch-robot').value];
 		}
@@ -144,7 +144,7 @@ smallify["no"] = "no";
 		gameData.died = smallify[document.getElementById('Died').checked];
 		gameData.tippedOver = smallify[document.getElementById('Tipped-Over').checked];
 		gameData.coopertition = smallify[document.getElementById('Coopertition').checked];
-		if(gameData.endPos in smallify)
+		if(document.getElementById('End-Position').value in smallify)
 		{
 			gameData.endPos = smallify[document.getElementById('End-Position').value];
 		}
@@ -152,7 +152,7 @@ smallify["no"] = "no";
 		{
 			gameData.endPos = document.getElementById('End-Position').value;
 		}
-		if(gameData.harmony in smallify)
+		if(gameData.harmony = document.getElementById('Harmony').value in smallify)
 		{
 			gameData.harmony = smallify[document.getElementById('Harmony').value];
 		}
@@ -161,16 +161,16 @@ smallify["no"] = "no";
 			gameData.harmony = document.getElementById('Harmony').value;
 		}
 		
-		if(gameData.offSkill in smallify)
+		if(document.getElementById('Offensive Skill').value in smallify)
 		{
 			gameData.offSkill = smallify[document.getElementById('Offensive Skill').value];
 		}
 		else
 		{
-			gameData.offSkill = document.getElementById('Offensive Skill').value
+			gameData.offSkill = document.getElementById('Offensive Skill').value;
 		}
 
-		if(gameData.defSkill in smallify)
+		if(document.getElementById('Defensive Skill').value in smallify)
 		{
 			gameData.defSkill = smallify[document.getElementById('Defensive Skill').value];
 		}
@@ -179,7 +179,7 @@ smallify["no"] = "no";
 			gameData.defSkill = document.getElementById('Defensive Skill').value
 		}
 
-		if (gameData.card in smallify)
+		if (document.getElementById('Card').value in smallify)
 		{
 			gameData.card = smallify[document.getElementById('Card').value]
 		}
@@ -189,7 +189,7 @@ smallify["no"] = "no";
 		}
 		gameData.comments = document.getElementById('Comments').value;
 		gameData.spotlight = smallify[document.getElementById('Spotlight').checked];
-		if(gameData.speed in smallify)
+		if(document.getElementById('Speed').value in smallify)
 		{
 			gameData.speed = smallify[document.getElementById('Speed').value];
 		}
