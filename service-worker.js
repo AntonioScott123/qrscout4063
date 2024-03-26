@@ -36,10 +36,7 @@ self.addEventListener('install', function(event) {
     })
   );
 });
-
-// Activate event
 self.addEventListener('activate', function(event) {
-  // Clean up old caches if any
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
       return Promise.all(
