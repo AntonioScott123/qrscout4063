@@ -1,6 +1,6 @@
 // Service Worker Logic
 
-var cacheName = 'my-web-app-cache-v1';
+var cacheName = 'my-web-app-cache-v2'; // Increment version to ensure old cache is deleted
 var filesToCache = [
   '/',
   '/index.html',
@@ -19,10 +19,20 @@ var filesToCache = [
 
 // Install event
 self.addEventListener('install', function(event) {
-  // Precache the app shell
+  // Delete old cache and precache the app shell
   event.waitUntil(
-    caches.open(cacheName).then(function(cache) {
-      return cache.addAll(filesToCache);
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.filter(function(name) {
+          return name.startsWith('my-web-app-cache-') && name !== cacheName;
+        }).map(function(name) {
+          return caches.delete(name);
+        })
+      );
+    }).then(function() {
+      return caches.open(cacheName).then(function(cache) {
+        return cache.addAll(filesToCache);
+      });
     })
   );
 });
@@ -34,7 +44,7 @@ self.addEventListener('activate', function(event) {
     caches.keys().then(function(cacheNames) {
       return Promise.all(
         cacheNames.filter(function(name) {
-          return name !== cacheName;
+          return name.startsWith('my-web-app-cache-') && name !== cacheName;
         }).map(function(name) {
           return caches.delete(name);
         })
@@ -45,13 +55,23 @@ self.addEventListener('activate', function(event) {
 
 // Fetch event
 self.addEventListener('fetch', function(event) {
-  // Serve from cache if available, otherwise fetch from network
+  // Try fetching from network first, fallback to cache if network fails
   event.respondWith(
-    caches.match(event.request).then(function(response) {
-      return response || fetch(event.request);
+    fetch(event.request).then(function(response) {
+      // If successful, cache the response and return it
+      return caches.open(cacheName).then(function(cache) {
+        cache.put(event.request, response.clone());
+        return response;
+      });
+    }).catch(function() {
+      // If network fails, serve from cache
+      return caches.match(event.request).then(function(response) {
+        return response || fetch(event.request);
+      });
     })
   );
 });
+
 
 // Listen for beforeinstallprompt event
 self.addEventListener('beforeinstallprompt', function(event) {
@@ -62,4 +82,3 @@ self.addEventListener('beforeinstallprompt', function(event) {
     }
   });
 });
-
