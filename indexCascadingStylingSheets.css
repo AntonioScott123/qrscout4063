@@ -150,6 +150,7 @@
         }
 		input {
 			height: 40px;
+                        width: 95%;
 		}
 		textarea {
 			resize: none;
