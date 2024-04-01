@@ -59,7 +59,6 @@ function checkIfTeamSigma(enteredTeam)
 }
 
 		function ClearAll() {
-			document.getElementById('prematch-scout-initials').value = '';
 			document.getElementById('prematch-match-number').value = '';
 			document.getElementById('prematch-team-number').value = '';
 			document.getElementById('prematch-human-player').checked = false;
@@ -238,7 +237,7 @@ function checkIfTeamSigma(enteredTeam)
 		}
 		// Generate QR code with updated gameData
 		teamNumTrue = checkIfTeamSigma(gameData.teamNum)
-		if(!teamNumTrue)
+		if(!teamNumTrue && gameData.teamNum !== "")
 		{
 			openPopup();
 		}
