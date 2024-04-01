@@ -241,7 +241,6 @@ function checkIfTeamSigma(enteredTeam)
 		if(!teamNumTrue)
 		{
 			openPopup();
-			alert("Seems like you typed the wrong team number sigma!!!");
 		}
 		else
 		{
@@ -278,12 +277,12 @@ function generateQRCode() {
 			height: 300,
 		});
 		
-		document.getElementById('popup').style.display = 'block';
+		document.getElementById('popupQR').style.display = 'block';
 		document.getElementById('overlay').style.display = 'block';
 	}
 }
 		
 function closePopup() {
-	document.getElementById('popup').style.display = 'none';
+	document.getElementById('popupQR').style.display = 'none';
 	document.getElementById('overlay').style.display = 'none';
 }
