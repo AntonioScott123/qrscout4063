@@ -230,7 +230,7 @@ function checkIfTeamSigma(enteredTeam)
 		}
 		// Generate QR code with updated gameData
 		teamNumTrue = checkIfTeamSigma(gameData.teamNum)
-		if(teamNumTrue = false)
+		if(!teamNumTrue)
 		{
 			alert("Seems like you typed the wrong team number sigma!!!");
 		}
