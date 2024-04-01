@@ -43,6 +43,12 @@ smallify["CAN"] = "CAN";
 smallify["yes"] = "yes";
 smallify["no"] = "no";
 
+var teamsCompeting = [4063, 2, 3, 4, 5];
+
+function checkIfTeamSigma(EnteredTeam) 
+{
+	return teamsCompeting.includes(enteredTeam);
+}
 
 		function ClearAll() {
 			document.getElementById('prematch-scout-initials').value = '';
@@ -126,8 +132,8 @@ smallify["no"] = "no";
 		
         function updateQRCodeOnSubmit() {
 		// Update all the gameData fields with the form values
-		gameData.initials = document.getElementById('prematch-scout-initials').value;
-		gameData.matchNum = parseInt(document.getElementById('prematch-match-number').value);
+		gameData.initials = document.getElementById('prematch-scout-initials').value.split(' ').join('');
+		gameData.matchNum = parseInt(document.getElementById('prematch-match-number').value.split(' ').join(''));
 		if(document.getElementById('prematch-robot').value in smallify)
 		{
 			gameData.robot = smallify[document.getElementById('prematch-robot').value];
@@ -136,7 +142,7 @@ smallify["no"] = "no";
 		{
 			gameData.robot = document.getElementById('prematch-robot').value;
 		}
-		gameData.teamNum = parseInt(document.getElementById('prematch-team-number').value);
+		gameData.teamNum = parseInt(document.getElementById('prematch-team-number').value.split(' ').join(''));
 		gameData.humanAtAmp = smallify[document.getElementById('prematch-human-player').checked];
 		gameData.noShow = smallify[document.getElementById('prematch-no-show').checked];
 		gameData.mobility = smallify[document.getElementById('Mobility').checked];
@@ -223,7 +229,15 @@ smallify["no"] = "no";
 			teamNumInput.classList.remove('error');
 		}
 		// Generate QR code with updated gameData
-		generateQRCode();
+		teamNumTrue = checkIfTeamSigma(gameData.teamNum)
+		if(teamNumTrue = false)
+		{
+			alert("Seems like you typed the wrong team number sigma!!!");
+		}
+		else
+		{
+			generateQRCode();
+		}
 		}
 let deferredPrompt;
 
