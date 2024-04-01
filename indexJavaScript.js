@@ -282,7 +282,7 @@ function generateQRCode() {
 	}
 }
 		
-function closePopup() {
+function closePopupQR() {
 	document.getElementById('popupQR').style.display = 'none';
 	document.getElementById('overlay').style.display = 'none';
 }
