@@ -45,7 +45,7 @@ smallify["no"] = "no";
 
 var teamsCompeting = [4063, 2, 3, 4, 5];
 
-function checkIfTeamSigma(EnteredTeam) 
+function checkIfTeamSigma(enteredTeam) 
 {
 	return teamsCompeting.includes(enteredTeam);
 }
