@@ -237,13 +237,13 @@ function checkIfTeamSigma(enteredTeam)
 		}
 		// Generate QR code with updated gameData
 		teamNumTrue = checkIfTeamSigma(gameData.teamNum)
-		if(!teamNumTrue && gameData.teamNum !== "")
+		if(teamNumTrue)
 		{
-			openPopup();
+			generateQRCode();
 		}
 		else
 		{
-			generateQRCode();
+			openPopup();
 		}
 		}
 let deferredPrompt;
