@@ -45,6 +45,14 @@ smallify["no"] = "no";
 
 var teamsCompeting = [4063, 2, 3, 4, 5];
 
+function openPopup() {
+    document.getElementById('popup').style.display = 'block';
+}
+
+function closePopup() {
+    document.getElementById('popup').style.display = 'none';
+}
+
 function checkIfTeamSigma(enteredTeam) 
 {
 	return teamsCompeting.includes(enteredTeam);
@@ -232,6 +240,7 @@ function checkIfTeamSigma(enteredTeam)
 		teamNumTrue = checkIfTeamSigma(gameData.teamNum)
 		if(!teamNumTrue)
 		{
+			openPopup();
 			alert("Seems like you typed the wrong team number sigma!!!");
 		}
 		else
