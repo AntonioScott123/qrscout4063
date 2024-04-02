@@ -26,7 +26,8 @@ const gameData = {
 			tippedOver: false,
 			card: "",
 			comments: "",
-			speed: ""
+			speed: "",
+			centerlineNotes: false
 			
 		
 			
@@ -75,6 +76,7 @@ function checkIfTeamSigma(enteredTeam)
 			document.getElementById('Card').value = 'No_Card';
 			document.getElementById('Comments').value = '';
 			document.getElementById('Speed').value = "Not_Observed";
+			document.getElementById("centerlineNotes").checked = false;
 			
 			gameData.initials = '';
 			gameData.matchNum = 0;
@@ -156,6 +158,7 @@ function checkIfTeamSigma(enteredTeam)
 		gameData.died = smallify[document.getElementById('Died').checked];
 		gameData.tippedOver = smallify[document.getElementById('Tipped-Over').checked];
 		gameData.coopertition = smallify[document.getElementById('Coopertition').checked];
+		gameData.centerlineNotes = smallify[document.getElementById('centerlineNotes').checked];
 		if(document.getElementById('End-Position').value in smallify)
 		{
 			gameData.endPos = smallify[document.getElementById('End-Position').value];
@@ -265,7 +268,7 @@ function generateQRCode() {
 	) {
 		// Fields are empty
 	} else {
-		const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.humanAtAmp} ${gameData.noShow} ${gameData.mobility} ${gameData.ampScored} ${gameData.ampMissed} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.autoFoul} ${gameData.coopertition} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.teleopFoul} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.speed} ${gameData.died} ${gameData.tippedOver} ${gameData.card}`;
+		const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.humanAtAmp} ${gameData.noShow} ${gameData.mobility} ${gameData.centerlineNotes} ${gameData.ampScored} ${gameData.ampMissed} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.autoFoul} ${gameData.coopertition} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.teleopFoul} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.speed} ${gameData.died} ${gameData.tippedOver} ${gameData.card}`;
 		const qrCodeDataWithCommas = qrCodeData.split(' ').join('~');
 		const qrCodeDataWithCommasWithComment = qrCodeDataWithCommas + '~' + gameData.comments;
 		const qrCodeContainer = document.getElementById('qr-code-popup');

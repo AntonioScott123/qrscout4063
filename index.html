@@ -93,6 +93,13 @@
                 </div>
             </div>
             <div class="mini-box">
+                <h3>CENTERLINE NOTES?</h3>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="centerlineNotes">
+                    <label for="centerlineNotes"></label>
+                </div>
+            </div>
+            <div class="mini-box">
                 <h3>AMP SCORED</h3>
                 <button type="button" onclick="updateButtonNum('ampScored', -1)">-</button>
                 <span id="ampScored">0</span>
@@ -205,27 +212,29 @@
 				<h3>OFFENSIVE SKILL</h3>
 				<select id="Offensive Skill">
 					<option value="Not_Observed">Not Observed</option>
-                    <option value="Not_Effective">Not Effective</option>
-                    <option value="Average">Average</option>
-                    <option value="Very_Effective">Very Effective</option>
+                    <option value="0">Not Effective</option>
+                    <option value="1">Average</option>
+                    <option value="2">Effective</option>
+                    <option value="3">Very Effective</option>
                 </select>
 			</div>
 			<div class="mini-box">
 			<h3>DEFENSIVE SKILL</h3>
 				<select id="Defensive Skill">
 					<option value="Not_Observed">Not Observed</option>
-                    <option value="Not_Effective">Not Effective</option>
-                    <option value="Average">Average</option>
-                    <option value="Very_Effective">Very Effective</option>
+                    <option value="0">Not Effective</option>
+                    <option value="1">Average</option>
+                    <option value="2">Effective</option>
+                    <option value="3">Very Effective</option>
                 </select>
 			</div>
             <div class="mini-box">
                 <h3>SPEED</h3>
                     <select id="Speed">
                         <option value="Not_Observed">Not Observed</option>
-                        <option value="Slow">Slow</option>
-                        <option value="Average">Average</option>
-                        <option value="Fast">Fast</option>
+                        <option value="0">Slow</option>
+                        <option value="1">Average</option>
+                        <option value="2">Fast</option>
                     </select>
                 </div>
 			<div class="mini-box">
