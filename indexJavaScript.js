@@ -69,6 +69,7 @@ function checkIfTeamSigma(enteredTeam)
 			document.getElementById('Tipped-Over').checked = false;
 			document.getElementById('Coopertition').checked = false;
 			document.getElementById('Spotlight').checked = false;
+			document.getElementById("centerlineNotes").checked = false;
 			document.getElementById('End-Position').value = 'Choose_Answer';
 			document.getElementById('Harmony').value = 'Choose_Answer';
 			document.getElementById('Offensive Skill').value = 'Not_Observed';
@@ -76,7 +77,6 @@ function checkIfTeamSigma(enteredTeam)
 			document.getElementById('Card').value = 'No_Card';
 			document.getElementById('Comments').value = '';
 			document.getElementById('Speed').value = "Not_Observed";
-			document.getElementById("centerlineNotes").checked = false;
 			
 			gameData.initials = '';
 			gameData.matchNum = 0;
@@ -88,6 +88,7 @@ function checkIfTeamSigma(enteredTeam)
 			gameData.died = false;
 			gameData.tippedOver = false;
 			gameData.coopertition = false;
+			gameData.centerlineNotes = false;
 			gameData.endPos = 'Choose_Answer';
 			gameData.harmony = 'Choose_Answer';
 			gameData.offSkill = 'Not_Observed';
@@ -127,7 +128,7 @@ function checkIfTeamSigma(enteredTeam)
         function updateButtonNum(variable, value) {
     gameData[variable] += value;
     if (variable === 'teleopFoul' || variable === 'dfouls') {
-        gameData[variable] = Math.max(gameData[variable], -69);
+        gameData[variable] = Math.max(gameData[variable], -21);
     } else {
         gameData[variable] = Math.max(gameData[variable], 0);
     }
