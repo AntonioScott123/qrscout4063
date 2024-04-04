@@ -44,7 +44,7 @@ smallify["CAN"] = "CAN";
 smallify["yes"] = "yes";
 smallify["no"] = "no";
 
-var teamsCompeting = [4063, 2, 3, 4, 5];
+var teamsCompeting = [148, 324, 624, 1296, 2687, 2689, 2714, 2848, 2882, 3310, 3679, 3847, 4063, 4153, 4192, 4206, 5212, 5414, 5427, 5431, 5572, 6369, 6488, 6645, 6768, 6800, 7115, 7121, 7691, 8088, 8177, 8528, 8749, 8858, 8874, 9054, 9080, 9088, 9121, 9181, 9418, 9512, 9786];
 
 function openPopup() {
     document.getElementById('popup').style.display = 'block';
