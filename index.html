@@ -64,52 +64,17 @@
                 <h3>TEAM NUMBER</h3>
                 <input type="number" id="prematch-team-number" placeholder="Required">
             </div>
-
-            <div class="mini-box">
-                <h3>HUMAN PLAYER AT AMP</h3>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="prematch-human-player">
-                    <label for="prematch-human-player"></label>
-                </div>
-            </div>
-
-            <div class="mini-box">
-                <h3>NO SHOW</h3>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="prematch-no-show">
-                    <label for="prematch-no-show"></label>
-                </div>
-            </div>
         </div>
 
         <!-- Auto Widget -->
         <div class="widget" id="Auto-Widget">
             <h2>Auto</h2>
             <div class="mini-box">
-                <h3>MOBILITY?</h3>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="Mobility">
-                    <label for="Mobility"></label>
-                </div>
-            </div>
-            <div class="mini-box">
                 <h3>CENTERLINE NOTES?</h3>
                 <div class="checkbox-container">
                     <input type="checkbox" class="custom-checkbox" id="centerlineNotes">
                     <label for="centerlineNotes"></label>
                 </div>
-            </div>
-            <div class="mini-box">
-                <h3>AMP SCORED</h3>
-                <button type="button" onclick="updateButtonNum('ampScored', -1)">-</button>
-                <span id="ampScored">0</span>
-                <button type="button" onclick="updateButtonNum('ampScored', 1)">+</button>
-            </div>
-            <div class="mini-box">
-                <h3>AMP MISSED</h3> <!-- Fixed closing tag -->
-                <button type="button" onclick="updateButtonNum('ampMissed', -1)">-</button>
-                <span id="ampMissed">0</span>
-                <button type="button" onclick="updateButtonNum('ampMissed', 1)">+</button>
             </div>
 			<div class="mini-box">
 				<h3>SPEAKER SCORED</h3>
@@ -123,22 +88,9 @@
 				<span id="speakerMissed">0</span>
 				<button type="button" onclick="updateButtonNum('speakerMissed', 1)">+</button>
 			</div>
-			<div class="mini-box">
-				<h3>AUTO FOUL</h3>
-				<button type="button" onclick="updateButtonNum('autoFoul', -1)">-</button>
-				<span id="autoFoul">0</span>
-				<button type="button" onclick="updateButtonNum('autoFoul', 1)">+</button>
-			</div>
         </div>
 		<div class="widget" id="TeleOp-Widget">
             <h2>teleop</h2>
-            <div class="mini-box">
-                <h3>COOPERTITION</h3>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="Coopertition">
-                    <label for="Coopertition"></label>
-                </div>
-            </div>
             <div class="mini-box">
                 <h3>AMP SCORED</h3>
                 <button type="button" onclick="updateButtonNum('tampScored', -1)">-</button>
@@ -146,7 +98,7 @@
                 <button type="button" onclick="updateButtonNum('tampScored', 1)">+</button>
             </div>
             <div class="mini-box">
-                <h3>AMP MISSED</h3> <!-- Fixed closing tag -->
+                <h3>AMP MISSED</h3>
                 <button type="button" onclick="updateButtonNum('tampMissed', -1)">-</button>
                 <span id="tampMissed">0</span>
                 <button type="button" onclick="updateButtonNum('tampMissed', 1)">+</button>

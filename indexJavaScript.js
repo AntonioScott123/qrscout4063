@@ -3,21 +3,13 @@ const gameData = {
 			matchNum: 0,
 			robot: "",
 			teamNum: 0,
-			humanAtAmp: false,
-			noShow: false,
-			mobility: false,
-			ampScored: 0,
-			ampMissed: 0,
 			speakerScored: 0,
 			speakerMissed: 0,
-			autoFoul: 0,
-			coopertition: false,
 			tampScored: 0,
 			tampMissed: 0,
 			tspeakerScored: 0,
 			tspeakerMissed: 0,
 			noteTrap: 0,
-			teleopFoul: 0,
 			endPos: "",
 			harmony: "",
 			offSkill: "",
@@ -62,12 +54,8 @@ function checkIfTeamSigma(enteredTeam)
 		function ClearAll() {
 			document.getElementById('prematch-match-number').value = '';
 			document.getElementById('prematch-team-number').value = '';
-			document.getElementById('prematch-human-player').checked = false;
-			document.getElementById('prematch-no-show').checked = false;
-			document.getElementById('Mobility').checked = false;
 			document.getElementById('Died').checked = false;
 			document.getElementById('Tipped-Over').checked = false;
-			document.getElementById('Coopertition').checked = false;
 			document.getElementById('Spotlight').checked = false;
 			document.getElementById("centerlineNotes").checked = false;
 			document.getElementById('End-Position').value = 'Choose_Answer';
@@ -82,12 +70,8 @@ function checkIfTeamSigma(enteredTeam)
 			gameData.matchNum = 0;
 			gameData.robot = 'Choose_Answer';
 			gameData.teamNum = 0;
-			gameData.humanAtAmp = false;
-			gameData.noShow = false;
-			gameData.mobility = false;
 			gameData.died = false;
 			gameData.tippedOver = false;
-			gameData.coopertition = false;
 			gameData.centerlineNotes = false;
 			gameData.endPos = 'Choose_Answer';
 			gameData.harmony = 'Choose_Answer';
@@ -95,29 +79,21 @@ function checkIfTeamSigma(enteredTeam)
 			gameData.defSkill = 'Not_Observed';
 			gameData.card = 'No_Card';
 			gameData.comments = '';
-			gameData.ampScored = 0;
-			gameData.ampMissed = 0;
 			gameData.speakerScored = 0;
 			gameData.speakerMissed = 0;
-			gameData.autoFoul = 0;
 			gameData.tampScored = 0;
 			gameData.tampMissed = 0;
 			gameData.tspeakerScored = 0;
 			gameData.tspeakerMissed = 0;
 			gameData.noteTrap = 0;
-			gameData.teleopFoul = 0;
 
-			document.getElementById('ampScored').textContent = gameData.ampScored;
-			document.getElementById('ampMissed').textContent = gameData.ampMissed;
 			document.getElementById('speakerScored').textContent = gameData.speakerScored;
 			document.getElementById('speakerMissed').textContent = gameData.speakerMissed;
-			document.getElementById('autoFoul').textContent = gameData.autoFoul;
 			document.getElementById('tampScored').textContent = gameData.tampScored;
 			document.getElementById('tampMissed').textContent = gameData.tampMissed;
 			document.getElementById('tspeakerScored').textContent = gameData.tspeakerScored;
 			document.getElementById('tspeakerMissed').textContent = gameData.tspeakerMissed;
 			document.getElementById('noteTrap').textContent = gameData.noteTrap;
-			document.getElementById('teleopFoul').textContent = gameData.teleopFoul;
 			teamNumInput.classList.remove('error');
 			matchNumInput.classList.remove('error');
 			initialsInput.classList.remove('error');
@@ -127,11 +103,7 @@ function checkIfTeamSigma(enteredTeam)
 
         function updateButtonNum(variable, value) {
     gameData[variable] += value;
-    if (variable === 'teleopFoul' || variable === 'dfouls') {
-        gameData[variable] = Math.max(gameData[variable], -21);
-    } else {
-        gameData[variable] = Math.max(gameData[variable], 0);
-    }
+	gameData[variable] = Math.max(gameData[variable], 0);
     // Update HTML element value
     document.getElementById(variable).textContent = gameData[variable];
 
@@ -153,12 +125,8 @@ function checkIfTeamSigma(enteredTeam)
 			gameData.robot = document.getElementById('prematch-robot').value;
 		}
 		gameData.teamNum = parseInt(document.getElementById('prematch-team-number').value.split(' ').join(''));
-		gameData.humanAtAmp = smallify[document.getElementById('prematch-human-player').checked];
-		gameData.noShow = smallify[document.getElementById('prematch-no-show').checked];
-		gameData.mobility = smallify[document.getElementById('Mobility').checked];
 		gameData.died = smallify[document.getElementById('Died').checked];
 		gameData.tippedOver = smallify[document.getElementById('Tipped-Over').checked];
-		gameData.coopertition = smallify[document.getElementById('Coopertition').checked];
 		gameData.centerlineNotes = smallify[document.getElementById('centerlineNotes').checked];
 		if(document.getElementById('End-Position').value in smallify)
 		{
@@ -269,7 +237,7 @@ function generateQRCode() {
 	) {
 		// Fields are empty
 	} else {
-		const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.humanAtAmp} ${gameData.noShow} ${gameData.mobility} ${gameData.centerlineNotes} ${gameData.ampScored} ${gameData.ampMissed} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.autoFoul} ${gameData.coopertition} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.teleopFoul} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.speed} ${gameData.died} ${gameData.tippedOver} ${gameData.card}`;
+		const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.centerlineNotes} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.speed} ${gameData.died} ${gameData.tippedOver} ${gameData.card}`;
 		const qrCodeDataWithCommas = qrCodeData.split(' ').join('~');
 		const qrCodeDataWithCommasWithComment = qrCodeDataWithCommas + '~' + gameData.comments;
 		const qrCodeContainer = document.getElementById('qr-code-popup');
