@@ -56,9 +56,6 @@ function checkIfTeamSigma(enteredTeam)
 }
 
 		function ClearAll() {
-			const initialsInput = document.getElementById('prematch-scout-initials');
-			const matchNumInput = document.getElementById('prematch-match-number');
-			const teamNumInput = document.getElementById('prematch-team-number');
 			document.getElementById('prematch-match-number').value = '';
 			document.getElementById('prematch-team-number').value = '';
 			document.getElementById('Died').checked = false;
@@ -93,9 +90,6 @@ function checkIfTeamSigma(enteredTeam)
 			gameData.tspeakerScored = 0;
 			gameData.tspeakerMissed = 0;
 			gameData.noteTrap = 0;
-			initialsInput.value = '';
-     	  	matchNumInput.value = '';
-        	teamNumInput.value = '';
 
 			document.getElementById('speakerScored').textContent = gameData.speakerScored;
 			document.getElementById('speakerMissed').textContent = gameData.speakerMissed;
