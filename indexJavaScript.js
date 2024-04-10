@@ -36,6 +36,11 @@ smallify["CAN"] = "CAN";
 smallify["yes"] = "yes";
 smallify["no"] = "no";
 
+function scrollToTop() {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome
+  }
+
 var teamsCompeting = [0];
 function openPopup() {
     document.getElementById('popup').style.display = 'block';
