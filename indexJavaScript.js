@@ -36,8 +36,7 @@ smallify["CAN"] = "CAN";
 smallify["yes"] = "yes";
 smallify["no"] = "no";
 
-var teamsCompeting = [148, 324, 624, 1296, 2687, 2689, 2714, 2848, 2882, 3310, 3679, 3847, 4063, 4153, 4192, 4206, 5212, 5414, 5427, 5431, 5572, 6369, 6488, 6645, 6768, 6800, 7115, 7121, 7691, 8088, 8177, 8528, 8749, 8858, 8874, 9054, 9080, 9088, 9121, 9181, 9418, 9512, 9786];
-
+var teamsCompeting = [0];
 function openPopup() {
     document.getElementById('popup').style.display = 'block';
 }
@@ -226,16 +225,13 @@ window.addEventListener('beforeinstallprompt', function(event) {
 
 });
 
-		
-		// Function to generate QR code
-function generateQRCode() {
+		function generateQRCode() {
 	if (
 		document.getElementById('prematch-scout-initials').value === "" ||
 		document.getElementById('prematch-match-number').value === "" ||
 		document.getElementById('prematch-team-number').value === "" ||
 		document.getElementById('prematch-robot').value === "Choose_Answer"
 	) {
-		// Fields are empty
 	} else {
 		const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.centerlineNotes} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.speed} ${gameData.died} ${gameData.tippedOver} ${gameData.card}`;
 		const qrCodeDataWithCommas = qrCodeData.split(' ').join('~');
