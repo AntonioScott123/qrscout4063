@@ -64,10 +64,11 @@ function ClearAll() {
     document.getElementById("centerlineNotes").checked = false;
     document.getElementById('End-Position').value = 'Choose_Answer';
 	document.getElementById("Offensive Skill").value = 0;
+	document.getElementById("Defensive Skill").value = 0;
     document.getElementById('Harmony').value = 'Choose_Answer';
     document.getElementById('Card').value = 'No_Card';
     document.getElementById('Comments').value = '';
-    document.getElementById('Speed').value = "Not_Observed";
+    document.getElementById('Speed').value = 0;
 
     gameData.initials = '';
     gameData.matchNum = 0;
