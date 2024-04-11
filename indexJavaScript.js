@@ -63,6 +63,7 @@ function ClearAll() {
     document.getElementById('Spotlight').checked = false;
     document.getElementById("centerlineNotes").checked = false;
     document.getElementById('End-Position').value = 'Choose_Answer';
+	document.getElementById("Offensive Skill").value = 0;
     document.getElementById('Harmony').value = 'Choose_Answer';
     document.getElementById('Card').value = 'No_Card';
     document.getElementById('Comments').value = '';
