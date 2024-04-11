@@ -55,20 +55,16 @@ function checkIfTeamSigma(enteredTeam)
 	return teamsCompeting.includes(enteredTeam);
 }
 
-let teamNumInput = document.getElementById('prematch-team-number');
-let matchNumInput = document.getElementById('prematch-match-number');
-let initialsInput = document.getElementById('initials');
-
 function ClearAll() {
-    teamNumInput.value = '';
-    matchNumInput.value = '';
+    document.getElementById('prematch-match-number').value = '';
+    document.getElementById('prematch-team-number').value = '';
     document.getElementById('Died').checked = false;
     document.getElementById('Tipped-Over').checked = false;
     document.getElementById('Spotlight').checked = false;
     document.getElementById("centerlineNotes").checked = false;
     document.getElementById('End-Position').value = 'Choose_Answer';
-    document.getElementById("Offensive Skill").value = 0;
-    document.getElementById("Defensive Skill").value = 0;
+	document.getElementById("Offensive Skill").value = 0;
+	document.getElementById("Defensive Skill").value = 0;
     document.getElementById('Harmony').value = 'Choose_Answer';
     document.getElementById('Card').value = 'No_Card';
     document.getElementById('Comments').value = '';
@@ -102,11 +98,6 @@ function ClearAll() {
     document.getElementById('tspeakerScored').textContent = gameData.tspeakerScored;
     document.getElementById('tspeakerMissed').textContent = gameData.tspeakerMissed;
     document.getElementById('noteTrap').textContent = gameData.noteTrap;
-    teamNumInput.classList.remove('error');
-    matchNumInput.classList.remove('error');
-    initialsInput.classList.remove('error');
-}
-
 }
 
 
@@ -191,29 +182,7 @@ function ClearAll() {
 		{
 			gameData.speed = document.getElementById('Speed').value;
 		}
-		// Update other fields similarly
-		
-		
-		if (initialsInput.value === '') {
-			initialsInput.classList.add('error');
-		} 
-		else {
-			initialsInput.classList.remove('error');
-		}
-
-		if (matchNumInput.value === '') {
-			matchNumInput.classList.add('error');
-		} 
-		else {
-			matchNumInput.classList.remove('error');
-		}
-
-		if (teamNumInput.value === '') {
-			teamNumInput.classList.add('error');
-		} 
-		else {
-			teamNumInput.classList.remove('error');
-		}
+		// Update other fields similarl
 		// Generate QR code with updated gameData
 		teamNumTrue = checkIfTeamSigma(gameData.teamNum)
 		if(teamNumTrue)
