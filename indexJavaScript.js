@@ -64,8 +64,6 @@ function ClearAll() {
     document.getElementById("centerlineNotes").checked = false;
     document.getElementById('End-Position').value = 'Choose_Answer';
     document.getElementById('Harmony').value = 'Choose_Answer';
-    document.getElementById('Offensive Skill').value = 'Not_Observed'; // explicitly set to 'Not_Observed'
-    document.getElementById('Defensive Skill').value = 'Not_Observed'; // explicitly set to 'Not_Observed'
     document.getElementById('Card').value = 'No_Card';
     document.getElementById('Comments').value = '';
     document.getElementById('Speed').value = "Not_Observed";
