@@ -55,19 +55,20 @@ function checkIfTeamSigma(enteredTeam)
 	return teamsCompeting.includes(enteredTeam);
 }
 
+let teamNumInput = document.getElementById('prematch-team-number');
+let matchNumInput = document.getElementById('prematch-match-number');
+let initialsInput = document.getElementById('initials');
+
 function ClearAll() {
-	var teamNumInput = document.getElementById('prematch-team-number');
-    var matchNumInput = document.getElementById('prematch-match-number');
-    var initialsInput = document.getElementById('initials');
-    document.getElementById('prematch-match-number').value = '';
-    document.getElementById('prematch-team-number').value = '';
+    teamNumInput.value = '';
+    matchNumInput.value = '';
     document.getElementById('Died').checked = false;
     document.getElementById('Tipped-Over').checked = false;
     document.getElementById('Spotlight').checked = false;
     document.getElementById("centerlineNotes").checked = false;
     document.getElementById('End-Position').value = 'Choose_Answer';
-	document.getElementById("Offensive Skill").value = 0;
-	document.getElementById("Defensive Skill").value = 0;
+    document.getElementById("Offensive Skill").value = 0;
+    document.getElementById("Defensive Skill").value = 0;
     document.getElementById('Harmony').value = 'Choose_Answer';
     document.getElementById('Card').value = 'No_Card';
     document.getElementById('Comments').value = '';
@@ -104,6 +105,8 @@ function ClearAll() {
     teamNumInput.classList.remove('error');
     matchNumInput.classList.remove('error');
     initialsInput.classList.remove('error');
+}
+
 }
 
 
