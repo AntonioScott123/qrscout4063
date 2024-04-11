@@ -25,6 +25,11 @@ const gameData = {
 			
 			}
 
+
+var teamNumInput = document.getElementById('prematch-team-number');
+var matchNumInput = document.getElementById('prematch-match-number');
+var initialsInput = document.getElementById('initials');
+
 let smallify = {};
 
 smallify["Not_Observed"] = "NOB";
@@ -187,9 +192,6 @@ function ClearAll() {
 		}
 		// Update other fields similarly
 		
-		const initialsInput = document.getElementById('prematch-scout-initials');
-		const matchNumInput = document.getElementById('prematch-match-number');
-		const teamNumInput = document.getElementById('prematch-team-number');
 		
 		if (initialsInput.value === '') {
 			initialsInput.classList.add('error');
