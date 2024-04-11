@@ -55,54 +55,54 @@ function checkIfTeamSigma(enteredTeam)
 	return teamsCompeting.includes(enteredTeam);
 }
 
-		function ClearAll() {
-			document.getElementById('prematch-match-number').value = '';
-			document.getElementById('prematch-team-number').value = '';
-			document.getElementById('Died').checked = false;
-			document.getElementById('Tipped-Over').checked = false;
-			document.getElementById('Spotlight').checked = false;
-			document.getElementById("centerlineNotes").checked = false;
-			document.getElementById('End-Position').value = 'Choose_Answer';
-			document.getElementById('Harmony').value = 'Choose_Answer';
-			document.getElementById('Offensive Skill').value = 'Not_Observed';
-			document.getElementById('Defensive Skill').value = 'Not_Observed';
-			document.getElementById('Card').value = 'No_Card';
-			document.getElementById('Comments').value = '';
-			document.getElementById('Speed').value = "Not_Observed";
-			
-			gameData.initials = '';
-			gameData.matchNum = 0;
-			gameData.robot = 'Choose_Answer';
-			gameData.teamNum = 0;
-			gameData.died = false;
-			gameData.tippedOver = false;
-			gameData.centerlineNotes = false;
-			gameData.endPos = 'Choose_Answer';
-			gameData.harmony = 'Choose_Answer';
-			gameData.offSkill = 'Not_Observed';
-			gameData.defSkill = 'Not_Observed';
-			gameData.card = 'No_Card';
-			gameData.comments = '';
-			gameData.speakerScored = 0;
-			gameData.speakerMissed = 0;
-			gameData.tampScored = 0;
-			gameData.tampMissed = 0;
-			gameData.tspeakerScored = 0;
-			gameData.tspeakerMissed = 0;
-			gameData.noteTrap = 0;
+function ClearAll() {
+    document.getElementById('prematch-match-number').value = '';
+    document.getElementById('prematch-team-number').value = '';
+    document.getElementById('Died').checked = false;
+    document.getElementById('Tipped-Over').checked = false;
+    document.getElementById('Spotlight').checked = false;
+    document.getElementById("centerlineNotes").checked = false;
+    document.getElementById('End-Position').value = 'Choose_Answer';
+    document.getElementById('Harmony').value = 'Choose_Answer';
+    document.getElementById('Offensive Skill').value = 'Not_Observed'; // explicitly set to 'Not_Observed'
+    document.getElementById('Defensive Skill').value = 'Not_Observed'; // explicitly set to 'Not_Observed'
+    document.getElementById('Card').value = 'No_Card';
+    document.getElementById('Comments').value = '';
+    document.getElementById('Speed').value = "Not_Observed";
 
-			document.getElementById('speakerScored').textContent = gameData.speakerScored;
-			document.getElementById('speakerMissed').textContent = gameData.speakerMissed;
-			document.getElementById('tampScored').textContent = gameData.tampScored;
-			document.getElementById('tampMissed').textContent = gameData.tampMissed;
-			document.getElementById('tspeakerScored').textContent = gameData.tspeakerScored;
-			document.getElementById('tspeakerMissed').textContent = gameData.tspeakerMissed;
-			document.getElementById('noteTrap').textContent = gameData.noteTrap;
-			teamNumInput.classList.remove('error');
-			matchNumInput.classList.remove('error');
-			initialsInput.classList.remove('error');
+    gameData.initials = '';
+    gameData.matchNum = 0;
+    gameData.robot = 'Choose_Answer';
+    gameData.teamNum = 0;
+    gameData.died = false;
+    gameData.tippedOver = false;
+    gameData.centerlineNotes = false;
+    gameData.endPos = 'Choose_Answer';
+    gameData.harmony = 'Choose_Answer';
+    gameData.offSkill = 0;
+    gameData.defSkill = 0;
+    gameData.card = 'No_Card';
+    gameData.comments = '';
+    gameData.speakerScored = 0;
+    gameData.speakerMissed = 0;
+    gameData.tampScored = 0;
+    gameData.tampMissed = 0;
+    gameData.tspeakerScored = 0;
+    gameData.tspeakerMissed = 0;
+    gameData.noteTrap = 0;
 
-		}
+    document.getElementById('speakerScored').textContent = gameData.speakerScored;
+    document.getElementById('speakerMissed').textContent = gameData.speakerMissed;
+    document.getElementById('tampScored').textContent = gameData.tampScored;
+    document.getElementById('tampMissed').textContent = gameData.tampMissed;
+    document.getElementById('tspeakerScored').textContent = gameData.tspeakerScored;
+    document.getElementById('tspeakerMissed').textContent = gameData.tspeakerMissed;
+    document.getElementById('noteTrap').textContent = gameData.noteTrap;
+    teamNumInput.classList.remove('error');
+    matchNumInput.classList.remove('error');
+    initialsInput.classList.remove('error');
+}
+
 
 
         function updateButtonNum(variable, value) {
