@@ -192,4 +192,12 @@ function generateQRCode() {
         const qrCodeDataWithCommas = qrCodeData.split(' ').join('~');
         const qrCodeDataWithCommasWithComment = qrCodeDataWithCommas + '~' + gameData.comments;
         const qrCodeContainer = document.getElementById('qr-code-popup');
-        qrCodeContainer.innerHTML
+        qrCodeContainer.innerHTML = '';
+        const qrCode = new QRCode(qrCodeContainer, {
+            text: qrCodeDataWithCommasWithComment,
+            width: 128,
+            height: 128
+        });
+        openPopup();
+    }
+}
