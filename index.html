@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4063 Crescendo QRScout</title>
     <script src="QR-CodeGen.js"></script>
-	<script src="indexJavaScript.js"></script>
+    <script src="indexJavaScript.js"></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
@@ -24,10 +24,10 @@
         return cache.addAll(filesToCache);
     }
     </script>
-	<link rel="manifest" href="/manifest.json">
-	<link rel="icon" type="image/png" href="/icon-192.png">
-  	<link rel="apple-touch-icon" href="/icon-512.png">
-	<link rel="stylesheet" href="indexCascadingStylingSheets.css">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" href="/icon-192.png">
+    <link rel="apple-touch-icon" href="/icon-512.png">
+    <link rel="stylesheet" href="indexCascadingStylingSheets.css">
 </head>
 <body>
 
@@ -50,7 +50,7 @@
             <div class="mini-box">
                 <h3>ROBOT</h3>
                 <select id="prematch-robot">
-                	<option value="Choose_Answer">Choose Answer</option>
+                    <option value="Choose_Answer">Choose Answer</option>
                     <option value="Red_1">Red 1</option>
                     <option value="Red_2">Red 2</option>
                     <option value="Red_3">Red 3</option>
@@ -66,178 +66,33 @@
             </div>
         </div>
 
-        <!-- Auto Widget -->
-        <div class="widget" id="Auto-Widget">
-            <h2>Auto</h2>
-            <div class="mini-box">
-                <h3>CENTERLINE NOTES?</h3>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="centerlineNotes">
-                    <label for="centerlineNotes"></label>
-                </div>
-            </div>
-			<div class="mini-box">
-				<h3>SPEAKER SCORED</h3>
-				<button type="button" onclick="updateButtonNum('speakerScored', -1)">-</button>
-				<span id="speakerScored">0</span>
-				<button type="button" onclick="updateButtonNum('speakerScored', 1)">+</button>
-			</div>
-			<div class="mini-box">
-				<h3>SPEAKER MISSED</h3>
-				<button type="button" onclick="updateButtonNum('speakerMissed', -1)">-</button>
-				<span id="speakerMissed">0</span>
-				<button type="button" onclick="updateButtonNum('speakerMissed', 1)">+</button>
-			</div>
-        </div>
-		<div class="widget" id="TeleOp-Widget">
-            <h2>teleop</h2>
-            <div class="mini-box">
-                <h3>AMP SCORED</h3>
-                <button type="button" onclick="updateButtonNum('tampScored', -1)">-</button>
-                <span id="tampScored">0</span>
-                <button type="button" onclick="updateButtonNum('tampScored', 1)">+</button>
-            </div>
-            <div class="mini-box">
-                <h3>AMP MISSED</h3>
-                <button type="button" onclick="updateButtonNum('tampMissed', -1)">-</button>
-                <span id="tampMissed">0</span>
-                <button type="button" onclick="updateButtonNum('tampMissed', 1)">+</button>
-            </div>
-			<div class="mini-box">
-				<h3>SPEAKER SCORED</h3>
-				<button type="button" onclick="updateButtonNum('tspeakerScored', -1)">-</button>
-				<span id="tspeakerScored">0</span>
-				<button type="button" onclick="updateButtonNum('tspeakerScored', 1)">+</button>
-			</div>
-			<div class="mini-box">
-				<h3>SPEAKER MISSED</h3>
-				<button type="button" onclick="updateButtonNum('tspeakerMissed', -1)">-</button>
-				<span id="tspeakerMissed">0</span>
-				<button type="button" onclick="updateButtonNum('tspeakerMissed', 1)">+</button>
-			</div>
-			<div class="mini-box">
-				<h3>NOTE IN TRAP?</h3>
-				<button type="button" onclick="updateButtonNum('noteTrap', -1)">-</button>
-				<span id="noteTrap">0</span>
-				<button type="button" onclick="updateButtonNum('noteTrap', 1)">+</button>
-			</div>
-        </div>
-		<div class="widget" id="Endgame-Widget">
-			<h2>Endgame</h2>
-			<div class="mini-box">
-			<h3>SPOTLIGHT</h3>
-			<div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="Spotlight">
-                    <label for="Spotlight"></label>
-			</div>
-            </div>
-			<div class="mini-box">
-				<h3>END POSITION</h3>
-                <select id="End-Position">
-                	<option value="Choose_Answer">Choose Answer</option>
-                    <option value="No_Climb">No Climb</option>
-                    <option value="Failed_Climb">Failed Climb</option>
-                    <option value="Parked">Parked</option>
-                    <option value="Onstage">Onstage</option>
-                </select>
-			</div>
-			<div class="mini-box">
-				<h3>HARMONY</h3>
-				<select id="Harmony">
-					<option value="Choose_Answer">Choose Answer</option>
-                    <option value="Not_Completed">Not Completed</option>
-                    <option value="First_On_Chain">First On Chain</option>
-                    <option value="Second_On_Chain">Second On Chain</option>
-                    <option value="Third_On_Chain">Third On Chain</option>
-                </select>
-			</div>
-		</div>
-		<div class="widget" id="PostMatch">
-			<h2>Postmatch</h2>
-			<div class="mini-box">
-				<h3>OFFENSIVE SKILL</h3>
-				<select id="Offensive Skill">
-					<option value="0">Not Observed</option>
-                    <option value="1">Not Effective</option>
-                    <option value="2">Average</option>
-                    <option value="3">Effective</option>
-                    <option value="4">Very Effective</option>
-                </select>
-			</div>
-			<div class="mini-box">
-			<h3>DEFENSIVE SKILL</h3>
-				<select id="Defensive Skill">
-					<option value="0">Not Observed</option>
-                    <option value="1">Not Effective</option>
-                    <option value="2">Average</option>
-                    <option value="3">Effective</option>
-                    <option value="4">Very Effective</option>
-                </select>
-			</div>
-            <div class="mini-box">
-                <h3>SPEED</h3>
-                    <select id="Speed">
-                        <option value="0">Not Observed</option>
-                        <option value="1">Slow</option>
-                        <option value="2">Average</option>
-                        <option value="3">Fast</option>
-                    </select>
-                </div>
-			<div class="mini-box">
-			<h3>DIED</h3>
-			<div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="Died">
-                    <label for="Died"></label>
-			</div>
-            </div>
-			<div class="mini-box">
-			<h3>TIPPED OVER</h3>
-			<div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="Tipped-Over">
-                    <label for="Tipped-Over"></label>
-            </div>
-		</div>
-		<div class="mini-box">
-			<h3>CARD</h3>
-				<select id="Card">
-                    <option value="No_Card">No Card</option>
-                    <option value="Red_Card">Red Card</option>
-                    <option value="Yellow_Card">Yellow Card</option>
-                    </select>
-			</div>
-            <div class="mini-box">
-                <h3>COMMENTS</h3>
-                <textarea id="Comments" rows="10" cols="30"></textarea>
-            </div>
-		</div>
+        <!-- Your other widgets here -->
+
     </div>
+
     <div id="qr-code">
         <!-- Placeholder for the QR code image -->
     </div>
 
-    <!-- Submit Info Button -->
-	<div class="right-align" style="display: inline-block; float: right; margin-left: 10px;">
-		<button id="submit-button" style="margin-bottom: 150px;" onclick="updateQRCodeOnSubmit(); scrollToTop()">Submit Info</button>
-	</div>
-	<div class="left-align" style="display: inline-block; float: left;">
-		<button id="submit-button" style="margin-bottom: 150px;" onclick="ClearAll(); scrollToTop()">Clear All</button>
-	</div>
-	
-	<div style="width: 100%; overflow: hidden;">
-		<div style="display: inline-block; float: left;">
-		<a href="https://www.Team4063.com" target="_blank">
-			<img src="assets/Pictures/4063_Logo.png" style="height: 100px; width: 150px; margin-left: 0;" alt="4063 Logo">
-		</a>
-		</div>
-		<a href="https://www.firstinspires.org/robotics/frc/game-and-season" target="_blank">
-		<div style="display: inline-block; float: right; margin-left: 10px;">
-			<img src="assets/Pictures/Crescendo_Logo.png" style="height: 100px; width: 150px;" alt="Crescendo Logo">
-		</div>
-		</a>
-	</div>
-	<footer id="myFooter">
-    <p>Made By Michael Cariaga And Antonio Scott</p>
-	</footer>
+    <!-- Submit Info Button & Clear All Button -->
+    <div class="button-container">
+        <button id="submit-button" onclick="updateQRCodeOnSubmit(); scrollToTop()">Submit Info</button>
+        <button id="clear-button" onclick="ClearAll(); scrollToTop()">Clear All</button>
+    </div>
+
+    <div class="logo-container">
+        <a href="https://www.Team4063.com" target="_blank">
+            <img src="assets/Pictures/4063_Logo.png" alt="4063 Logo">
+        </a>
+        <a href="https://www.firstinspires.org/robotics/frc/game-and-season" target="_blank">
+            <img src="assets/Pictures/Crescendo_Logo.png" alt="Crescendo Logo">
+        </a>
+    </div>
+
+    <footer id="myFooter">
+        <p>Made By Michael Cariaga And Antonio Scott</p>
+    </footer>
+
     <!-- Popup Panel -->
     <div id="popup" class="popup">
         <div class="popup-content">
@@ -245,20 +100,12 @@
             <p>Team Number Typed Wrong</p>
         </div>
     </div>
+
     <div class="popupQR" id="popupQR">
         <div id="qr-code-popup"></div>
-        <button 
-		style="padding: 5px; 
-			height: 32px;
-			width: 75px;
-			font-size: 16px; 
-			cursor: pointer; 
-			border-radius: 5px; 
-			background-color: #ff0000; 
-			color: #ffffff;" 
-		onclick="closePopupQR()">Close
-		</button>
+        <button onclick="closePopupQR()">Close</button>
     </div>
+
     <div class="overlay" id="overlay"></div>
 
 </body>
