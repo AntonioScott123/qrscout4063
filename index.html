@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>4063 Crescendo QRScout</title>
+  <title>4063 Reefscape QRScout</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" href="/icon-192.png">
   <link rel="apple-touch-icon" href="/icon-512.png">
@@ -12,6 +12,18 @@
   <script src="QR-CodeGen.js"></script>
   <!-- Main JavaScript file loaded with defer -->
   <script defer src="indexJavaScript.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(function (registration) {
+            console.log('ServiceWorker registration successful with scope:', registration.scope);
+          }, function (err) {
+            console.log('ServiceWorker registration failed:', err);
+          });
+      });
+    }
+  </script>
 </head>
 <body>
   <h1>QRScout 4063</h1>
@@ -28,7 +40,11 @@
         <input type="number" id="prematch-match-number" placeholder="Required">
       </div>
       <div class="mini-box">
-        <h3>ROBOT</h3>
+        <h3>TEAM NUMBER</h3>
+        <input type="number" id="prematch-team-number" placeholder="Required">
+      </div>
+      <div class="mini-box">
+        <h3>ROBOT TYPE</h3>
         <select id="prematch-robot">
           <option value="Choose_Answer">Choose Answer</option>
           <option value="Red_1">Red 1</option>
@@ -39,68 +55,145 @@
           <option value="Blue_3">Blue 3</option>
         </select>
       </div>
-      <div class="mini-box">
-        <h3>TEAM NUMBER</h3>
-        <input type="number" id="prematch-team-number" placeholder="Required">
-      </div>
     </div>
 
     <!-- Auto Widget -->
     <div class="widget" id="Auto-Widget">
       <h2>Auto</h2>
       <div class="mini-box">
-        <h3>CENTERLINE NOTES?</h3>
-        <div class="checkbox-container">
-          <input type="checkbox" class="custom-checkbox" id="centerlineNotes">
-          <label for="centerlineNotes"></label>
-        </div>
+        <h3>MOVED?</h3>
+        <!-- Custom checkbox with accompanying label -->
+        <input type="checkbox" class="custom-checkbox" id="moved">
+        <label for="moved"></label>
+      </div>
+      <!-- Coral Scoring for Auto (Levels L1 to L4) -->
+      <div class="mini-box">
+        <h3>L1 Coral Scored</h3>
+        <button onclick="updateButtonNum('L1autoscored', -1)">-</button>
+        <span id="L1autoscored">0</span>
+        <button onclick="updateButtonNum('L1autoscored', 1)">+</button>
       </div>
       <div class="mini-box">
-        <h3>SPEAKER SCORED</h3>
-        <button type="button" onclick="updateButtonNum('speakerScored', -1)">-</button>
-        <span id="speakerScored">0</span>
-        <button type="button" onclick="updateButtonNum('speakerScored', 1)">+</button>
+        <h3>L1 Coral Missed</h3>
+        <button onclick="updateButtonNum('L1automissed', -1)">-</button>
+        <span id="L1automissed">0</span>
+        <button onclick="updateButtonNum('L1automissed', 1)">+</button>
       </div>
       <div class="mini-box">
-        <h3>SPEAKER MISSED</h3>
-        <button type="button" onclick="updateButtonNum('speakerMissed', -1)">-</button>
-        <span id="speakerMissed">0</span>
-        <button type="button" onclick="updateButtonNum('speakerMissed', 1)">+</button>
+        <h3>L2 Coral Scored</h3>
+        <button onclick="updateButtonNum('L2autoscored', -1)">-</button>
+        <span id="L2autoscored">0</span>
+        <button onclick="updateButtonNum('L2autoscored', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>L2 Coral Missed</h3>
+        <button onclick="updateButtonNum('L2automissed', -1)">-</button>
+        <span id="L2automissed">0</span>
+        <button onclick="updateButtonNum('L2automissed', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>L3 Coral Scored</h3>
+        <button onclick="updateButtonNum('L3autoscored', -1)">-</button>
+        <span id="L3autoscored">0</span>
+        <button onclick="updateButtonNum('L3autoscored', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>L3 Coral Missed</h3>
+        <button onclick="updateButtonNum('L3automissed', -1)">-</button>
+        <span id="L3automissed">0</span>
+        <button onclick="updateButtonNum('L3automissed', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>L4 Coral Scored</h3>
+        <button onclick="updateButtonNum('L4autoscored', -1)">-</button>
+        <span id="L4autoscored">0</span>
+        <button onclick="updateButtonNum('L4autoscored', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>L4 Coral Missed</h3>
+        <button onclick="updateButtonNum('L4automissed', -1)">-</button>
+        <span id="L4automissed">0</span>
+        <button onclick="updateButtonNum('L4automissed', 1)">+</button>
+      </div>
+      <!-- New Auto: Algae in Barge Scored/Missed -->
+      <div class="mini-box">
+        <h3>Algae in Barge Scored</h3>
+        <button onclick="updateButtonNum('AlgaeScoredinBarge_Auto', -1)">-</button>
+        <span id="AlgaeScoredinBarge_Auto">0</span>
+        <button onclick="updateButtonNum('AlgaeScoredinBarge_Auto', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>Algae in Barge Missed</h3>
+        <button onclick="updateButtonNum('AlgaeMissedBarge_Auto', -1)">-</button>
+        <span id="AlgaeMissedBarge_Auto">0</span>
+        <button onclick="updateButtonNum('AlgaeMissedBarge_Auto', 1)">+</button>
       </div>
     </div>
 
     <!-- TeleOp Widget -->
     <div class="widget" id="TeleOp-Widget">
       <h2>TeleOp</h2>
+      <!-- Coral Scoring for TeleOp (Levels L1 to L4) -->
       <div class="mini-box">
-        <h3>AMP SCORED</h3>
-        <button type="button" onclick="updateButtonNum('tampScored', -1)">-</button>
-        <span id="tampScored">0</span>
-        <button type="button" onclick="updateButtonNum('tampScored', 1)">+</button>
+        <h3>L1 Coral Scored</h3>
+        <button onclick="updateButtonNum('L1Telescored', -1)">-</button>
+        <span id="L1Telescored">0</span>
+        <button onclick="updateButtonNum('L1Telescored', 1)">+</button>
       </div>
       <div class="mini-box">
-        <h3>AMP MISSED</h3>
-        <button type="button" onclick="updateButtonNum('tampMissed', -1)">-</button>
-        <span id="tampMissed">0</span>
-        <button type="button" onclick="updateButtonNum('tampMissed', 1)">+</button>
+        <h3>L1 Coral Missed</h3>
+        <button onclick="updateButtonNum('L1Telemissed', -1)">-</button>
+        <span id="L1Telemissed">0</span>
+        <button onclick="updateButtonNum('L1Telemissed', 1)">+</button>
       </div>
       <div class="mini-box">
-        <h3>SPEAKER SCORED</h3>
-        <button type="button" onclick="updateButtonNum('tspeakerScored', -1)">-</button>
-        <span id="tspeakerScored">0</span>
-        <button type="button" onclick="updateButtonNum('tspeakerScored', 1)">+</button>
+        <h3>L2 Coral Scored</h3>
+        <button onclick="updateButtonNum('L2Telescored', -1)">-</button>
+        <span id="L2Telescored">0</span>
+        <button onclick="updateButtonNum('L2Telescored', 1)">+</button>
       </div>
       <div class="mini-box">
-        <h3>SPEAKER MISSED</h3>
-        <button type="button" onclick="updateButtonNum('tspeakerMissed', -1)">-</button>
-        <span id="tspeakerMissed">0</span>
-        <button type="button" onclick="updateButtonNum('tspeakerMissed', 1)">+</button>
+        <h3>L2 Coral Missed</h3>
+        <button onclick="updateButtonNum('L2Telemissed', -1)">-</button>
+        <span id="L2Telemissed">0</span>
+        <button onclick="updateButtonNum('L2Telemissed', 1)">+</button>
       </div>
       <div class="mini-box">
-        <h3>NOTE IN TRAP?</h3>
-        <button type="button" onclick="updateButtonNum('noteTrap', -1)">-</button>
-        <span id="noteTrap">0</span>
-        <button type="button" onclick="updateButtonNum('noteTrap', 1)">+</button>
+        <h3>L3 Coral Scored</h3>
+        <button onclick="updateButtonNum('L3Telescored', -1)">-</button>
+        <span id="L3Telescored">0</span>
+        <button onclick="updateButtonNum('L3Telescored', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>L3 Coral Missed</h3>
+        <button onclick="updateButtonNum('L3Telemissed', -1)">-</button>
+        <span id="L3Telemissed">0</span>
+        <button onclick="updateButtonNum('L3Telemissed', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>L4 Coral Scored</h3>
+        <button onclick="updateButtonNum('L4Telescored', -1)">-</button>
+        <span id="L4Telescored">0</span>
+        <button onclick="updateButtonNum('L4Telescored', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>L4 Coral Missed</h3>
+        <button onclick="updateButtonNum('L4Telemissed', -1)">-</button>
+        <span id="L4Telemissed">0</span>
+        <button onclick="updateButtonNum('L4Telemissed', 1)">+</button>
+      </div>
+      <!-- New TeleOp: Algae in Barge Scored/Missed -->
+      <div class="mini-box">
+        <h3>Algae in Barge Scored</h3>
+        <button onclick="updateButtonNum('AlgaeScoredinBarge_TeleOp', -1)">-</button>
+        <span id="AlgaeScoredinBarge_TeleOp">0</span>
+        <button onclick="updateButtonNum('AlgaeScoredinBarge_TeleOp', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>Algae in Barge Missed</h3>
+        <button onclick="updateButtonNum('AlgaeMissedBarge_TeleOp', -1)">-</button>
+        <span id="AlgaeMissedBarge_TeleOp">0</span>
+        <button onclick="updateButtonNum('AlgaeMissedBarge_TeleOp', 1)">+</button>
       </div>
     </div>
 
@@ -108,31 +201,23 @@
     <div class="widget" id="Endgame-Widget">
       <h2>Endgame</h2>
       <div class="mini-box">
-        <h3>SPOTLIGHT</h3>
-        <div class="checkbox-container">
-          <input type="checkbox" class="custom-checkbox" id="Spotlight">
-          <label for="Spotlight"></label>
-        </div>
-      </div>
-      <div class="mini-box">
         <h3>END POSITION</h3>
-        <select id="End-Position">
+        <select id="climbed">
           <option value="Choose_Answer">Choose Answer</option>
-          <option value="No_Climb">No Climb</option>
-          <option value="Failed_Climb">Failed Climb</option>
-          <option value="Parked">Parked</option>
-          <option value="Onstage">Onstage</option>
+          <option value="No_Cage">No Cage</option>
+          <option value="Shallow_Cage">Shallow Cage</option>
+          <option value="Deep_Cage">Deep Cage</option>
         </select>
       </div>
       <div class="mini-box">
-        <h3>HARMONY</h3>
-        <select id="Harmony">
-          <option value="Choose_Answer">Choose Answer</option>
-          <option value="Not_Completed">Not Completed</option>
-          <option value="First_On_Chain">First On Chain</option>
-          <option value="Second_On_Chain">Second On Chain</option>
-          <option value="Third_On_Chain">Third On Chain</option>
-        </select>
+        <h3>Speed</h3>
+        <input type="number" id="speed" value="0">
+      </div>
+      <div class="mini-box">
+        <h3>Tipped During Match?</h3>
+        <!-- Custom checkbox for Tipped During Match -->
+        <input type="checkbox" class="custom-checkbox" id="Tipped-During-Match">
+        <label for="Tipped-During-Match"></label>
       </div>
     </div>
 
@@ -140,105 +225,24 @@
     <div class="widget" id="PostMatch">
       <h2>Postmatch</h2>
       <div class="mini-box">
-        <h3>OFFENSIVE SKILL</h3>
-        <select id="Offensive Skill">
-          <option value="0">Not Observed</option>
-          <option value="1">Not Effective</option>
-          <option value="2">Average</option>
-          <option value="3">Effective</option>
-          <option value="4">Very Effective</option>
-        </select>
-      </div>
-      <div class="mini-box">
-        <h3>DEFENSIVE SKILL</h3>
-        <select id="Defensive Skill">
-          <option value="0">Not Observed</option>
-          <option value="1">Not Effective</option>
-          <option value="2">Average</option>
-          <option value="3">Effective</option>
-          <option value="4">Very Effective</option>
-        </select>
-      </div>
-      <div class="mini-box">
-        <h3>SPEED</h3>
-        <select id="Speed">
-          <option value="0">Not Observed</option>
-          <option value="1">Slow</option>
-          <option value="2">Average</option>
-          <option value="3">Fast</option>
-        </select>
-      </div>
-      <div class="mini-box">
-        <h3>DIED</h3>
-        <div class="checkbox-container">
-          <input type="checkbox" class="custom-checkbox" id="Died">
-          <label for="Died"></label>
-        </div>
-      </div>
-      <div class="mini-box">
-        <h3>TIPPED OVER</h3>
-        <div class="checkbox-container">
-          <input type="checkbox" class="custom-checkbox" id="Tipped-Over">
-          <label for="Tipped-Over"></label>
-        </div>
-      </div>
-      <div class="mini-box">
-        <h3>CARD</h3>
-        <select id="Card">
-          <option value="No_Card">No Card</option>
-          <option value="Red_Card">Red Card</option>
-          <option value="Yellow_Card">Yellow Card</option>
-        </select>
-      </div>
-      <div class="mini-box">
         <h3>COMMENTS</h3>
-        <textarea id="Comments" rows="10" cols="30"></textarea>
+        <textarea id="Comments" rows="10" cols="29"></textarea>
       </div>
     </div>
   </div>
 
-  <!-- QR Code container -->
   <div id="qr-code">
-    <!-- Placeholder for the QR code image -->
+    <!-- Placeholder for QR code -->
   </div>
 
-  <!-- Submit and Clear Buttons -->
-  <div class="right-align" style="display: inline-block; float: right; margin-left: 10px;">
-    <button id="submit-button" style="margin-bottom: 150px;" onclick="updateQRCodeOnSubmit(); scrollToTop()">Submit Info</button>
-  </div>
-  <div class="left-align" style="display: inline-block; float: left;">
-    <button id="clear-button" style="margin-bottom: 150px;" onclick="ClearAll(); scrollToTop()">Clear All</button>
-  </div>
+  <!-- Button to Generate QR Code -->
+  <button id="submit-btn" onclick="updateQRCodeOnSubmit()">Generate QR Code</button>
 
-  <div style="width: 100%; overflow: hidden;">
-    <div style="display: inline-block; float: left;">
-      <a href="https://www.Team4063.com" target="_blank">
-        <img src="assets/Pictures/4063_Logo.png" style="height: 100px; width: 150px; margin-left: 0;" alt="4063 Logo">
-      </a>
-    </div>
-    <a href="https://www.firstinspires.org/robotics/frc/game-and-season" target="_blank">
-      <div style="display: inline-block; float: right; margin-left: 10px;">
-        <img src="assets/Pictures/Crescendo_Logo.png" style="height: 100px; width: 150px;" alt="Crescendo Logo">
-      </div>
-    </a>
-  </div>
-  <footer id="myFooter">
-    <p>Made By Michael Cariaga And Antonio Scott</p>
-  </footer>
-
-  <!-- Popup Panel for messages -->
-  <div id="popup" class="popup">
-    <div class="popup-content">
-      <span class="close" onclick="closePopup()">&times;</span>
-      <p>Team Number Typed Wrong</p>
-    </div>
-  </div>
-
-  <!-- Popup Panel for the QR Code -->
-  <div class="popupQR" id="popupQR">
+  <!-- QR Code Popup -->
+  <div id="popupQR" class="popup">
     <div id="qr-code-popup"></div>
-    <button style="padding: 5px; height: 32px; width: 75px; font-size: 16px; cursor: pointer; border-radius: 5px; background-color: #ff0000; color: #ffffff;" onclick="closePopupQR()">Close</button>
+    <button id="close-popup" onclick="closePopupQR()">Close</button>
   </div>
-  <div class="overlay" id="overlay"></div>
 </body>
 </html>
+
