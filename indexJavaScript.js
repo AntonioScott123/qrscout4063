@@ -1,4 +1,4 @@
-cconst gameData = {
+const gameData = {
     initials: "",
     matchNum: 0,
     robot: "",
