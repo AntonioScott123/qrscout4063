@@ -57,9 +57,17 @@ function updateQRCodeOnSubmit() {
         Comments: ${document.getElementById('Comments').value}
     `;
 
-    const qrCode = new QRCode(document.getElementById('qr-code'), {
+    const qrCode = new QRCode(document.getElementById('qr-code-popup'), {
         text: qrCodeData,
         width: 256,
         height: 256,
     });
+
+    // Display the popup containing the QR code
+    document.getElementById('popupQR').style.display = "block";
+}
+
+// Close the QR code popup
+function closePopupQR() {
+    document.getElementById('popupQR').style.display = "none";
 }
