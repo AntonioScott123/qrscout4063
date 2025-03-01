@@ -1,233 +1,265 @@
-const gameData = {
-			initials: "",
-			matchNum: 0,
-			robot: "",
-			teamNum: 0,
-			speakerScored: 0,
-			speakerMissed: 0,
-			tampScored: 0,
-			tampMissed: 0,
-			tspeakerScored: 0,
-			tspeakerMissed: 0,
-			noteTrap: 0,
-			endPos: "",
-			harmony: "",
-			offSkill: "",
-			defSkill: "",
-			died: false,
-			tippedOver: false,
-			card: "",
-			comments: "",
-			speed: "",
-			centerlineNotes: false
-			
-		
-			
-			}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4063 Crescendo QRScout</title>
+    <script src="QR-CodeGen.js"></script>
+	<script src="indexJavaScript.js"></script>
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(function(registration) {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+              console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+      }
+    else{
+        document.getElementById("prematch-widget").style.display = "none";
+    }
+    function showInstallPrompt() {
+        return cache.addAll(filesToCache);
+    }
+    </script>
+	<link rel="manifest" href="/manifest.json">
+	<link rel="icon" type="image/png" href="/icon-192.png">
+  	<link rel="apple-touch-icon" href="/icon-512.png">
+	<link rel="stylesheet" href="indexCascadingStylingSheets.css">
+</head>
+<body>
 
-let smallify = {};
+    <h1>QRScout 4063</h1>
 
-smallify["Not_Observed"] = "NOB";
-smallify["Choose_Answer"] = "CAN";
-smallify["false"] = "no";
-smallify["true"] = "yes";
-smallify["NOB"] = "NOB";
-smallify["CAN"] = "CAN";
-smallify["yes"] = "yes";
-smallify["no"] = "no";
+    <div class="dashboard">
+        <!-- New Teleop Widget -->
+        <div class="widget" id="prematch-widget">
+            <h2>Prematch</h2>
+            <div class="mini-box">
+                <h3>SCOUTER INITIALS</h3>
+                <input type="text" id="prematch-scout-initials" placeholder="Required">
+            </div>
 
-function scrollToTop() {
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0; // For Chrome
-  }
+            <div class="mini-box">
+                <h3>MATCH NUMBER</h3>
+                <input type="number" id="prematch-match-number" placeholder="Required">
+            </div>
 
-var teamsCompeting = [67, 70, 78, 114, 175, 179, 219, 226, 578, 604, 1058, 1114, 1160, 1288, 1318, 1391, 1410, 1458, 1501, 1533, 1591, 1727, 1730, 1731, 2073, 2338, 2522, 2609, 2611, 2614, 2689, 2713, 2930, 2987, 3075, 3341, 3534, 3539, 3544, 4063, 4125, 4285, 4322, 4400, 4501, 4630, 5417, 5427, 5461, 5712, 5885, 5892, 6217, 6329, 6413, 6459, 6586, 6740, 6800, 6902, 7174, 7428, 7457, 7763, 8019, 8033, 8840, 9431, 9452, 9458, 9483, 9498, 9535, 9636, 9764];
-function openPopup() {
-    document.getElementById('popup').style.display = 'block';
-}
+            <div class="mini-box">
+                <h3>ROBOT</h3>
+                <select id="prematch-robot">
+                	<option value="Choose_Answer">Choose Answer</option>
+                    <option value="Red_1">Red 1</option>
+                    <option value="Red_2">Red 2</option>
+                    <option value="Red_3">Red 3</option>
+                    <option value="Blue_1">Blue 1</option>
+                    <option value="Blue_2">Blue 2</option>
+                    <option value="Blue_3">Blue 3</option>
+                </select>
+            </div>
 
-function closePopup() {
-    document.getElementById('popup').style.display = 'none';
-}
+            <div class="mini-box">
+                <h3>TEAM NUMBER</h3>
+                <input type="number" id="prematch-team-number" placeholder="Required">
+            </div>
+        </div>
 
-function checkIfTeamSigma(enteredTeam) 
-{
-	return teamsCompeting.includes(enteredTeam);
-}
+        <!-- Auto Widget -->
+        <div class="widget" id="Auto-Widget">
+            <h2>Auto</h2>
+            <div class="mini-box">
+                <h3>CENTERLINE NOTES?</h3>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="centerlineNotes">
+                    <label for="centerlineNotes"></label>
+                </div>
+            </div>
+			<div class="mini-box">
+				<h3>SPEAKER SCORED</h3>
+				<button type="button" onclick="updateButtonNum('speakerScored', -1)">-</button>
+				<span id="speakerScored">0</span>
+				<button type="button" onclick="updateButtonNum('speakerScored', 1)">+</button>
+			</div>
+			<div class="mini-box">
+				<h3>SPEAKER MISSED</h3>
+				<button type="button" onclick="updateButtonNum('speakerMissed', -1)">-</button>
+				<span id="speakerMissed">0</span>
+				<button type="button" onclick="updateButtonNum('speakerMissed', 1)">+</button>
+			</div>
+        </div>
+		<div class="widget" id="TeleOp-Widget">
+            <h2>teleop</h2>
+            <div class="mini-box">
+                <h3>AMP SCORED</h3>
+                <button type="button" onclick="updateButtonNum('tampScored', -1)">-</button>
+                <span id="tampScored">0</span>
+                <button type="button" onclick="updateButtonNum('tampScored', 1)">+</button>
+            </div>
+            <div class="mini-box">
+                <h3>AMP MISSED</h3>
+                <button type="button" onclick="updateButtonNum('tampMissed', -1)">-</button>
+                <span id="tampMissed">0</span>
+                <button type="button" onclick="updateButtonNum('tampMissed', 1)">+</button>
+            </div>
+			<div class="mini-box">
+				<h3>SPEAKER SCORED</h3>
+				<button type="button" onclick="updateButtonNum('tspeakerScored', -1)">-</button>
+				<span id="tspeakerScored">0</span>
+				<button type="button" onclick="updateButtonNum('tspeakerScored', 1)">+</button>
+			</div>
+			<div class="mini-box">
+				<h3>SPEAKER MISSED</h3>
+				<button type="button" onclick="updateButtonNum('tspeakerMissed', -1)">-</button>
+				<span id="tspeakerMissed">0</span>
+				<button type="button" onclick="updateButtonNum('tspeakerMissed', 1)">+</button>
+			</div>
+			<div class="mini-box">
+				<h3>NOTE IN TRAP?</h3>
+				<button type="button" onclick="updateButtonNum('noteTrap', -1)">-</button>
+				<span id="noteTrap">0</span>
+				<button type="button" onclick="updateButtonNum('noteTrap', 1)">+</button>
+			</div>
+        </div>
+		<div class="widget" id="Endgame-Widget">
+			<h2>Endgame</h2>
+			<div class="mini-box">
+			<h3>SPOTLIGHT</h3>
+			<div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="Spotlight">
+                    <label for="Spotlight"></label>
+			</div>
+            </div>
+			<div class="mini-box">
+				<h3>END POSITION</h3>
+                <select id="End-Position">
+                	<option value="Choose_Answer">Choose Answer</option>
+                    <option value="No_Climb">No Climb</option>
+                    <option value="Failed_Climb">Failed Climb</option>
+                    <option value="Parked">Parked</option>
+                    <option value="Onstage">Onstage</option>
+                </select>
+			</div>
+			<div class="mini-box">
+				<h3>HARMONY</h3>
+				<select id="Harmony">
+					<option value="Choose_Answer">Choose Answer</option>
+                    <option value="Not_Completed">Not Completed</option>
+                    <option value="First_On_Chain">First On Chain</option>
+                    <option value="Second_On_Chain">Second On Chain</option>
+                    <option value="Third_On_Chain">Third On Chain</option>
+                </select>
+			</div>
+		</div>
+		<div class="widget" id="PostMatch">
+			<h2>Postmatch</h2>
+			<div class="mini-box">
+				<h3>OFFENSIVE SKILL</h3>
+				<select id="Offensive Skill">
+					<option value="0">Not Observed</option>
+                    <option value="1">Not Effective</option>
+                    <option value="2">Average</option>
+                    <option value="3">Effective</option>
+                    <option value="4">Very Effective</option>
+                </select>
+			</div>
+			<div class="mini-box">
+			<h3>DEFENSIVE SKILL</h3>
+				<select id="Defensive Skill">
+					<option value="0">Not Observed</option>
+                    <option value="1">Not Effective</option>
+                    <option value="2">Average</option>
+                    <option value="3">Effective</option>
+                    <option value="4">Very Effective</option>
+                </select>
+			</div>
+            <div class="mini-box">
+                <h3>SPEED</h3>
+                    <select id="Speed">
+                        <option value="0">Not Observed</option>
+                        <option value="1">Slow</option>
+                        <option value="2">Average</option>
+                        <option value="3">Fast</option>
+                    </select>
+                </div>
+			<div class="mini-box">
+			<h3>DIED</h3>
+			<div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="Died">
+                    <label for="Died"></label>
+			</div>
+            </div>
+			<div class="mini-box">
+			<h3>TIPPED OVER</h3>
+			<div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="Tipped-Over">
+                    <label for="Tipped-Over"></label>
+            </div>
+		</div>
+		<div class="mini-box">
+			<h3>CARD</h3>
+				<select id="Card">
+                    <option value="No_Card">No Card</option>
+                    <option value="Red_Card">Red Card</option>
+                    <option value="Yellow_Card">Yellow Card</option>
+                    </select>
+			</div>
+            <div class="mini-box">
+                <h3>COMMENTS</h3>
+                <textarea id="Comments" rows="10" cols="30"></textarea>
+            </div>
+		</div>
+    </div>
+    <div id="qr-code">
+        <!-- Placeholder for the QR code image -->
+    </div>
 
-function ClearAll() {
-    document.getElementById('prematch-match-number').value = '';
-    document.getElementById('prematch-team-number').value = '';
-    document.getElementById('Died').checked = false;
-    document.getElementById('Tipped-Over').checked = false;
-    document.getElementById('Spotlight').checked = false;
-    document.getElementById("centerlineNotes").checked = false;
-    document.getElementById('End-Position').value = 'Choose_Answer';
-	document.getElementById("Offensive Skill").value = 0;
-	document.getElementById("Defensive Skill").value = 0;
-    document.getElementById('Harmony').value = 'Choose_Answer';
-    document.getElementById('Card').value = 'No_Card';
-    document.getElementById('Comments').value = '';
-    document.getElementById('Speed').value = 0;
+    <!-- Submit Info Button -->
+	<div class="right-align" style="display: inline-block; float: right; margin-left: 10px;">
+		<button id="submit-button" style="margin-bottom: 150px;" onclick="updateQRCodeOnSubmit(); scrollToTop()">Submit Info</button>
+	</div>
+	<div class="left-align" style="display: inline-block; float: left;">
+		<button id="submit-button" style="margin-bottom: 150px;" onclick="ClearAll(); scrollToTop()">Clear All</button>
+	</div>
+	
+	<div style="width: 100%; overflow: hidden;">
+		<div style="display: inline-block; float: left;">
+		<a href="https://www.Team4063.com" target="_blank">
+			<img src="assets/Pictures/4063_Logo.png" style="height: 100px; width: 150px; margin-left: 0;" alt="4063 Logo">
+		</a>
+		</div>
+		<a href="https://www.firstinspires.org/robotics/frc/game-and-season" target="_blank">
+		<div style="display: inline-block; float: right; margin-left: 10px;">
+			<img src="assets/Pictures/Crescendo_Logo.png" style="height: 100px; width: 150px;" alt="Crescendo Logo">
+		</div>
+		</a>
+	</div>
+	<footer id="myFooter">
+    <p>Made By Michael Cariaga And Antonio Scott</p>
+	</footer>
+    <!-- Popup Panel -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup()">&times;</span>
+            <p>Team Number Typed Wrong</p>
+        </div>
+    </div>
+    <div class="popupQR" id="popupQR">
+        <div id="qr-code-popup"></div>
+        <button 
+		style="padding: 5px; 
+			height: 32px;
+			width: 75px;
+			font-size: 16px; 
+			cursor: pointer; 
+			border-radius: 5px; 
+			background-color: #ff0000; 
+			color: #ffffff;" 
+		onclick="closePopupQR()">Close
+		</button>
+    </div>
+    <div class="overlay" id="overlay"></div>
 
-    gameData.initials = '';
-    gameData.matchNum = 0;
-    gameData.robot = 'Choose_Answer';
-    gameData.teamNum = 0;
-    gameData.died = false;
-    gameData.tippedOver = false;
-    gameData.centerlineNotes = false;
-    gameData.endPos = 'Choose_Answer';
-    gameData.harmony = 'Choose_Answer';
-    gameData.offSkill = 0;
-    gameData.defSkill = 0;
-    gameData.card = 'No_Card';
-    gameData.comments = '';
-    gameData.speakerScored = 0;
-    gameData.speakerMissed = 0;
-    gameData.tampScored = 0;
-    gameData.tampMissed = 0;
-    gameData.tspeakerScored = 0;
-    gameData.tspeakerMissed = 0;
-    gameData.noteTrap = 0;
-
-    document.getElementById('speakerScored').textContent = gameData.speakerScored;
-    document.getElementById('speakerMissed').textContent = gameData.speakerMissed;
-    document.getElementById('tampScored').textContent = gameData.tampScored;
-    document.getElementById('tampMissed').textContent = gameData.tampMissed;
-    document.getElementById('tspeakerScored').textContent = gameData.tspeakerScored;
-    document.getElementById('tspeakerMissed').textContent = gameData.tspeakerMissed;
-    document.getElementById('noteTrap').textContent = gameData.noteTrap;
-}
-
-
-
-        function updateButtonNum(variable, value) {
-    gameData[variable] += value;
-	gameData[variable] = Math.max(gameData[variable], 0);
-    // Update HTML element value
-    document.getElementById(variable).textContent = gameData[variable];
-
-        function updateGameData(section, key, value) {
-            gameData[section][key] = value;
-        }
-		}
-		
-        function updateQRCodeOnSubmit() {
-		// Update all the gameData fields with the form values
-		gameData.initials = document.getElementById('prematch-scout-initials').value.split(' ').join('');
-		gameData.matchNum = parseInt(document.getElementById('prematch-match-number').value.split(' ').join(''));
-		if(document.getElementById('prematch-robot').value in smallify)
-		{
-			gameData.robot = smallify[document.getElementById('prematch-robot').value];
-		}
-		else
-		{
-			gameData.robot = document.getElementById('prematch-robot').value;
-		}
-		gameData.teamNum = parseInt(document.getElementById('prematch-team-number').value.split(' ').join(''));
-		gameData.died = smallify[document.getElementById('Died').checked];
-		gameData.tippedOver = smallify[document.getElementById('Tipped-Over').checked];
-		gameData.centerlineNotes = smallify[document.getElementById('centerlineNotes').checked];
-		if(document.getElementById('End-Position').value in smallify)
-		{
-			gameData.endPos = smallify[document.getElementById('End-Position').value];
-		}
-		else
-		{
-			gameData.endPos = document.getElementById('End-Position').value;
-		}
-		if(gameData.harmony = document.getElementById('Harmony').value in smallify)
-		{
-			gameData.harmony = smallify[document.getElementById('Harmony').value];
-		}
-		else
-		{
-			gameData.harmony = document.getElementById('Harmony').value;
-		}
-		
-		if(document.getElementById('Offensive Skill').value in smallify)
-		{
-			gameData.offSkill = smallify[document.getElementById('Offensive Skill').value];
-		}
-		else
-		{
-			gameData.offSkill = document.getElementById('Offensive Skill').value;
-		}
-
-		if(document.getElementById('Defensive Skill').value in smallify)
-		{
-			gameData.defSkill = smallify[document.getElementById('Defensive Skill').value];
-		}
-		else
-		{
-			gameData.defSkill = document.getElementById('Defensive Skill').value
-		}
-
-		if (document.getElementById('Card').value in smallify)
-		{
-			gameData.card = smallify[document.getElementById('Card').value]
-		}
-		else
-		{
-			gameData.card = document.getElementById('Card').value
-		}
-		gameData.comments = document.getElementById('Comments').value;
-		gameData.spotlight = smallify[document.getElementById('Spotlight').checked];
-		if(document.getElementById('Speed').value in smallify)
-		{
-			gameData.speed = smallify[document.getElementById('Speed').value];
-		}
-		else
-		{
-			gameData.speed = document.getElementById('Speed').value;
-		}
-		// Update other fields similarl
-		// Generate QR code with updated gameData
-		teamNumTrue = checkIfTeamSigma(gameData.teamNum)
-		if(teamNumTrue)
-		{
-			generateQRCode();
-		}
-		else
-		{
-			openPopup();
-		}
-		}
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', function(event) {
-	event.preventDefault();
-	deferredPrompt = event;
-
-});
-
-		function generateQRCode() {
-	if (
-		document.getElementById('prematch-scout-initials').value === "" ||
-		document.getElementById('prematch-match-number').value === "" ||
-		document.getElementById('prematch-team-number').value === "" ||
-		document.getElementById('prematch-robot').value === "Choose_Answer"
-	) {
-	} else {
-		const qrCodeData = ${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.centerlineNotes} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.speed} ${gameData.died} ${gameData.tippedOver} ${gameData.card};
-		const qrCodeDataWithCommas = qrCodeData.split(' ').join('~');
-		const qrCodeDataWithCommasWithComment = qrCodeDataWithCommas + '~' + gameData.comments;
-		const qrCodeContainer = document.getElementById('qr-code-popup');
-		qrCodeContainer.innerHTML = '';
-		
-		const qrCode = new QRCode(qrCodeContainer, {
-			text: qrCodeDataWithCommasWithComment,
-			width: 300,
-			height: 300,
-		});
-		
-		document.getElementById('popupQR').style.display = 'block';
-		document.getElementById('overlay').style.display = 'block';
-	}
-}
-		
-function closePopupQR() {
-	document.getElementById('popupQR').style.display = 'none';
-	document.getElementById('overlay').style.display = 'none';
-}
+</body>
+</html>
