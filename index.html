@@ -1,7 +1,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4063 Crescendo QRScout</title>
     <title>4063 Reefscape QRScout</title>
     <script src="QR-CodeGen.js"></script>
 	<script src="indexJavaScript.js"></script>
@@ -14,17 +13,6 @@
               console.log('ServiceWorker registration successful with scope: ', registration.scope);
             }, function(err) {
               console.log('ServiceWorker registration failed: ', err);
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(function(registration) {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                    }, function(err) {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
-            });
-        });
-      }
     else{
         document.getElementById("prematch-widget").style.display = "none";
     }
@@ -42,10 +30,6 @@
 	<link rel="icon" type="image/png" href="/icon-192.png">
   	<link rel="apple-touch-icon" href="/icon-512.png">
 	<link rel="stylesheet" href="indexCascadingStylingSheets.css">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="icon" type="image/png" href="/icon-192.png">
-    <link rel="apple-touch-icon" href="/icon-512.png">
-    <link rel="stylesheet" href="indexCascadingStylingSheets.css">
 </head>
 <body>
 
@@ -56,18 +40,9 @@
         <div class="widget" id="prematch-widget">
             <h2>Prematch</h2>
 
-        <!-- Auto Widget -->
-        <div class="widget" id="Auto-Widget">
-            <h2>Auto</h2>
-
             <div class="mini-box">
                 <h3>SCOUTER INITIALS</h3>
                 <input type="text" id="prematch-scout-initials" placeholder="Required">
-                <h3>MOVED?</h3>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="autoMoved">
-                    <label for="autoMoved"></label>
-                </div>
             </div>
 
             <!-- Coral Scoring and Missing -->
