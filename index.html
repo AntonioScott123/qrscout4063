@@ -1,303 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4063 Crescendo QRScout</title>
-    <script src="QR-CodeGen.js"></script>
-	<script src="indexJavaScript.js"></script>
-    <script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/service-worker.js')
-            .then(function(registration) {
-              console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            }, function(err) {
-              console.log('ServiceWorker registration failed: ', err);
-
-            });
-        });
-      }
-    else{
-        document.getElementById("prematch-widget").style.display = "none";
-    }
-    function showInstallPrompt() {
-        return cache.addAll(filesToCache);
-    }
-    </script>
-	<link rel="manifest" href="/manifest.json">
-	<link rel="icon" type="image/png" href="/icon-192.png">
-  	<link rel="apple-touch-icon" href="/icon-512.png">
-	<link rel="stylesheet" href="indexCascadingStylingSheets.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4063 Crescendo QRScout</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" href="/icon-192.png">
+  <link rel="apple-touch-icon" href="/icon-512.png">
+  <link rel="stylesheet" href="indexCascadingStylingSheets.css">
+  <!-- QR Code Generation Library -->
+  <script src="QR-CodeGen.js"></script>
+  <!-- Main JavaScript file loaded with defer -->
+  <script defer src="indexJavaScript.js"></script>
 </head>
 <body>
-
-    <h1>QRScout 4063</h1>
-
-    <div class="dashboard">
-        <!-- New Teleop Widget -->
-        <div class="widget" id="prematch-widget">
-            <h2>Prematch</h2>
-
-
-            <div class="mini-box">
-                <h3>SCOUTER INITIALS</h3>
-                <input type="text" id="prematch-scout-initials" placeholder="Required">
-
-
-
-            </div>
-
-
-
-
-
-
-
-
-            <div class="mini-box">
-                <h3>MATCH NUMBER</h3>
-                <input type="number" id="prematch-match-number" placeholder="Required">
-
-
-            </div>
-
-            <div class="mini-box">
-                <h3>ROBOT</h3>
-                <select id="prematch-robot">
-                	<option value="Choose_Answer">Choose Answer</option>
-                    <option value="Red_1">Red 1</option>
-                    <option value="Red_2">Red 2</option>
-                    <option value="Red_3">Red 3</option>
-                    <option value="Blue_1">Blue 1</option>
-                    <option value="Blue_2">Blue 2</option>
-                    <option value="Blue_3">Blue 3</option>
-                </select>
-            </div>
-
-            <div class="mini-box">
-                <h3>TEAM NUMBER</h3>
-                <input type="number" id="prematch-team-number" placeholder="Required">
-
-
-
-
-
-
-
-
-            </div>
-        </div>
-
-        <!-- Auto Widget -->
-        <div class="widget" id="Auto-Widget">
-            <h2>Auto</h2>
-            <div class="mini-box">
-                <h3>CENTERLINE NOTES?</h3>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="centerlineNotes">
-                    <label for="centerlineNotes"></label>
-                </div>
-            </div>
-			<div class="mini-box">
-				<h3>SPEAKER SCORED</h3>
-				<button type="button" onclick="updateButtonNum('speakerScored', -1)">-</button>
-				<span id="speakerScored">0</span>
-				<button type="button" onclick="updateButtonNum('speakerScored', 1)">+</button>
-			</div>
-			<div class="mini-box">
-				<h3>SPEAKER MISSED</h3>
-				<button type="button" onclick="updateButtonNum('speakerMissed', -1)">-</button>
-				<span id="speakerMissed">0</span>
-				<button type="button" onclick="updateButtonNum('speakerMissed', 1)">+</button>
-			</div>
-        </div>
-		<div class="widget" id="TeleOp-Widget">
-            <h2>teleop</h2>
-            <div class="mini-box">
-                <h3>AMP SCORED</h3>
-                <button type="button" onclick="updateButtonNum('tampScored', -1)">-</button>
-                <span id="tampScored">0</span>
-                <button type="button" onclick="updateButtonNum('tampScored', 1)">+</button>
-            </div>
-
-            <div class="mini-box">
-                <h3>AMP MISSED</h3>
-                <button type="button" onclick="updateButtonNum('tampMissed', -1)">-</button>
-                <span id="tampMissed">0</span>
-                <button type="button" onclick="updateButtonNum('tampMissed', 1)">+</button>
-            </div>
-			<div class="mini-box">
-				<h3>SPEAKER SCORED</h3>
-				<button type="button" onclick="updateButtonNum('tspeakerScored', -1)">-</button>
-				<span id="tspeakerScored">0</span>
-				<button type="button" onclick="updateButtonNum('tspeakerScored', 1)">+</button>
-			</div>
-			<div class="mini-box">
-				<h3>SPEAKER MISSED</h3>
-				<button type="button" onclick="updateButtonNum('tspeakerMissed', -1)">-</button>
-				<span id="tspeakerMissed">0</span>
-				<button type="button" onclick="updateButtonNum('tspeakerMissed', 1)">+</button>
-			</div>
-			<div class="mini-box">
-				<h3>NOTE IN TRAP?</h3>
-				<button type="button" onclick="updateButtonNum('noteTrap', -1)">-</button>
-				<span id="noteTrap">0</span>
-				<button type="button" onclick="updateButtonNum('noteTrap', 1)">+</button>
-			</div>
-        </div>
-		<div class="widget" id="Endgame-Widget">
-			<h2>Endgame</h2>
-			<div class="mini-box">
-			<h3>SPOTLIGHT</h3>
-			<div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="Spotlight">
-                    <label for="Spotlight"></label>
-			</div>
-            </div>
-			<div class="mini-box">
-				<h3>END POSITION</h3>
-
-
-
-
-
-                <select id="End-Position">
-                	<option value="Choose_Answer">Choose Answer</option>
-                    <option value="No_Climb">No Climb</option>
-                    <option value="Failed_Climb">Failed Climb</option>
-                    <option value="Parked">Parked</option>
-                    <option value="Onstage">Onstage</option>
-                </select>
-			</div>
-			<div class="mini-box">
-				<h3>HARMONY</h3>
-				<select id="Harmony">
-					<option value="Choose_Answer">Choose Answer</option>
-                    <option value="Not_Completed">Not Completed</option>
-                    <option value="First_On_Chain">First On Chain</option>
-                    <option value="Second_On_Chain">Second On Chain</option>
-                    <option value="Third_On_Chain">Third On Chain</option>
-                </select>
-			</div>
-		</div>
-		<div class="widget" id="PostMatch">
-			<h2>Postmatch</h2>
-			<div class="mini-box">
-				<h3>OFFENSIVE SKILL</h3>
-				<select id="Offensive Skill">
-					<option value="0">Not Observed</option>
-                    <option value="1">Not Effective</option>
-                    <option value="2">Average</option>
-                    <option value="3">Effective</option>
-                    <option value="4">Very Effective</option>
-                </select>
-			</div>
-			<div class="mini-box">
-			<h3>DEFENSIVE SKILL</h3>
-				<select id="Defensive Skill">
-					<option value="0">Not Observed</option>
-                    <option value="1">Not Effective</option>
-                    <option value="2">Average</option>
-                    <option value="3">Effective</option>
-                    <option value="4">Very Effective</option>
-                </select>
-			</div>
-            <div class="mini-box">
-                <h3>SPEED</h3>
-                    <select id="Speed">
-                        <option value="0">Not Observed</option>
-                        <option value="1">Slow</option>
-                        <option value="2">Average</option>
-                        <option value="3">Fast</option>
-                    </select>
-                </div>
-			<div class="mini-box">
-			<h3>DIED</h3>
-			<div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="Died">
-                    <label for="Died"></label>
-			</div>
-            </div>
-			<div class="mini-box">
-			<h3>TIPPED OVER</h3>
-			<div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="Tipped-Over">
-                    <label for="Tipped-Over"></label>
-
-
-
-            </div>
-		</div>
-		<div class="mini-box">
-			<h3>CARD</h3>
-				<select id="Card">
-                    <option value="No_Card">No Card</option>
-                    <option value="Red_Card">Red Card</option>
-                    <option value="Yellow_Card">Yellow Card</option>
-                    </select>
-			</div>
-            <div class="mini-box">
-                <h3>COMMENTS</h3>
-                <textarea id="Comments" rows="10" cols="30"></textarea>
-
-
-
-
-
-
-            </div>
-		</div>
-    </div>
-    <div id="qr-code">
-        <!-- Placeholder for the QR code image -->
+  <h1>QRScout 4063</h1>
+  <div class="dashboard">
+    <!-- Prematch Widget -->
+    <div class="widget" id="prematch-widget">
+      <h2>Prematch</h2>
+      <div class="mini-box">
+        <h3>SCOUTER INITIALS</h3>
+        <input type="text" id="prematch-scout-initials" placeholder="Required">
+      </div>
+      <div class="mini-box">
+        <h3>MATCH NUMBER</h3>
+        <input type="number" id="prematch-match-number" placeholder="Required">
+      </div>
+      <div class="mini-box">
+        <h3>ROBOT</h3>
+        <select id="prematch-robot">
+          <option value="Choose_Answer">Choose Answer</option>
+          <option value="Red_1">Red 1</option>
+          <option value="Red_2">Red 2</option>
+          <option value="Red_3">Red 3</option>
+          <option value="Blue_1">Blue 1</option>
+          <option value="Blue_2">Blue 2</option>
+          <option value="Blue_3">Blue 3</option>
+        </select>
+      </div>
+      <div class="mini-box">
+        <h3>TEAM NUMBER</h3>
+        <input type="number" id="prematch-team-number" placeholder="Required">
+      </div>
     </div>
 
-    <!-- Submit Info Button -->
-	<div class="right-align" style="display: inline-block; float: right; margin-left: 10px;">
-		<button id="submit-button" style="margin-bottom: 150px;" onclick="updateQRCodeOnSubmit(); scrollToTop()">Submit Info</button>
-	</div>
-	<div class="left-align" style="display: inline-block; float: left;">
-		<button id="submit-button" style="margin-bottom: 150px;" onclick="ClearAll(); scrollToTop()">Clear All</button>
-	</div>
-	
-	<div style="width: 100%; overflow: hidden;">
-		<div style="display: inline-block; float: left;">
-		<a href="https://www.Team4063.com" target="_blank">
-			<img src="assets/Pictures/4063_Logo.png" style="height: 100px; width: 150px; margin-left: 0;" alt="4063 Logo">
-		</a>
-		</div>
-		<a href="https://www.firstinspires.org/robotics/frc/game-and-season" target="_blank">
-		<div style="display: inline-block; float: right; margin-left: 10px;">
-			<img src="assets/Pictures/Crescendo_Logo.png" style="height: 100px; width: 150px;" alt="Crescendo Logo">
-		</div>
-		</a>
-	</div>
-	<footer id="myFooter">
+    <!-- Auto Widget -->
+    <div class="widget" id="Auto-Widget">
+      <h2>Auto</h2>
+      <div class="mini-box">
+        <h3>CENTERLINE NOTES?</h3>
+        <div class="checkbox-container">
+          <input type="checkbox" class="custom-checkbox" id="centerlineNotes">
+          <label for="centerlineNotes"></label>
+        </div>
+      </div>
+      <div class="mini-box">
+        <h3>SPEAKER SCORED</h3>
+        <button type="button" onclick="updateButtonNum('speakerScored', -1)">-</button>
+        <span id="speakerScored">0</span>
+        <button type="button" onclick="updateButtonNum('speakerScored', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>SPEAKER MISSED</h3>
+        <button type="button" onclick="updateButtonNum('speakerMissed', -1)">-</button>
+        <span id="speakerMissed">0</span>
+        <button type="button" onclick="updateButtonNum('speakerMissed', 1)">+</button>
+      </div>
+    </div>
+
+    <!-- TeleOp Widget -->
+    <div class="widget" id="TeleOp-Widget">
+      <h2>teleop</h2>
+      <div class="mini-box">
+        <h3>AMP SCORED</h3>
+        <button type="button" onclick="updateButtonNum('tampScored', -1)">-</button>
+        <span id="tampScored">0</span>
+        <button type="button" onclick="updateButtonNum('tampScored', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>AMP MISSED</h3>
+        <button type="button" onclick="updateButtonNum('tampMissed', -1)">-</button>
+        <span id="tampMissed">0</span>
+        <button type="button" onclick="updateButtonNum('tampMissed', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>SPEAKER SCORED</h3>
+        <button type="button" onclick="updateButtonNum('tspeakerScored', -1)">-</button>
+        <span id="tspeakerScored">0</span>
+        <button type="button" onclick="updateButtonNum('tspeakerScored', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>SPEAKER MISSED</h3>
+        <button type="button" onclick="updateButtonNum('tspeakerMissed', -1)">-</button>
+        <span id="tspeakerMissed">0</span>
+        <button type="button" onclick="updateButtonNum('tspeakerMissed', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>NOTE IN TRAP?</h3>
+        <button type="button" onclick="updateButtonNum('noteTrap', -1)">-</button>
+        <span id="noteTrap">0</span>
+        <button type="button" onclick="updateButtonNum('noteTrap', 1)">+</button>
+      </div>
+    </div>
+
+    <!-- Endgame Widget -->
+    <div class="widget" id="Endgame-Widget">
+      <h2>Endgame</h2>
+      <div class="mini-box">
+        <h3>SPOTLIGHT</h3>
+        <div class="checkbox-container">
+          <input type="checkbox" class="custom-checkbox" id="Spotlight">
+          <label for="Spotlight"></label>
+        </div>
+      </div>
+      <div class="mini-box">
+        <h3>END POSITION</h3>
+        <select id="End-Position">
+          <option value="Choose_Answer">Choose Answer</option>
+          <option value="No_Climb">No Climb</option>
+          <option value="Failed_Climb">Failed Climb</option>
+          <option value="Parked">Parked</option>
+          <option value="Onstage">Onstage</option>
+        </select>
+      </div>
+      <div class="mini-box">
+        <h3>HARMONY</h3>
+        <select id="Harmony">
+          <option value="Choose_Answer">Choose Answer</option>
+          <option value="Not_Completed">Not Completed</option>
+          <option value="First_On_Chain">First On Chain</option>
+          <option value="Second_On_Chain">Second On Chain</option>
+          <option value="Third_On_Chain">Third On Chain</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Postmatch Widget -->
+    <div class="widget" id="PostMatch">
+      <h2>Postmatch</h2>
+      <div class="mini-box">
+        <h3>OFFENSIVE SKILL</h3>
+        <select id="Offensive Skill">
+          <option value="0">Not Observed</option>
+          <option value="1">Not Effective</option>
+          <option value="2">Average</option>
+          <option value="3">Effective</option>
+          <option value="4">Very Effective</option>
+        </select>
+      </div>
+      <div class="mini-box">
+        <h3>DEFENSIVE SKILL</h3>
+        <select id="Defensive Skill">
+          <option value="0">Not Observed</option>
+          <option value="1">Not Effective</option>
+          <option value="2">Average</option>
+          <option value="3">Effective</option>
+          <option value="4">Very Effective</option>
+        </select>
+      </div>
+      <div class="mini-box">
+        <h3>SPEED</h3>
+        <select id="Speed">
+          <option value="0">Not Observed</option>
+          <option value="1">Slow</option>
+          <option value="2">Average</option>
+          <option value="3">Fast</option>
+        </select>
+      </div>
+      <div class="mini-box">
+        <h3>DIED</h3>
+        <div class="checkbox-container">
+          <input type="checkbox" class="custom-checkbox" id="Died">
+          <label for="Died"></label>
+        </div>
+      </div>
+      <div class="mini-box">
+        <h3>TIPPED OVER</h3>
+        <div class="checkbox-container">
+          <input type="checkbox" class="custom-checkbox" id="Tipped-Over">
+          <label for="Tipped-Over"></label>
+        </div>
+      </div>
+      <div class="mini-box">
+        <h3>CARD</h3>
+        <select id="Card">
+          <option value="No_Card">No Card</option>
+          <option value="Red_Card">Red Card</option>
+          <option value="Yellow_Card">Yellow Card</option>
+        </select>
+      </div>
+      <div class="mini-box">
+        <h3>COMMENTS</h3>
+        <textarea id="Comments" rows="10" cols="30"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR Code container -->
+  <div id="qr-code">
+    <!-- Placeholder for the QR code image -->
+  </div>
+
+  <!-- Submit and Clear Buttons -->
+  <div class="right-align" style="display: inline-block; float: right; margin-left: 10px;">
+    <button id="submit-button" style="margin-bottom: 150px;" onclick="updateQRCodeOnSubmit(); scrollToTop()">Submit Info</button>
+  </div>
+  <div class="left-align" style="display: inline-block; float: left;">
+    <button id="clear-button" style="margin-bottom: 150px;" onclick="ClearAll(); scrollToTop()">Clear All</button>
+  </div>
+
+  <div style="width: 100%; overflow: hidden;">
+    <div style="display: inline-block; float: left;">
+      <a href="https://www.Team4063.com" target="_blank">
+        <img src="assets/Pictures/4063_Logo.png" style="height: 100px; width: 150px; margin-left: 0;" alt="4063 Logo">
+      </a>
+    </div>
+    <a href="https://www.firstinspires.org/robotics/frc/game-and-season" target="_blank">
+      <div style="display: inline-block; float: right; margin-left: 10px;">
+        <img src="assets/Pictures/Crescendo_Logo.png" style="height: 100px; width: 150px;" alt="Crescendo Logo">
+      </div>
+    </a>
+  </div>
+  <footer id="myFooter">
     <p>Made By Michael Cariaga And Antonio Scott</p>
-	</footer>
-    <!-- Popup Panel -->
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <span class="close" onclick="closePopup()">&times;</span>
-            <p>Team Number Typed Wrong</p>
-        </div>
-    </div>
-    <div class="popupQR" id="popupQR">
-        <div id="qr-code-popup"></div>
-        <button 
-		style="padding: 5px; 
-			height: 32px;
-			width: 75px;
-			font-size: 16px; 
-			cursor: pointer; 
-			border-radius: 5px; 
-			background-color: #ff0000; 
-			color: #ffffff;" 
-		onclick="closePopupQR()">Close
-		</button>
-    </div>
-    <div class="overlay" id="overlay"></div>
+  </footer>
 
+  <!-- Popup Panel for messages -->
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <span class="close" onclick="closePopup()">&times;</span>
+      <p>Team Number Typed Wrong</p>
+    </div>
+  </div>
+
+  <!-- Popup Panel for the QR Code -->
+  <div class="popupQR" id="popupQR">
+    <div id="qr-code-popup"></div>
+    <button style="padding: 5px; height: 32px; width: 75px; font-size: 16px; cursor: pointer; border-radius: 5px; background-color: #ff0000; color: #ffffff;" onclick="closePopupQR()">Close</button>
+  </div>
+  <div class="overlay" id="overlay"></div>
 </body>
 </html>
