@@ -4,27 +4,24 @@
     <title>4063 Reefscape QRScout</title>
     <script src="QR-CodeGen.js"></script>
 	<script src="indexJavaScript.js"></script>
-    <script src="indexJavaScript.js"></script>
     <script>
-    if ('serviceWorker' in navigator) {
+   if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('/service-worker.js')
             .then(function(registration) {
               console.log('ServiceWorker registration successful with scope: ', registration.scope);
             }, function(err) {
               console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        });
+	
     else{
         document.getElementById("prematch-widget").style.display = "none";
     }
     function showInstallPrompt() {
         return cache.addAll(filesToCache);
     }
-        } else {
-            document.getElementById("prematch-widget").style.display = "none";
-        }
-        function showInstallPrompt() {
-            return cache.addAll(filesToCache);
-        }
     </script>
 	<link rel="manifest" href="/manifest.json">
 	<link rel="icon" type="image/png" href="/icon-192.png">
@@ -39,26 +36,14 @@
         <!-- New Teleop Widget -->
         <div class="widget" id="prematch-widget">
             <h2>Prematch</h2>
-
             <div class="mini-box">
                 <h3>SCOUTER INITIALS</h3>
                 <input type="text" id="prematch-scout-initials" placeholder="Required">
             </div>
 
-            <!-- Coral Scoring and Missing -->
-            <div class="mini-box">
-                <h3>L4 CORAL SCORED</h3>
-                <button onclick="updateButtonNum('L4CoralScored', -1)">-</button>
-                <span id="L4CoralScored">0</span>
-                <button onclick="updateButtonNum('L4CoralScored', 1)">+</button>
-            </div>
             <div class="mini-box">
                 <h3>MATCH NUMBER</h3>
                 <input type="number" id="prematch-match-number" placeholder="Required">
-                <h3>L4 CORAL MISSED</h3>
-                <button onclick="updateButtonNum('L4CoralMissed', -1)">-</button>
-                <span id="L4CoralMissed">0</span>
-                <button onclick="updateButtonNum('L4CoralMissed', 1)">+</button>
             </div>
 
             <div class="mini-box">
@@ -72,31 +57,11 @@
                     <option value="Blue_2">Blue 2</option>
                     <option value="Blue_3">Blue 3</option>
                 </select>
-                <h3>L3 CORAL SCORED</h3>
-                <button onclick="updateButtonNum('L3CoralScored', -1)">-</button>
-                <span id="L3CoralScored">0</span>
-                <button onclick="updateButtonNum('L3CoralScored', 1)">+</button>
-            </div>
-            <div class="mini-box">
-                <h3>L3 CORAL MISSED</h3>
-                <button onclick="updateButtonNum('L3CoralMissed', -1)">-</button>
-                <span id="L3CoralMissed">0</span>
-                <button onclick="updateButtonNum('L3CoralMissed', 1)">+</button>
             </div>
 
             <div class="mini-box">
-                <h3>TEAM NUMBER</h3>
+		<h3>TEAM NUMBER</h3>
                 <input type="number" id="prematch-team-number" placeholder="Required">
-                <h3>L2 CORAL SCORED</h3>
-                <button onclick="updateButtonNum('L2CoralScored', -1)">-</button>
-                <span id="L2CoralScored">0</span>
-                <button onclick="updateButtonNum('L2CoralScored', 1)">+</button>
-            </div>
-            <div class="mini-box">
-                <h3>L2 CORAL MISSED</h3>
-                <button onclick="updateButtonNum('L2CoralMissed', -1)">-</button>
-                <span id="L2CoralMissed">0</span>
-                <button onclick="updateButtonNum('L2CoralMissed', 1)">+</button>
             </div>
         </div>
 
@@ -109,11 +74,6 @@
                     <input type="checkbox" class="custom-checkbox" id="centerlineNotes">
                     <label for="centerlineNotes"></label>
                 </div>
-                <h3>L1 CORAL SCORED</h3>
-                <button onclick="updateButtonNum('L1CoralScored', -1)">-</button>
-                <span id="L1CoralScored">0</span>
-                <button onclick="updateButtonNum('L1CoralScored', 1)">+</button>
-            </div>
 			<div class="mini-box">
 				<h3>SPEAKER SCORED</h3>
 				<button type="button" onclick="updateButtonNum('speakerScored', -1)">-</button>
@@ -134,10 +94,6 @@
                 <button type="button" onclick="updateButtonNum('tampScored', -1)">-</button>
                 <span id="tampScored">0</span>
                 <button type="button" onclick="updateButtonNum('tampScored', 1)">+</button>
-                <h3>L1 CORAL MISSED</h3>
-                <button onclick="updateButtonNum('L1CoralMissed', -1)">-</button>
-                <span id="L1CoralMissed">0</span>
-                <button onclick="updateButtonNum('L1CoralMissed', 1)">+</button>
             </div>
 
             <div class="mini-box">
@@ -145,10 +101,6 @@
                 <button type="button" onclick="updateButtonNum('tampMissed', -1)">-</button>
                 <span id="tampMissed">0</span>
                 <button type="button" onclick="updateButtonNum('tampMissed', 1)">+</button>
-                <h3>ALGAE IN BARGE SCORED</h3>
-                <button onclick="updateButtonNum('AlgaeScored', -1)">-</button>
-                <span id="AlgaeScored">0</span>
-                <button onclick="updateButtonNum('AlgaeScored', 1)">+</button>
             </div>
 			<div class="mini-box">
 				<h3>SPEAKER SCORED</h3>
@@ -177,24 +129,12 @@
                     <input type="checkbox" class="custom-checkbox" id="Spotlight">
                     <label for="Spotlight"></label>
 			</div>
-            <div class="mini-box">
-                <h3>ALGAE IN BARGE MISSED</h3>
-                <button onclick="updateButtonNum('AlgaeMissed', -1)">-</button>
-                <span id="AlgaeMissed">0</span>
-                <button onclick="updateButtonNum('AlgaeMissed', 1)">+</button>
             </div>
 			<div class="mini-box">
 				<h3>END POSITION</h3>
-        </div>
-
-        <!-- Endgame Widget -->
-        <div class="widget" id="Endgame-Widget">
-            <h2>Endgame</h2>
-            <div class="mini-box">
-                <h3>END POSITION</h3>
+				
                 <select id="End-Position">
                 	<option value="Choose_Answer">Choose Answer</option>
-                    <option value="Choose_Answer">Choose Answer</option>
                     <option value="No_Climb">No Climb</option>
                     <option value="Failed_Climb">Failed Climb</option>
                     <option value="Parked">Parked</option>
@@ -222,8 +162,6 @@
                     <option value="2">Average</option>
                     <option value="3">Effective</option>
                     <option value="4">Very Effective</option>
-                    <option value="Shallow_Climb">Shallow Climb</option>
-                    <option value="Deep_Climb">Deep Climb</option>
                 </select>
 			</div>
 			<div class="mini-box">
@@ -257,14 +195,6 @@
 			<div class="checkbox-container">
                     <input type="checkbox" class="custom-checkbox" id="Tipped-Over">
                     <label for="Tipped-Over"></label>
-        </div>
-
-        <!-- Postmatch Widget -->
-        <div class="widget" id="PostMatch">
-            <h2>Postmatch</h2>
-            <div class="mini-box">
-                <h3>TIPPED DURING MATCH?</h3>
-                <input type="checkbox" class="custom-checkbox" id="TippedDuringMatch">
             </div>
 		</div>
 		<div class="mini-box">
@@ -278,14 +208,6 @@
             <div class="mini-box">
                 <h3>COMMENTS</h3>
                 <textarea id="Comments" rows="10" cols="30"></textarea>
-                <h3>ROBOT SPEED</h3>
-                <select id="RobotSpeed">
-                    <option value="1">1 - Very Slow</option>
-                    <option value="2">2 - Slow</option>
-                    <option value="3">3 - Average</option>
-                    <option value="4">4 - Fast</option>
-                    <option value="5">5 - Very Fast</option>
-                </select>
             </div>
 		</div>
     </div>
