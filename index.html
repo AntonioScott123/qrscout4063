@@ -153,10 +153,6 @@
         <textarea id="Comments" rows="10" cols="30"></textarea>
     </div>
 
-    <div id="qr-code">
-        <!-- Placeholder for the QR code -->
-    </div>
-
     <footer>
         <p>Made By Michael Cariaga And Antonio Scott</p>
     </footer>
@@ -169,18 +165,12 @@
         <button id="submit-button" style="margin-bottom: 150px;" onclick="ClearAll(); scrollToTop()">Clear All</button>
     </div>
 
-    <!-- Popup Panel -->
-    <div id="popup" class="popup">
+    <!-- Popup QR Code Modal -->
+    <div class="popupQR" id="popupQR">
         <div class="popup-content">
-            <span class="close" onclick="closePopup()">&times;</span>
-            <p>Team Number Typed Wrong</p>
+            <span class="close" onclick="closePopupQR()">&times;</span>
+            <div id="qr-code-popup"></div>
         </div>
     </div>
-
-    <div class="popupQR" id="popupQR">
-        <div id="qr-code-popup"></div>
-        <button style="padding: 5px; height: 32px; width: 75px; font-size: 16px; cursor: pointer;" onclick="closePopupQR()">Close</button>
-    </div>
-
 </body>
 </html>
