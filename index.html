@@ -19,8 +19,26 @@
         } else {
             document.getElementById("prematch-widget").style.display = "none";
         }
+        function updateButtonNum(id, change) {
+            let element = document.getElementById(id);
+            let value = parseInt(element.textContent) + change;
+            if (value < 0) value = 0;
+            element.textContent = value;
+        }
         function showInstallPrompt() {
-            return cache.addAll(filesToCache);
+            if ('caches' in window) {
+                caches.open('qrscout-cache').then(cache => {
+                    cache.addAll([
+                        '/index.html',
+                        '/indexCascadingStylingSheets.css',
+                        '/indexJavaScript.js',
+                        '/QR-CodeGen.js',
+                        '/manifest.json',
+                        '/icon-192.png',
+                        '/icon-512.png'
+                    ]);
+                });
+            }
         }
     </script>
     <link rel="manifest" href="/manifest.json">
