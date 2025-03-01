@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4063 Crescendo QRScout</title>
-    <script src="QR-CodeGen.js"></script>
-    <script src="indexJavaScript.js"></script>
+    <script src="QR-CodeGen.js"></script> <!-- QR Code Gen script -->
+    <script src="indexJavaScript.js"></script> <!-- Main JavaScript file -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {
@@ -17,8 +16,6 @@
                         console.log('ServiceWorker registration failed: ', err);
                     });
             });
-        } else {
-            document.getElementById("prematch-widget").style.display = "none";
         }
 
         function showInstallPrompt() {
@@ -32,11 +29,9 @@
 </head>
 
 <body>
-
     <h1>QRScout 4063</h1>
 
     <div class="dashboard">
-
         <!-- Auto Widget -->
         <div class="widget" id="Auto-Widget">
             <h2>Auto</h2>
@@ -159,7 +154,7 @@
     </div>
 
     <div id="qr-code">
-        <!-- Placeholder -->
+        <!-- Placeholder for the QR code -->
     </div>
 
     <footer>
@@ -173,23 +168,6 @@
     <div class="left-align" style="display: inline-block; float: left;">
         <button id="submit-button" style="margin-bottom: 150px;" onclick="ClearAll(); scrollToTop()">Clear All</button>
     </div>
-
-    <div style="width: 100%; overflow: hidden;">
-        <div style="display: inline-block; float: left;">
-            <a href="https://www.Team4063.com" target="_blank">
-                <img src="assets/Pictures/4063_Logo.png" style="height: 100px; width: 150px; margin-left: 0;" alt="4063 Logo">
-            </a>
-        </div>
-        <a href="https://www.firstinspires.org/robotics/frc/game-and-season" target="_blank">
-            <div style="display: inline-block; float: right; margin-left: 10px;">
-                <img src="assets/Pictures/Crescendo_Logo.png" style="height: 100px; width: 150px;" alt="Crescendo Logo">
-            </div>
-        </a>
-    </div>
-
-    <footer id="myFooter">
-        <p>Made By Michael Cariaga And Antonio Scott</p>
-    </footer>
 
     <!-- Popup Panel -->
     <div id="popup" class="popup">
@@ -205,5 +183,4 @@
     </div>
 
 </body>
-
 </html>
