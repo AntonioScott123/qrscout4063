@@ -1,44 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4063 Reefscape QRScout</title>
+    <title>4063 Crescendo QRScout</title>
     <script src="QR-CodeGen.js"></script>
     <script src="indexJavaScript.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
+            window.addEventListener('load', function () {
                 navigator.serviceWorker.register('/service-worker.js')
-                    .then(function(registration) {
+                    .then(function (registration) {
                         console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                    }, function(err) {
+                    }, function (err) {
                         console.log('ServiceWorker registration failed: ', err);
                     });
             });
         } else {
             document.getElementById("prematch-widget").style.display = "none";
         }
-        function updateButtonNum(id, change) {
-            let element = document.getElementById(id);
-            let value = parseInt(element.textContent) + change;
-            if (value < 0) value = 0;
-            element.textContent = value;
-        }
+
         function showInstallPrompt() {
-            if ('caches' in window) {
-                caches.open('qrscout-cache').then(cache => {
-                    cache.addAll([
-                        '/index.html',
-                        '/indexCascadingStylingSheets.css',
-                        '/indexJavaScript.js',
-                        '/QR-CodeGen.js',
-                        '/manifest.json',
-                        '/icon-192.png',
-                        '/icon-512.png'
-                    ]);
-                });
-            }
+            return cache.addAll(filesToCache);
         }
     </script>
     <link rel="manifest" href="/manifest.json">
@@ -46,6 +30,7 @@
     <link rel="apple-touch-icon" href="/icon-512.png">
     <link rel="stylesheet" href="indexCascadingStylingSheets.css">
 </head>
+
 <body>
 
     <h1>QRScout 4063</h1>
@@ -148,13 +133,13 @@
         <!-- Postmatch Widget -->
         <div class="widget" id="PostMatch">
             <h2>Postmatch</h2>
-        <div class="mini-box">
-            <h3>TIPPED DURING MATCH?</h3>
-            <div class="checkbox-container">
-                <input type="checkbox" class="custom-checkbox" id="TippedDuringMatch">
-                <label for="TippedDuringMatch"></label>
+            <div class="mini-box">
+                <h3>TIPPED DURING MATCH?</h3>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="TippedDuringMatch">
+                    <label for="TippedDuringMatch"></label>
+                </div>
             </div>
-        </div>
             <div class="mini-box">
                 <h3>ROBOT SPEED</h3>
                 <select id="RobotSpeed">
@@ -168,9 +153,57 @@
         </div>
     </div>
 
+    <div class="mini-box">
+        <h3>COMMENTS</h3>
+        <textarea id="Comments" rows="10" cols="30"></textarea>
+    </div>
+
+    <div id="qr-code">
+        <!-- Placeholder -->
+    </div>
+
     <footer>
         <p>Made By Michael Cariaga And Antonio Scott</p>
     </footer>
 
+    <!-- Submit Info Button -->
+    <div class="right-align" style="display: inline-block; float: right; margin-left: 10px;">
+        <button id="submit-button" style="margin-bottom: 150px;" onclick="updateQRCodeOnSubmit(); scrollToTop()">Submit Info</button>
+    </div>
+    <div class="left-align" style="display: inline-block; float: left;">
+        <button id="submit-button" style="margin-bottom: 150px;" onclick="ClearAll(); scrollToTop()">Clear All</button>
+    </div>
+
+    <div style="width: 100%; overflow: hidden;">
+        <div style="display: inline-block; float: left;">
+            <a href="https://www.Team4063.com" target="_blank">
+                <img src="assets/Pictures/4063_Logo.png" style="height: 100px; width: 150px; margin-left: 0;" alt="4063 Logo">
+            </a>
+        </div>
+        <a href="https://www.firstinspires.org/robotics/frc/game-and-season" target="_blank">
+            <div style="display: inline-block; float: right; margin-left: 10px;">
+                <img src="assets/Pictures/Crescendo_Logo.png" style="height: 100px; width: 150px;" alt="Crescendo Logo">
+            </div>
+        </a>
+    </div>
+
+    <footer id="myFooter">
+        <p>Made By Michael Cariaga And Antonio Scott</p>
+    </footer>
+
+    <!-- Popup Panel -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup()">&times;</span>
+            <p>Team Number Typed Wrong</p>
+        </div>
+    </div>
+
+    <div class="popupQR" id="popupQR">
+        <div id="qr-code-popup"></div>
+        <button style="padding: 5px; height: 32px; width: 75px; font-size: 16px; cursor: pointer;" onclick="closePopupQR()">Close</button>
+    </div>
+
 </body>
+
 </html>
