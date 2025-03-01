@@ -44,6 +44,10 @@ function updateButtonNum(counterID, change) {
 
 // --- QR Code Generation ---
 function updateQRCodeOnSubmit() {
+    // Clear previous QR code
+    const qrCodeContainer = document.getElementById('qr-code-popup');
+    qrCodeContainer.innerHTML = ""; // This will clear any previous QR codes
+
     let qrCodeData = `
         Auto Moved: ${gameData.autoMoved}
         L4 Coral Scored: ${gameData.L4CoralScored} L4 Coral Missed: ${gameData.L4CoralMissed}
@@ -57,7 +61,7 @@ function updateQRCodeOnSubmit() {
         Comments: ${document.getElementById('Comments').value}
     `;
 
-    const qrCode = new QRCode(document.getElementById('qr-code-popup'), {
+    const qrCode = new QRCode(qrCodeContainer, {
         text: qrCodeData,
         width: 256,
         height: 256,
