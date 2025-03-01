@@ -234,4 +234,15 @@ text-align: left;
     clear: both;         /* Ensure it starts on a new line if floats are used */
     margin-top: 300px;; /* Ensure padding is included in the height */
   }
-  
+@media (max-width: 600px) {
+  .dashboard {
+    flex-direction: column;
+    align-items: center;
+  }
+  .widget {
+    width: 90%;
+    height: auto;
+    margin: 10px 0;
+  }
+}
+
