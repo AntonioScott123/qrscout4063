@@ -1,6 +1,3 @@
-// --- Data and Utility Functions ---
-
-// Only include properties that match the HTML fields.
 const gameData = {
 			initials: "",
 			matchNum: 0,
@@ -39,20 +36,17 @@ smallify["CAN"] = "CAN";
 smallify["yes"] = "yes";
 smallify["no"] = "no";
 
-
 function scrollToTop() {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0; // For Chrome
   }
-}
 
-// Example team numbers for validation (if needed)
 var teamsCompeting = [67, 70, 78, 114, 175, 179, 219, 226, 578, 604, 1058, 1114, 1160, 1288, 1318, 1391, 1410, 1458, 1501, 1533, 1591, 1727, 1730, 1731, 2073, 2338, 2522, 2609, 2611, 2614, 2689, 2713, 2930, 2987, 3075, 3341, 3534, 3539, 3544, 4063, 4125, 4285, 4322, 4400, 4501, 4630, 5417, 5427, 5461, 5712, 5885, 5892, 6217, 6329, 6413, 6459, 6586, 6740, 6800, 6902, 7174, 7428, 7457, 7763, 8019, 8033, 8840, 9431, 9452, 9458, 9483, 9498, 9535, 9636, 9764];
-
 function openPopup() {
     document.getElementById('popup').style.display = 'block';
 }
-@@ -50,184 +46,58 @@ function closePopup() {
+
+function closePopup() {
     document.getElementById('popup').style.display = 'none';
 }
 
@@ -60,6 +54,7 @@ function checkIfTeamSigma(enteredTeam)
 {
 	return teamsCompeting.includes(enteredTeam);
 }
+
 function ClearAll() {
     document.getElementById('prematch-match-number').value = '';
     document.getElementById('prematch-team-number').value = '';
@@ -110,6 +105,7 @@ function ClearAll() {
         function updateButtonNum(variable, value) {
     gameData[variable] += value;
 	gameData[variable] = Math.max(gameData[variable], 0);
+    // Update HTML element value
     document.getElementById(variable).textContent = gameData[variable];
 
         function updateGameData(section, key, value) {
@@ -214,7 +210,7 @@ window.addEventListener('beforeinstallprompt', function(event) {
 		document.getElementById('prematch-robot').value === "Choose_Answer"
 	) {
 	} else {
-		const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.centerlineNotes} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.speed} ${gameData.died} ${gameData.tippedOver} ${gameData.card}`;
+		const qrCodeData = ${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.centerlineNotes} ${gameData.speakerScored} ${gameData.speakerMissed} ${gameData.tampScored} ${gameData.tampMissed} ${gameData.tspeakerScored} ${gameData.tspeakerMissed} ${gameData.noteTrap} ${gameData.spotlight} ${gameData.endPos} ${gameData.harmony} ${gameData.offSkill} ${gameData.defSkill} ${gameData.speed} ${gameData.died} ${gameData.tippedOver} ${gameData.card};
 		const qrCodeDataWithCommas = qrCodeData.split(' ').join('~');
 		const qrCodeDataWithCommasWithComment = qrCodeDataWithCommas + '~' + gameData.comments;
 		const qrCodeContainer = document.getElementById('qr-code-popup');
@@ -235,5 +231,3 @@ function closePopupQR() {
 	document.getElementById('popupQR').style.display = 'none';
 	document.getElementById('overlay').style.display = 'none';
 }
-
-
