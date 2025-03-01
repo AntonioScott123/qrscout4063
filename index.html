@@ -32,130 +32,8 @@
     <h1>QRScout 4063</h1>
 
     <div class="dashboard">
-        <!-- Auto Widget -->
-        <div class="widget" id="Auto-Widget">
-            <h2>Auto</h2>
-
-            <div class="mini-box">
-                <h3>MOVED?</h3>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="autoMoved">
-                    <label for="autoMoved"></label>
-                </div>
-            </div>
-
-            <!-- Coral Scoring and Missing -->
-            <div class="mini-box">
-                <h3>L4 CORAL SCORED</h3>
-                <button onclick="updateButtonNum('L4CoralScored', -1)">-</button>
-                <span id="L4CoralScored">0</span>
-                <button onclick="updateButtonNum('L4CoralScored', 1)">+</button>
-            </div>
-            <div class="mini-box">
-                <h3>L4 CORAL MISSED</h3>
-                <button onclick="updateButtonNum('L4CoralMissed', -1)">-</button>
-                <span id="L4CoralMissed">0</span>
-                <button onclick="updateButtonNum('L4CoralMissed', 1)">+</button>
-            </div>
-
-            <div class="mini-box">
-                <h3>L3 CORAL SCORED</h3>
-                <button onclick="updateButtonNum('L3CoralScored', -1)">-</button>
-                <span id="L3CoralScored">0</span>
-                <button onclick="updateButtonNum('L3CoralScored', 1)">+</button>
-            </div>
-            <div class="mini-box">
-                <h3>L3 CORAL MISSED</h3>
-                <button onclick="updateButtonNum('L3CoralMissed', -1)">-</button>
-                <span id="L3CoralMissed">0</span>
-                <button onclick="updateButtonNum('L3CoralMissed', 1)">+</button>
-            </div>
-
-            <div class="mini-box">
-                <h3>L2 CORAL SCORED</h3>
-                <button onclick="updateButtonNum('L2CoralScored', -1)">-</button>
-                <span id="L2CoralScored">0</span>
-                <button onclick="updateButtonNum('L2CoralScored', 1)">+</button>
-            </div>
-            <div class="mini-box">
-                <h3>L2 CORAL MISSED</h3>
-                <button onclick="updateButtonNum('L2CoralMissed', -1)">-</button>
-                <span id="L2CoralMissed">0</span>
-                <button onclick="updateButtonNum('L2CoralMissed', 1)">+</button>
-            </div>
-
-            <div class="mini-box">
-                <h3>L1 CORAL SCORED</h3>
-                <button onclick="updateButtonNum('L1CoralScored', -1)">-</button>
-                <span id="L1CoralScored">0</span>
-                <button onclick="updateButtonNum('L1CoralScored', 1)">+</button>
-            </div>
-            <div class="mini-box">
-                <h3>L1 CORAL MISSED</h3>
-                <button onclick="updateButtonNum('L1CoralMissed', -1)">-</button>
-                <span id="L1CoralMissed">0</span>
-                <button onclick="updateButtonNum('L1CoralMissed', 1)">+</button>
-            </div>
-
-            <div class="mini-box">
-                <h3>ALGAE IN BARGE SCORED</h3>
-                <button onclick="updateButtonNum('AlgaeScored', -1)">-</button>
-                <span id="AlgaeScored">0</span>
-                <button onclick="updateButtonNum('AlgaeScored', 1)">+</button>
-            </div>
-            <div class="mini-box">
-                <h3>ALGAE IN BARGE MISSED</h3>
-                <button onclick="updateButtonNum('AlgaeMissed', -1)">-</button>
-                <span id="AlgaeMissed">0</span>
-                <button onclick="updateButtonNum('AlgaeMissed', 1)">+</button>
-            </div>
-        </div>
-
-        <!-- Endgame Widget -->
-        <div class="widget" id="Endgame-Widget">
-            <h2>Endgame</h2>
-            <div class="mini-box">
-                <h3>END POSITION</h3>
-                <select id="End-Position">
-                    <option value="Choose_Answer">Choose Answer</option>
-                    <option value="No_Climb">No Climb</option>
-                    <option value="Shallow_Climb">Shallow Climb</option>
-                    <option value="Deep_Climb">Deep Climb</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Postmatch Widget -->
-        <div class="widget" id="PostMatch">
-            <h2>Postmatch</h2>
-            <div class="mini-box">
-                <h3>TIPPED DURING MATCH?</h3>
-                <div class="checkbox-container">
-                    <input type="checkbox" class="custom-checkbox" id="TippedDuringMatch">
-                    <label for="TippedDuringMatch"></label>
-                </div>
-            </div>
-            <div class="mini-box">
-                <h3>ROBOT SPEED</h3>
-                <select id="RobotSpeed">
-                    <option value="1">1 - Very Slow</option>
-                    <option value="2">2 - Slow</option>
-                    <option value="3">3 - Average</option>
-                    <option value="4">4 - Fast</option>
-                    <option value="5">5 - Very Fast</option>
-                </select>
-            </div>
-        </div>
+        <!-- Widgets here... -->
     </div>
-
-    <div class="mini-box">
-        <h3>COMMENTS</h3>
-        <textarea id="Comments" rows="10" cols="30"></textarea>
-    </div>
-
-    <footer>
-        <p>Made By Michael Cariaga And Antonio Scott</p>
-    </footer>
 
     <!-- Submit Info Button -->
     <div class="right-align" style="display: inline-block; float: right; margin-left: 10px;">
@@ -168,8 +46,10 @@
     <!-- Popup QR Code Modal -->
     <div class="popupQR" id="popupQR">
         <div class="popup-content">
-            <span class="close" onclick="closePopupQR()">&times;</span>
+            <!-- QR code will be generated here -->
             <div id="qr-code-popup"></div>
+            <!-- Close button at bottom left -->
+            <button class="close-btn" onclick="closePopupQR()">CLOSE</button>
         </div>
     </div>
 </body>
