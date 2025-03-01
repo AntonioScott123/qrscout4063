@@ -10,19 +10,13 @@ if ('serviceWorker' in navigator) {
       });
   });
 } else {
-  // If Service Worker not supported, hide the prematch widget if needed.
   const prematchWidget = document.getElementById("prematch-widget");
   if (prematchWidget) {
     prematchWidget.style.display = "none";
   }
 }
 
-// Optional: Function to prompt installation (if needed)
-function showInstallPrompt() {
-  return cache.addAll(filesToCache);
-}
-
-// Global Game Data Object
+// Global gameData object (holds form data)
 const gameData = {
   initials: "",
   matchNum: 0,
@@ -48,7 +42,7 @@ const gameData = {
   spotlight: ""
 };
 
-// Smallify object (optional shortcut)
+// Optional shortcut object
 let smallify = {
   "Not_Observed": "NOB",
   "Choose_Answer": "CAN",
@@ -61,11 +55,11 @@ let smallify = {
 };
 
 function scrollToTop() {
-  document.body.scrollTop = 0; // For Safari
-  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE, Opera
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
 }
 
-// Teams Competing Array
+// Teams competing array (example list)
 var teamsCompeting = [67, 70, 78, 114, 175, 179, 219, 226, 578, 604, 1058, 1114, 1160, 1288, 1318, 1391, 1410, 1458, 1501, 1533, 1591, 1727, 1730, 1731, 2073, 2338, 2522, 2609, 2611, 2614, 2689, 2713, 2930, 2987, 3075, 3341, 3534, 3539, 3544, 4063, 4125, 4285, 4322, 4400, 4501, 4630, 5417, 5427, 5461, 5712, 5885, 5892, 6217, 6329, 6413, 6459, 6586, 6740, 6800, 6902, 7174, 7428, 7457, 7763, 8019, 8033, 8840, 9431, 9452, 9458, 9483, 9498, 9535, 9636, 9764];
 
 function openPopup() {
@@ -95,7 +89,7 @@ function ClearAll() {
   document.getElementById('Comments').value = '';
   document.getElementById('Speed').value = 0;
 
-  // Reset gameData
+  // Reset gameData values
   gameData.initials = '';
   gameData.matchNum = 0;
   gameData.robot = 'Choose_Answer';
@@ -139,27 +133,30 @@ window.addEventListener('beforeinstallprompt', function(event) {
   deferredPrompt = event;
 });
 
-// New function: updateQRCodeOnSubmit()
-// Gathers all form values, creates a comma-delimited string, and generates the QR code pop-up.
+// The updateQRCodeOnSubmit function gathers all form values, creates a comma-delimited string,
+// and generates a QR code in a pop-up—this pattern is similar to what the FRC Red Hawks app uses.
 function updateQRCodeOnSubmit() {
+  console.log("updateQRCodeOnSubmit called");
+  
   // Validate required fields
-  if (
-    document.getElementById('prematch-scout-initials').value === "" ||
-    document.getElementById('prematch-match-number').value === "" ||
-    document.getElementById('prematch-team-number').value === "" ||
-    document.getElementById('prematch-robot').value === "Choose_Answer"
-  ) {
+  const scoutInitials = document.getElementById('prematch-scout-initials').value;
+  const matchNumber = document.getElementById('prematch-match-number').value;
+  const teamNumber = document.getElementById('prematch-team-number').value;
+  const robot = document.getElementById('prematch-robot').value;
+  
+  if (scoutInitials === "" || matchNumber === "" || teamNumber === "" || robot === "Choose_Answer") {
+    console.log("Validation failed: missing required fields");
     return;
   }
   
   // Update gameData with current form values
-  gameData.initials = document.getElementById('prematch-scout-initials').value;
-  gameData.matchNum = document.getElementById('prematch-match-number').value;
-  gameData.teamNum = document.getElementById('prematch-team-number').value;
-  gameData.robot = document.getElementById('prematch-robot').value;
+  gameData.initials = scoutInitials;
+  gameData.matchNum = matchNumber;
+  gameData.teamNum = teamNumber;
+  gameData.robot = robot;
   gameData.centerlineNotes = document.getElementById('centerlineNotes').checked ? "yes" : "no";
   
-  // Auto widget values (assumes buttons update display)
+  // Auto widget values
   gameData.speakerScored = document.getElementById('speakerScored').textContent;
   gameData.speakerMissed = document.getElementById('speakerMissed').textContent;
   
@@ -210,9 +207,17 @@ function updateQRCodeOnSubmit() {
     gameData.comments
   ].join(',');
   
+  console.log("QR Data:", qrData);
+  
+  // Check if the QRCode library is loaded
+  if (typeof QRCode === 'undefined') {
+    console.error("QRCode library is not loaded!");
+    return;
+  }
+  
   // Generate the QR code in the pop-up container
   const qrCodeContainer = document.getElementById('qr-code-popup');
-  qrCodeContainer.innerHTML = ''; // Clear any previous QR code
+  qrCodeContainer.innerHTML = '';
   new QRCode(qrCodeContainer, {
     text: qrData,
     width: 300,
