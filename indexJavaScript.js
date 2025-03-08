@@ -44,7 +44,14 @@ if ('serviceWorker' in navigator) {
     climbed: "",
     TippedDuring: false,
     speed: "",
-    comments: ""
+    comments: "",
+    ProcessorScored_Auto: 0,
+    ProccessorMissed_Auto:0,
+    ProcessorScored_TeleOp: 0,
+    ProcessorMissed_TeleOp: 0,
+    
+
+
   };
   
   // Optional smallify object for abbreviating common values
@@ -88,14 +95,14 @@ if ('serviceWorker' in navigator) {
     
     // Clear Auto widget counters
     ['L1autoscored', 'L1automissed', 'L2autoscored', 'L2automissed', 'L3autoscored', 'L3automissed', 'L4autoscored', 'L4automissed',
-     'AlgaeScoredinBarge_Auto', 'AlgaeMissedBarge_Auto'
+     'AlgaeScoredinBarge_Auto', 'AlgaeMissedBarge_Auto','ProcessorScored_Auto','ProcessorMissed_Auto'
     ].forEach(id => {
       document.getElementById(id).textContent = '0';
     });
     
     // Clear TeleOp widget counters
     ['L1Telescored', 'L1Telemissed', 'L2Telescored', 'L2Telemissed', 'L3Telescored', 'L3Telemissed', 'L4Telescored', 'L4Telemissed',
-     'AlgaeScoredinBarge_TeleOp', 'AlgaeMissedBarge_TeleOp'
+     'AlgaeScoredinBarge_TeleOp', 'AlgaeMissedBarge_TeleOp','ProcessorScored_TeleOp','ProcessorMissed_TeleOp'
     ].forEach(id => {
       document.getElementById(id).textContent = '0';
     });
@@ -174,6 +181,7 @@ if ('serviceWorker' in navigator) {
     gameData.L4autoscored = parseInt(document.getElementById('L4autoscored').textContent);
     gameData.L4automissed = parseInt(document.getElementById('L4automissed').textContent);
     
+    
     // Capture TeleOp widget values
     gameData.L1Telescored = parseInt(document.getElementById('L1Telescored').textContent);
     gameData.L1Telemissed = parseInt(document.getElementById('L1Telemissed').textContent);
@@ -206,7 +214,7 @@ if ('serviceWorker' in navigator) {
     if (checkIfTeamSigma(gameData.teamNum)) {
       generateQRCode();
     } else {
-      openPopup();
+      openPopup();  
     }
   }
   
@@ -214,17 +222,18 @@ if ('serviceWorker' in navigator) {
   
   function generateQRCode() {
     // Create a string from gameData (using spaces then replace with tilde delimiter)
-    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.L1autoscored} ${gameData.L1automissed} ${gameData.L2autoscored} ${gameData.L2automissed} ${gameData.L3autoscored} ${gameData.L3automissed} ${gameData.L4autoscored} ${gameData.L4automissed} ${gameData.L1Telescored} ${gameData.L1Telemissed} ${gameData.L2Telescored} ${gameData.L2Telemissed} ${gameData.L3Telescored} ${gameData.L3Telemissed} ${gameData.L4Telescored} ${gameData.L4Telemissed} ${gameData.AlgaeScoredinBarge} ${gameData.AlgaeMissedBarge} ${gameData.climbed} ${gameData.TippedDuring} ${gameData.speed} ${gameData.comments}`;
+    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.L1autoscored} ${gameData.L1automissed} ${gameData.L2autoscored} ${gameData.L2automissed} ${gameData.L3autoscored} ${gameData.L3automissed} ${gameData.L4autoscored} ${gameData.L4automissed} ${gameData.L1Telescored} ${gameData.L1Telemissed} ${gameData.L2Telescored} ${gameData.L2Telemissed} ${gameData.L3Telescored} ${gameData.L3Telemissed} ${gameData.L4Telescored} ${gameData.L4Telemissed} ${gameData.AlgaeScoredinBarge} ${gameData.AlgaeMissedBarge} ${gameData.climbed} ${gameData.TippedDuring} ${gameData.speed}`;
     
     const qrCodeContainer = document.getElementById('qr-code-popup');
     qrCodeContainer.innerHTML = '';  // Clear previous QR code content
     
     // Generate QR code using a tilde delimiter
     new QRCode(qrCodeContainer, {
-      text: qrCodeData.split(' ').join('~'),
+      text: qrCodeData.split(' ').join('~') + "~" + gameData.comments,
       width: 300,
       height: 300,
     });
+
     
     // Display the QR code popup
     document.getElementById('popupQR').style.display = 'flex';
