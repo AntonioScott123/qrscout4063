@@ -170,7 +170,6 @@ button:active {
     z-index: 9999;
     padding: 20px;
     text-align: center;
-    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
