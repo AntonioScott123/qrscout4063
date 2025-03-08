@@ -34,16 +34,16 @@ h2 {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    align-items: flex-start; /* Align items to the start of the cross-axis (top) */
+    align-items: flex-start;
 }
 .widget {
-margin: 5px;
-padding: 10px;
-background: linear-gradient(to top, #00000000 1%, #FF69B4 100%);
-width: 275px;
-height: 625px;
+    margin: 5px;
+    padding: 10px;
+    background: linear-gradient(to top, #00000000 1%, #FF69B4 100%);
+    width: 275px;
+    height: 625px;
     border-radius: 10px;
-    box-shadow: 5 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 5px 4px 8px rgba(0, 0, 0, 0.2);
 }
 .mini-box {
     margin: 10px;
@@ -52,6 +52,12 @@ height: 625px;
     background-color: #ffffff;
     box-shadow: 0 40px 80px rgba(0, 0, 0, 0.1);
     flex-direction: column;
+}
+#TeleOp-Widget {
+    min-height: 875px; /* Increase the min-height to make these widgets longer */
+}
+#Auto-Widget {
+    min-height: 950px;
 }
 h3 {
     margin: 0px;
@@ -80,7 +86,6 @@ button {
 .custom-checkbox {
     display: none;
 }
-
 .custom-checkbox + label {
     margin-top: 15px;
     margin-bottom: 10px;
@@ -92,7 +97,6 @@ button {
     border-radius: 50%;
     cursor: pointer;
 }
-
 .custom-checkbox:checked + label {
     background-color: #FF69B4;
 }
@@ -128,7 +132,7 @@ button:active {
 }
 /* Popup styling */
 .popup {
-    display: none; /* Hide popup by default */
+    display: none;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -136,12 +140,11 @@ button:active {
     background-color: #fefefe;
     border: 1px solid #888;
     z-index: 9999;
+    padding: 20px;
 }
-
 .popup-content {
     padding: 20px;
 }
-
 .close {
     position: absolute;
     top: 10px;
@@ -171,10 +174,10 @@ button:active {
 }
 input {
     height: 40px;
-                width: 97%;
-                font-size: 16px;
-                padding: 2px;
-                margin: 0px;
+    width: 97%;
+    font-size: 16px;
+    padding: 2px;
+    margin: 0px;
 }
 textarea {
     resize: none;
@@ -202,22 +205,22 @@ select:focus {
     border-color: rgba(81, 203, 238, 1);
 }
 #myFooter {
-color: #FFFFFF;
+    color: #FFFFFF;
 }
 .error {
-border: 2px solid red;
+    border: 2px solid red;
 }
 .right-align {
-text-align: right;
+    text-align: right;
 }
 .left-align {
-text-align: left;
+    text-align: left;
 }
 #closeQRButton {
     background-color: red;
     color: white;
     padding: 10px 20px;
-    border-radius: 12px; /* Curved corners */
+    border-radius: 12px;
     border: none;
     font-size: 16px;
     cursor: pointer;
@@ -225,24 +228,62 @@ text-align: left;
     bottom: 20px;
     left: 20px;
 }
-
 #closeQRButton:hover {
     background-color: darkred;
 }
 /* Adjust the Postmatch widget styling */
 #PostMatch {
-    clear: both;         /* Ensure it starts on a new line if floats are used */
-    margin-top: 300px;; /* Ensure padding is included in the height */
-  }
+    clear: both;
+    margin-top: 300px;
+}
 @media (max-width: 600px) {
-  .dashboard {
-    flex-direction: column;
-    align-items: center;
-  }
-  .widget {
+    .dashboard {
+        flex-direction: column;
+        align-items: center;
+    }
+    .widget {
+        width: 90%;
+        height: auto;
+        margin: 10px 0;
+    }
+}
+/* Additional styles for the bottom buttons */
+.button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+#submit-btn, #clear-all-btn {
+    display: block;
+    margin: 10px auto;
+    width: 200px;
+    height: 50px;
+    font-size: 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#submit-btn {
+    background-color: green;
+    color: white;
+}
+#clear-all-btn {
+    background-color: blue;
+    color: white;
+}
+
+/* Revised close popup button styles */
+#close-popup {
+    position: static; /* Remove absolute positioning */
+    display: block;
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 20px auto 0; /* 20px top margin, centered */
     width: 90%;
-    height: auto;
-    margin: 10px 0;
-  }
+    text-align: center;
 }
 
