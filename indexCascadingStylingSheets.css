@@ -121,7 +121,7 @@ button {
     cursor: pointer;
 }
 .custom-checkbox:checked + label {
-    background-color: #FF69B4;
+    background-color: #007399;
 }
 
 #qr-code {
@@ -170,29 +170,33 @@ button:active {
     z-index: 9999;
     padding: 20px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
+
 .popup-content {
     padding: 20px;
 }
 .close {
     cursor: pointer;
 }
+.error {
+  border: 2px solid red;
+}
 
 /* Revised close popup button styling */
 #close-popup {
-    position: static;
-    display: block;
-    background-color: #0083AE;
-    color: white;
-    padding: 12px 25px;
-    border-radius: 12px;
-    border: none;
-    font-size: 22px;
+    padding: 5px;
+    height: 32px;
+    width: 75px;
+    font-size: 16px;
     cursor: pointer;
-    margin: 20px auto 0;
-    width: 90%;
-    text-align: center;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    border-radius: 5px;
+    background-color: #F5E565;
+    color: #000000;
+    font-weight: bold;
 }
 #close-popup:hover {
     background-color: #007399;
