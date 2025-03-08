@@ -14,51 +14,70 @@ body {
     font-family: 'SF Sports Night NS', sans-serif;
     text-align: center;
     margin: 20px;
-    background: linear-gradient(to bottom, #ffffff, #ffffff 75%, #FF69B4);
+    /* Smoother ocean-inspired background */
+    background: linear-gradient(to bottom, #E0F7F9, #F0F0F0 75%, #0083AE);
     font-size: 24px;
 }
+
 h1 {
     font-family: 'SF Sports Night', sans-serif;
-    color: #FF69B4;
+    color: #0083AE; /* Deep ocean blue */
     font-size: 64px;
     margin: 20px;
-    text-shadow: 0 4px 8px rgba(255, 0, 128, 0.7);
+    text-shadow: 0 4px 8px rgba(0, 131, 174, 0.7);
     letter-spacing: 5px;
 }
+
 h2 {
     margin: 10px;
     color: #ffffff;
     letter-spacing: 2px;
 }
+
 .dashboard {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     align-items: flex-start;
 }
+
+/* Enhanced widget styling */
 .widget {
-    margin: 5px;
-    padding: 10px;
-    background: linear-gradient(to top, #00000000 1%, #FF69B4 100%);
-    width: 275px;
-    height: 625px;
-    border-radius: 10px;
-    box-shadow: 5px 4px 8px rgba(0, 0, 0, 0.2);
-}
-.mini-box {
     margin: 10px;
-    padding: 0px;
-    border-radius: 5px;
-    background-color: #ffffff;
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.1);
-    flex-direction: column;
+    padding: 15px;
+    /* Underwater gradient from deep blue to lighter teal/seafoam */
+    background: linear-gradient(to bottom, #0083AE, #00A9C9, #E0F7F9);
+    width: 275px;
+    min-height: 625px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-#TeleOp-Widget {
-    min-height: 875px; /* Increase the min-height to make these widgets longer */
+
+.widget:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
 }
+
+/* Increase height for specific widgets if needed */
 #Auto-Widget {
     min-height: 950px;
 }
+
+#TeleOp-Widget {
+    min-height: 875px;
+}
+
+/* Mini-box adjustments for a cleaner look */
+.mini-box {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+}
+
+/* h3 adjustments */
 h3 {
     margin: 0px;
     font-family: tahoma, sans-serif;
@@ -69,6 +88,8 @@ h3 {
     margin-top: 0;
     border-radius: 0px;
 }
+
+/* Button styling for small counter buttons remains unchanged */
 button {
     padding: 5px;
     margin: 10px;
@@ -80,6 +101,8 @@ button {
     background-color: #FF69B4;
     color: #ffffff;
 }
+
+/* Checkbox styling */
 .checkbox-container {
     text-align: center;
 }
@@ -100,6 +123,7 @@ button {
 .custom-checkbox:checked + label {
     background-color: #FF69B4;
 }
+
 #qr-code {
     max-width: 300px;
     margin: 20px auto;
@@ -107,6 +131,8 @@ button {
 img {
     vertical-align: bottom;
 }
+
+/* Optional styling for an alternative submit button (if used) */
 #submit-button {
     padding: 2px;
     width: 200px;
@@ -119,6 +145,7 @@ img {
     margin-top: 0px;
     box-shadow: 0 40px 80px rgba(95, 89, 255, 0.6);
 }
+
 @keyframes buttonPress {
     0% { transform: scale(1); }
     50% { transform: scale(0.90); }
@@ -130,6 +157,7 @@ button:hover {
 button:active {
     animation: buttonPress 0.2s linear;
 }
+
 /* Popup styling */
 .popup {
     display: none;
@@ -141,27 +169,36 @@ button:active {
     border: 1px solid #888;
     z-index: 9999;
     padding: 20px;
+    text-align: center;
 }
 .popup-content {
     padding: 20px;
 }
 .close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
     cursor: pointer;
 }
-.popupQR {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #ffffff;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+
+/* Revised close popup button styling */
+#close-popup {
+    position: static;
+    display: block;
+    background-color: #0083AE;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 12px;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    margin: 20px auto 0;
+    width: 90%;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
+#close-popup:hover {
+    background-color: #007399;
+    transform: scale(1.03);
+}
+
 .overlay {
     display: none;
     position: fixed;
@@ -172,81 +209,19 @@ button:active {
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 999;
 }
-input {
-    height: 40px;
-    width: 97%;
-    font-size: 16px;
-    padding: 2px;
-    margin: 0px;
-}
-textarea {
-    resize: none;
-}
-select {
-    padding: 10px;
-    font-size: 16px;
+
+/* Input, textarea, and select styling */
+input, textarea, select {
     border: 1px solid #ccc;
     border-radius: 5px;
-    appearance: none; 
-    -webkit-appearance: none; 
-    background-color: #ffffff;
-    color: #333;
-    cursor: pointer;
-    width: 100%;
+    padding: 8px;
+    transition: border-color 0.3s ease;
 }
-select option {
-    padding: 10px;
-    background-color: #ffffff;
-    color: #333;
-}
-select:focus {
+input:focus, textarea:focus, select:focus {
+    border-color: #0083AE;
     outline: none;
-    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-    border-color: rgba(81, 203, 238, 1);
 }
-#myFooter {
-    color: #FFFFFF;
-}
-.error {
-    border: 2px solid red;
-}
-.right-align {
-    text-align: right;
-}
-.left-align {
-    text-align: left;
-}
-#closeQRButton {
-    background-color: red;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 12px;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-}
-#closeQRButton:hover {
-    background-color: darkred;
-}
-/* Adjust the Postmatch widget styling */
-#PostMatch {
-    clear: both;
-    margin-top: 300px;
-}
-@media (max-width: 600px) {
-    .dashboard {
-        flex-direction: column;
-        align-items: center;
-    }
-    .widget {
-        width: 90%;
-        height: auto;
-        margin: 10px 0;
-    }
-}
+
 /* Additional styles for the bottom buttons */
 .button-container {
     text-align: center;
@@ -255,35 +230,27 @@ select:focus {
 #submit-btn, #clear-all-btn {
     display: block;
     margin: 10px auto;
-    width: 200px;
-    height: 50px;
-    font-size: 20px;
+    width: 220px;
+    height: 55px;
+    font-size: 22px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 #submit-btn {
-    background-color: green;
+    background-color: #0083AE;
     color: white;
+}
+#submit-btn:hover {
+    background-color: #007399;
+    transform: scale(1.03);
 }
 #clear-all-btn {
-    background-color: blue;
+    background-color: #FF6B6B;
     color: white;
 }
-
-/* Revised close popup button styles */
-#close-popup {
-    position: static; /* Remove absolute positioning */
-    display: block;
-    background-color: green;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 12px;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    margin: 20px auto 0; /* 20px top margin, centered */
-    width: 90%;
-    text-align: center;
+#clear-all-btn:hover {
+    background-color: #e55a5a;
+    transform: scale(1.03);
 }
-
