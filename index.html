@@ -126,6 +126,18 @@
         <span id="AlgaeMissedBarge_Auto">0</span>
         <button onclick="updateButtonNum('AlgaeMissedBarge_Auto', 1)">+</button>
       </div>
+      <div class="mini-box">
+        <h3>Processor Scored</h3>
+        <button onclick="updateButtonNum('ProcessorScored_Auto', -1)">-</button>
+        <span id="ProcessorScored_Auto">0</span>
+        <button onclick="updateButtonNum('ProcessorScored_Auto', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>Processor Scored</h3>
+        <button onclick="updateButtonNum('ProcessorMissed_Auto', -1)">-</button>
+        <span id="ProcessorMissed_Auto">0</span>
+        <button onclick="updateButtonNum('ProcessorMissed_Auto', 1)">+</button>
+      </div>
     </div>
 
     <!-- TeleOp Widget -->
@@ -191,6 +203,24 @@
         <span id="AlgaeMissedBarge_TeleOp">0</span>
         <button onclick="updateButtonNum('AlgaeMissedBarge_TeleOp', 1)">+</button>
       </div>
+      <div class="mini-box">
+        <h3>Processor Scored</h3>
+        <button onclick="updateButtonNum('ProcessorScored_TeleOp', -1)">-</button>
+        <span id="ProcessorScored_TeleOp">0</span>
+        <button onclick="updateButtonNum('ProcessorScored_TeleOp', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>Processor Missed</h3>
+        <button onclick="updateButtonNum('ProcessorMissed_TeleOp', -1)">-</button>
+        <span id="ProcessorMissed_TeleOp">0</span>
+        <button onclick="updateButtonNum('ProcessorMissed_TeleOp', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>Human Player Score?</h3>
+        <button onclick="updateButtonNum('HumanPlayerScored', -1)">-</button>
+        <span id="HumanPlayerScored">0</span>
+        <button onclick="updateButtonNum('HumanPlayerScored', 1)">+</button>
+      </div>
     </div>
 
     <!-- Endgame Widget -->
@@ -200,6 +230,7 @@
         <h3>END POSITION</h3>
         <select id="climbed">
           <option value="Choose_Answer">Choose Answer</option>
+          <option value="Parked">Parked</option>
           <option value="No_Cage">No Cage</option>
           <option value="Shallow_Cage">Shallow Cage</option>
           <option value="Deep_Cage">Deep Cage</option>
@@ -213,6 +244,11 @@
         <h3>Tipped During Match?</h3>
         <input type="checkbox" class="custom-checkbox" id="Tipped-During-Match">
         <label for="Tipped-During-Match"></label>
+      </div>
+      <div class="mini-box">
+        <h3>Defense During Match?</h3>
+        <input type="checkbox" class="custom-checkbox" id="Defense-During-Match">
+        <label for="Defense-During-Match"></label>
       </div>
     </div>
 
@@ -238,8 +274,7 @@
   <div id="popupQR" class="popup">
     <div id="qr-code-popup"></div>
     <button id="close-popup" onclick="closePopupQR()">Close</button>
+
   </div>
-  <!-- popup wrong panel-->
-</div>
 </body>
 </html>
