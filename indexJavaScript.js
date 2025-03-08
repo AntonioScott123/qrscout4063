@@ -76,7 +76,7 @@ if ('serviceWorker' in navigator) {
   }
   
   function checkIfTeamSigma(enteredTeam) {
-    return true
+    return teamsCompeting.includes(enteredTeam);
   }
   
   function ClearAll() {
