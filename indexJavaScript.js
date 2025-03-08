@@ -59,11 +59,6 @@ if ('serviceWorker' in navigator) {
     "no": "no"
   };
   
-  function scrollToTop() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-  }
-  
   // Example teams competing array
   var teamsCompeting = [67,70,78,114,175,179,219,226,578,604,1058,1114,1160,1288,1318,1391,1410,1458,1501,1533,1591,1727,1730,1731,2073,2338,2522,2609,2611,2614,2689,2713,2930,2987,3075,3341,3534,3539,3544,4063,4125,4285,4322,4400,4501,4630,5417,5427,5461,5712,5885,5892,6217,6329,6413,6459,6586,6740,6800,6902,7174,7428,7457,7763,8019,8033,8840,9431,9452,9458,9483,9498,9535,9636,9764];
   
@@ -81,6 +76,10 @@ if ('serviceWorker' in navigator) {
   
   function ClearAll() {
     // Clear Prematch fields
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
     document.getElementById('prematch-scout-initials').value = '';
     document.getElementById('prematch-match-number').value = '';
     document.getElementById('prematch-team-number').value = '';
@@ -109,21 +108,63 @@ if ('serviceWorker' in navigator) {
     // Clear Postmatch field
     document.getElementById('Comments').value = '';
   }
-  
   function updateButtonNum(id, num) {
     var el = document.getElementById(id);
-    el.textContent = parseInt(el.textContent) + num;
+  let currentValue = parseInt(el.textContent);
+  let newValue = currentValue + num;
+  if (newValue < 0) {
+    newValue = 0;
+  }
+  el.textContent = newValue;
   }
   
   function updateQRCodeOnSubmit() {
-    // Capture Prematch values
-    gameData.initials = document.getElementById('prematch-scout-initials').value.trim();
-    gameData.matchNum = parseInt(document.getElementById('prematch-match-number').value.trim());
-    gameData.robot = smallify[document.getElementById('prematch-robot').value] || document.getElementById('prematch-robot').value;
-    gameData.teamNum = parseInt(document.getElementById('prematch-team-number').value.trim());
+    // Get required fields
+    let initialsField = document.getElementById('prematch-scout-initials');
+    let matchNumField = document.getElementById('prematch-match-number');
+    let teamNumField = document.getElementById('prematch-team-number');
+    let robotField = document.getElementById('prematch-robot');
+    
+    // Remove previous error styling if any
+    initialsField.classList.remove('error');
+    matchNumField.classList.remove('error');
+    teamNumField.classList.remove('error');
+    robotField.classList.remove('error');
+    
+    // Validate required fields
+    let valid = true;
+    if (initialsField.value.trim() === "") {
+      initialsField.classList.add('error');
+      valid = false;
+    }
+    if (matchNumField.value.trim() === "") {
+      matchNumField.classList.add('error');
+      valid = false;
+    }
+    if (teamNumField.value.trim() === "") {
+      teamNumField.classList.add('error');
+      valid = false;
+    }
+    // Assuming "Choose_Answer" means not selected
+    if (robotField.value === "Choose_Answer") {
+      robotField.classList.add('error');
+      valid = false;
+    }
+    
+    // If any required field is invalid, scroll to top and exit
+    if (!valid) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    
+    // All required fields are filled—capture the values.
+    gameData.initials = initialsField.value.trim();
+    gameData.matchNum = parseInt(matchNumField.value.trim());
+    gameData.robot = smallify[robotField.value] || robotField.value;
+    gameData.teamNum = parseInt(teamNumField.value.trim());
     gameData.moved = document.getElementById('moved').checked;
     
-    // Capture Auto widget values (Coral Scoring)
+    // Capture Auto widget values
     gameData.L1autoscored = parseInt(document.getElementById('L1autoscored').textContent);
     gameData.L1automissed = parseInt(document.getElementById('L1automissed').textContent);
     gameData.L2autoscored = parseInt(document.getElementById('L2autoscored').textContent);
@@ -133,7 +174,7 @@ if ('serviceWorker' in navigator) {
     gameData.L4autoscored = parseInt(document.getElementById('L4autoscored').textContent);
     gameData.L4automissed = parseInt(document.getElementById('L4automissed').textContent);
     
-    // Capture TeleOp widget values (Coral Scoring)
+    // Capture TeleOp widget values
     gameData.L1Telescored = parseInt(document.getElementById('L1Telescored').textContent);
     gameData.L1Telemissed = parseInt(document.getElementById('L1Telemissed').textContent);
     gameData.L2Telescored = parseInt(document.getElementById('L2Telescored').textContent);
@@ -161,13 +202,15 @@ if ('serviceWorker' in navigator) {
     // Capture Postmatch widget value
     gameData.comments = document.getElementById('Comments').value;
     
-    // Validate team number using teamsCompeting array
+    // Validate team number using teamsCompeting array (or your custom logic)
     if (checkIfTeamSigma(gameData.teamNum)) {
       generateQRCode();
     } else {
       openPopup();
     }
   }
+  
+  
   
   function generateQRCode() {
     // Create a string from gameData (using spaces then replace with tilde delimiter)
