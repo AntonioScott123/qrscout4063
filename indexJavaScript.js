@@ -119,8 +119,8 @@ if ('serviceWorker' in navigator) {
     // Capture Prematch values
     gameData.initials = document.getElementById('prematch-scout-initials').value.trim();
     gameData.matchNum = parseInt(document.getElementById('prematch-match-number').value.trim());
-    gameData.robot = smallify[document.getElementById('prematch-robot').value] || document.getElementById('prematch-robot').value;
     gameData.teamNum = parseInt(document.getElementById('prematch-team-number').value.trim());
+    gameData.robot = smallify[document.getElementById('prematch-robot').value] || document.getElementById('prematch-robot').value;
     gameData.moved = document.getElementById('moved').checked;
     
     // Capture Auto widget values (Coral Scoring)
