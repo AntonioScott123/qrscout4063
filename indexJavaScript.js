@@ -76,7 +76,7 @@ if ('serviceWorker' in navigator) {
   }
   
   function checkIfTeamSigma(enteredTeam) {
-    return True
+    return true
   }
   
   function ClearAll() {
