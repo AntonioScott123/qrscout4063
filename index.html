@@ -7,6 +7,7 @@
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" href="/icon-192.png">
   <link rel="apple-touch-icon" href="/icon-512.png">
+  <!-- Link to the external CSS file -->
   <link rel="stylesheet" href="indexCascadingStylingSheets.css">
   <!-- QR Code Generation Library -->
   <script src="QR-CodeGen.js"></script>
@@ -62,11 +63,9 @@
       <h2>Auto</h2>
       <div class="mini-box">
         <h3>MOVED?</h3>
-        <!-- Custom checkbox with accompanying label -->
         <input type="checkbox" class="custom-checkbox" id="moved">
         <label for="moved"></label>
       </div>
-      <!-- Coral Scoring for Auto (Levels L1 to L4) -->
       <div class="mini-box">
         <h3>L1 Coral Scored</h3>
         <button onclick="updateButtonNum('L1autoscored', -1)">-</button>
@@ -115,7 +114,6 @@
         <span id="L4automissed">0</span>
         <button onclick="updateButtonNum('L4automissed', 1)">+</button>
       </div>
-      <!-- New Auto: Algae in Barge Scored/Missed -->
       <div class="mini-box">
         <h3>Algae in Barge Scored</h3>
         <button onclick="updateButtonNum('AlgaeScoredinBarge_Auto', -1)">-</button>
@@ -133,7 +131,6 @@
     <!-- TeleOp Widget -->
     <div class="widget" id="TeleOp-Widget">
       <h2>TeleOp</h2>
-      <!-- Coral Scoring for TeleOp (Levels L1 to L4) -->
       <div class="mini-box">
         <h3>L1 Coral Scored</h3>
         <button onclick="updateButtonNum('L1Telescored', -1)">-</button>
@@ -182,7 +179,6 @@
         <span id="L4Telemissed">0</span>
         <button onclick="updateButtonNum('L4Telemissed', 1)">+</button>
       </div>
-      <!-- New TeleOp: Algae in Barge Scored/Missed -->
       <div class="mini-box">
         <h3>Algae in Barge Scored</h3>
         <button onclick="updateButtonNum('AlgaeScoredinBarge_TeleOp', -1)">-</button>
@@ -215,7 +211,6 @@
       </div>
       <div class="mini-box">
         <h3>Tipped During Match?</h3>
-        <!-- Custom checkbox for Tipped During Match -->
         <input type="checkbox" class="custom-checkbox" id="Tipped-During-Match">
         <label for="Tipped-During-Match"></label>
       </div>
@@ -235,15 +230,14 @@
     <!-- Placeholder for QR code -->
   </div>
 
-  <!-- Button to Generate QR Code -->
-  <button id="submit-btn" onclick="updateQRCodeOnSubmit()">Generate QR Code</button>
-  <!-- This is the button for clear all-->
-  <button id="clear-all-btn" onclick="ClearAll()">Clear All</button>
-  <!-- QR Code Popup -->
+  <div class="button-container">
+    <button id="submit-btn" onclick="updateQRCodeOnSubmit()">Generate QR Code</button>
+    <button id="clear-all-btn" onclick="ClearAll()">Clear All</button>
+  </div>
+
   <div id="popupQR" class="popup">
     <div id="qr-code-popup"></div>
     <button id="close-popup" onclick="closePopupQR()">Close</button>
   </div>
 </body>
 </html>
-
