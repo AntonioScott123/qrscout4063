@@ -43,12 +43,14 @@ if ('serviceWorker' in navigator) {
     AlgaeMissedBarge: 0,
     climbed: "",
     TippedDuring: false,
+    DefenseDuring: false,
     speed: "",
     comments: "",
     ProcessorScored_Auto: 0,
-    ProccessorMissed_Auto:0,
+    ProcessorMissed_Auto:0,
     ProcessorScored_TeleOp: 0,
     ProcessorMissed_TeleOp: 0,
+    HumanPlayerScored: 0
     
 
 
@@ -102,7 +104,7 @@ if ('serviceWorker' in navigator) {
     
     // Clear TeleOp widget counters
     ['L1Telescored', 'L1Telemissed', 'L2Telescored', 'L2Telemissed', 'L3Telescored', 'L3Telemissed', 'L4Telescored', 'L4Telemissed',
-     'AlgaeScoredinBarge_TeleOp', 'AlgaeMissedBarge_TeleOp','ProcessorScored_TeleOp','ProcessorMissed_TeleOp'
+     'AlgaeScoredinBarge_TeleOp', 'AlgaeMissedBarge_TeleOp','ProcessorScored_TeleOp','ProcessorMissed_TeleOp', 'HumanPlayerScored'
     ].forEach(id => {
       document.getElementById(id).textContent = '0';
     });
@@ -111,6 +113,7 @@ if ('serviceWorker' in navigator) {
     document.getElementById('climbed').value = 'Choose_Answer';
     document.getElementById('speed').value = '0';
     document.getElementById('Tipped-During-Match').checked = false;
+    document.getElementById('Defense-During-Match').checked = false;
     
     // Clear Postmatch field
     document.getElementById('Comments').value = '';
@@ -180,6 +183,8 @@ if ('serviceWorker' in navigator) {
     gameData.L3automissed = parseInt(document.getElementById('L3automissed').textContent);
     gameData.L4autoscored = parseInt(document.getElementById('L4autoscored').textContent);
     gameData.L4automissed = parseInt(document.getElementById('L4automissed').textContent);
+    gameData.ProcessorScored_Auto = parseInt(document.getElementById('ProcessorScored_Auto').textContent);
+    gameData.ProcessorMissed_Auto = parseInt(document.getElementById('ProcessorMissed_Auto').textContent);
     
     
     // Capture TeleOp widget values
@@ -191,21 +196,16 @@ if ('serviceWorker' in navigator) {
     gameData.L3Telemissed = parseInt(document.getElementById('L3Telemissed').textContent);
     gameData.L4Telescored = parseInt(document.getElementById('L4Telescored').textContent);
     gameData.L4Telemissed = parseInt(document.getElementById('L4Telemissed').textContent);
+    gameData.ProcessorScored_TeleOp = parseInt(document.getElementById('ProcessorScored_TeleOp').textContent);
+    gameData.ProcessorMissed_TeleOp = parseInt(document.getElementById('ProcessorMissed_TeleOp').textContent);
     
     // Capture additional algae data from Auto and TeleOp sections
-    const autoAlgaeScored = parseInt(document.getElementById('AlgaeScoredinBarge_Auto').textContent);
-    const autoAlgaeMissed = parseInt(document.getElementById('AlgaeMissedBarge_Auto').textContent);
-    const teleopAlgaeScored = parseInt(document.getElementById('AlgaeScoredinBarge_TeleOp').textContent);
-    const teleopAlgaeMissed = parseInt(document.getElementById('AlgaeMissedBarge_TeleOp').textContent);
-    
-    // Sum the algae scores from Auto and TeleOp sections
-    gameData.AlgaeScoredinBarge = autoAlgaeScored + teleopAlgaeScored;
-    gameData.AlgaeMissedBarge = autoAlgaeMissed + teleopAlgaeMissed;
     
     // Capture Endgame widget values
     gameData.climbed = document.getElementById('climbed').value;
     gameData.speed = document.getElementById('speed').value;
     gameData.TippedDuring = document.getElementById('Tipped-During-Match').checked ? "Yes" : "No";
+    gameData.DefenseDuring = document.getElementById('Defense-During-Match').checked ? "Yes" : "No";
     
     // Capture Postmatch widget value
     gameData.comments = document.getElementById('Comments').value;
@@ -222,7 +222,11 @@ if ('serviceWorker' in navigator) {
   
   function generateQRCode() {
     // Create a string from gameData (using spaces then replace with tilde delimiter)
-    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.L1autoscored} ${gameData.L1automissed} ${gameData.L2autoscored} ${gameData.L2automissed} ${gameData.L3autoscored} ${gameData.L3automissed} ${gameData.L4autoscored} ${gameData.L4automissed} ${gameData.L1Telescored} ${gameData.L1Telemissed} ${gameData.L2Telescored} ${gameData.L2Telemissed} ${gameData.L3Telescored} ${gameData.L3Telemissed} ${gameData.L4Telescored} ${gameData.L4Telemissed} ${gameData.AlgaeScoredinBarge} ${gameData.AlgaeMissedBarge} ${gameData.climbed} ${gameData.TippedDuring} ${gameData.speed}`;
+    const autoAlgaeScored = parseInt(document.getElementById('AlgaeScoredinBarge_Auto').textContent);
+    const autoAlgaeMissed = parseInt(document.getElementById('AlgaeMissedBarge_Auto').textContent);
+    const teleopAlgaeScored = parseInt(document.getElementById('AlgaeScoredinBarge_TeleOp').textContent);
+    const teleopAlgaeMissed = parseInt(document.getElementById('AlgaeMissedBarge_TeleOp').textContent);
+    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.L1autoscored} ${gameData.L1automissed} ${gameData.L2autoscored} ${gameData.L2automissed} ${gameData.L3autoscored} ${gameData.L3automissed} ${gameData.L4autoscored} ${gameData.L4automissed} ${autoAlgaeScored} ${autoAlgaeMissed} ${gameData.ProcessorScored_Auto} ${gameData.ProcessorMissed_Auto} ${gameData.L1Telescored} ${gameData.L1Telemissed} ${gameData.L2Telescored} ${gameData.L2Telemissed} ${gameData.L3Telescored} ${gameData.L3Telemissed} ${gameData.L4Telescored} ${gameData.L4Telemissed} ${teleopAlgaeScored} ${teleopAlgaeMissed} ${gameData.ProcessorScored_TeleOp} ${gameData.ProcessorMissed_TeleOp} ${gameData.climbed} ${gameData.TippedDuring} ${gameData.speed}`;
     
     const qrCodeContainer = document.getElementById('qr-code-popup');
     qrCodeContainer.innerHTML = '';  // Clear previous QR code content
