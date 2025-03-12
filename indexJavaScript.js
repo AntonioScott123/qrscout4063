@@ -103,7 +103,7 @@ if ('serviceWorker' in navigator) {
     
     // Clear TeleOp widget counters
     ['L1Telescored', 'L1Telemissed', 'L2Telescored', 'L2Telemissed', 'L3Telescored', 'L3Telemissed', 'L4Telescored', 'L4Telemissed',
-     'AlgaeScoredinBarge_TeleOp', 'AlgaeMissedBarge_TeleOp','ProcessorScored_TeleOp','ProcessorMissed_TeleOp', 'HumanPlayerScored'
+     'AlgaeScoredinBarge_TeleOp', 'AlgaeMissedBarge_TeleOp','ProcessorScored_TeleOp','ProcessorMissed_TeleOp'
     ].forEach(id => {
       document.getElementById(id).textContent = '0';
     });
