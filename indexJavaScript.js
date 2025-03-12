@@ -49,8 +49,7 @@ if ('serviceWorker' in navigator) {
     ProcessorScored_Auto: 0,
     ProcessorMissed_Auto:0,
     ProcessorScored_TeleOp: 0,
-    ProcessorMissed_TeleOp: 0,
-    HumanPlayerScored: 0
+    ProcessorMissed_TeleOp: 0
     
 
 
