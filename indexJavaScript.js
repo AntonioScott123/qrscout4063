@@ -88,10 +88,8 @@ if ('serviceWorker' in navigator) {
       top: 0,
       behavior: "smooth"
     });
-    document.getElementById('prematch-scout-initials').value = '';
     document.getElementById('prematch-match-number').value = '';
     document.getElementById('prematch-team-number').value = '';
-    document.getElementById('prematch-robot').value = 'Choose_Answer';
     document.getElementById('moved').checked = false;
     
     // Clear Auto widget counters
