@@ -202,7 +202,7 @@ if ('serviceWorker' in navigator) {
     gameData.climbed = document.getElementById('climbed').value;
     gameData.speed = document.getElementById('speed').value;
     gameData.TippedDuring = document.getElementById('Tipped-During-Match').checked ? "Yes" : "No";
-    gameData.DefenseDuring = document.getElementById('Defense-During-Match').checked ? "Yes" : "No";
+
     
     // Capture Postmatch widget value
     gameData.comments = document.getElementById('Comments').value;
