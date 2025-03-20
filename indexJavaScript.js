@@ -111,7 +111,6 @@ if ('serviceWorker' in navigator) {
     document.getElementById('speed').value = '0';
     document.getElementById('Tipped-During-Match').checked = false;
     document.getElementById('Defense-During-Match').checked = false;
-    
     // Clear Postmatch field
     document.getElementById('Comments').value = '';
   }
