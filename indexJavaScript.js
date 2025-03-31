@@ -78,7 +78,7 @@ if ('serviceWorker' in navigator) {
     document.getElementById('popup').style.display = 'none';
   }
   
-  function checkIfTeamSigma(enteredTeam) {
+  function checkIfTeam(enteredTeam) {
     return true
   }
   
@@ -206,7 +206,7 @@ if ('serviceWorker' in navigator) {
     gameData.comments = document.getElementById('Comments').value;
     
     // Validate team number using teamsCompeting array (or your custom logic)
-    if (checkIfTeamSigma(gameData.teamNum)) {
+    if (checkIfTeam(gameData.teamNum)) {
       generateQRCode();
     } else {
       openPopup();  
