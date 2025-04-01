@@ -15,7 +15,7 @@ var filesToCache = [
   '/icon-512.png',
   '/manifest.json',
   '/service-worker.js'
-];
+]
 
 // Install event
 self.addEventListener('install', function(event) {
