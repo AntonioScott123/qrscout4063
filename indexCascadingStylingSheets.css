@@ -10,13 +10,24 @@
     font-weight: normal;
     font-style: normal;
 }
+:root {
+    --app-gradient: linear-gradient(to bottom, #E0F7F9, #F0F0F0 75%, #0083AE);
+}
+
+html,
+body {
+    min-height: 100%;
+    margin: 0;
+    background: var(--app-gradient);
+    background-attachment: fixed;
+}
+
 body {
     font-family: 'SF Sports Night NS', sans-serif;
     text-align: center;
-    margin: 0;
+    min-height: 100dvh;
     padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
     /* Smoother ocean-inspired background */
-    background: linear-gradient(to bottom, #E0F7F9, #F0F0F0 75%, #0083AE);
     font-size: 24px;
 }
 
