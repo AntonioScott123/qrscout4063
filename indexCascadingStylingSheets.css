@@ -202,14 +202,14 @@ button {
 
 .fancy-select-wrapper::before,
 .fancy-select-wrapper::after {
-    content: "❯";
-    color: #0083AE;
+    content: "▼";
+    color: #000000;
     font-size: 14px;
     font-weight: bold;
 }
 
 .fancy-select-wrapper::before {
-    transform: rotate(180deg);
+    transform: none;
 }
 
 .fancy-select {
@@ -219,12 +219,22 @@ button {
     text-align: center;
     text-align-last: center;
     font-weight: bold;
+    color: #000000;
     background-color: #f8fdff;
 }
 
 #speed {
+    display: block;
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-left: 0;
+    margin-right: 0;
     accent-color: #0083AE;
+}
+
+input[type="range"] {
+    padding: 0;
 }
 
 .speed-value {
@@ -401,10 +411,20 @@ input:focus, textarea:focus, select:focus {
 
 @keyframes falsePop {
     0% { transform: scale(1); }
-    45% { transform: scale(1.2); }
+    45% { transform: scale(1.12); }
     100% { transform: scale(1); }
+}
+
+@keyframes trueSplashPop {
+    0% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 131, 174, 0); }
+    40% { transform: scale(1.1); box-shadow: 0 0 0 4px rgba(0, 131, 174, 0.16); }
+    100% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 131, 174, 0); }
 }
 
 .checkbox-false-pop {
     animation: falsePop 0.18s ease-out;
+}
+
+.checkbox-true-pop {
+    animation: trueSplashPop 0.24s ease-out;
 }

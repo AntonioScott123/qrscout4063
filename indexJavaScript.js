@@ -270,9 +270,16 @@ function initializeCheckboxAnimations() {
   const checkboxes = document.querySelectorAll('.custom-checkbox');
   checkboxes.forEach((checkbox) => {
     checkbox.addEventListener('change', () => {
-      if (checkbox.checked) return;
       const label = document.querySelector(`label[for="${checkbox.id}"]`);
       if (!label) return;
+
+      if (checkbox.checked) {
+        label.classList.remove('checkbox-true-pop');
+        void label.offsetWidth;
+        label.classList.add('checkbox-true-pop');
+        return;
+      }
+
       label.classList.remove('checkbox-false-pop');
       void label.offsetWidth;
       label.classList.add('checkbox-false-pop');
