@@ -95,6 +95,18 @@
     <div class="widget" id="TeleOp-Widget">
       <h2>TeleOp</h2>
       <div class="mini-box">
+        <h3>FUEL SCORED</h3>
+        <button onclick="updateButtonNum('teleopFuelScored', -1)">-</button>
+        <span id="teleopFuelScored">0</span>
+        <button onclick="updateButtonNum('teleopFuelScored', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>FUEL MISSED</h3>
+        <button onclick="updateButtonNum('teleopFuelMissed', -1)">-</button>
+        <span id="teleopFuelMissed">0</span>
+        <button onclick="updateButtonNum('teleopFuelMissed', 1)">+</button>
+      </div>
+      <div class="mini-box">
         <h3>INTAKE SPEED (1-5)</h3>
         <input type="range" id="speed" min="1" max="5" step="1" value="3">
         <div id="speed-value" class="speed-value">3</div>
@@ -116,18 +128,6 @@
           <input type="checkbox" class="custom-checkbox" id="intakeOutpost">
           <label for="intakeOutpost"></label>
         </div>
-      </div>
-      <div class="mini-box">
-        <h3>FUEL SCORED</h3>
-        <button onclick="updateButtonNum('teleopFuelScored', -1)">-</button>
-        <span id="teleopFuelScored">0</span>
-        <button onclick="updateButtonNum('teleopFuelScored', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>FUEL MISSED</h3>
-        <button onclick="updateButtonNum('teleopFuelMissed', -1)">-</button>
-        <span id="teleopFuelMissed">0</span>
-        <button onclick="updateButtonNum('teleopFuelMissed', 1)">+</button>
       </div>
     </div>
 
