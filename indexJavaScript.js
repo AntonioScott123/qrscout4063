@@ -96,14 +96,14 @@ if ('serviceWorker' in navigator) {
     ['L1autoscored', 'L1automissed', 'L2autoscored', 'L2automissed', 'L3autoscored', 'L3automissed', 'L4autoscored', 'L4automissed',
      'AlgaeScoredinBarge_Auto', 'AlgaeMissedBarge_Auto','ProcessorScored_Auto','ProcessorMissed_Auto'
     ].forEach(id => {
-      document.getElementById(id).textContent = '0';
+      setCounterValue(id, 0);
     });
     
     // Clear TeleOp widget counters
     ['L1Telescored', 'L1Telemissed', 'L2Telescored', 'L2Telemissed', 'L3Telescored', 'L3Telemissed', 'L4Telescored', 'L4Telemissed',
      'AlgaeScoredinBarge_TeleOp', 'AlgaeMissedBarge_TeleOp','ProcessorScored_TeleOp','ProcessorMissed_TeleOp'
     ].forEach(id => {
-      document.getElementById(id).textContent = '0';
+      setCounterValue(id, 0);
     });
     
     // Clear Endgame widget fields
@@ -113,15 +113,141 @@ if ('serviceWorker' in navigator) {
     // Clear Postmatch field
     document.getElementById('Comments').value = '';
   }
-  function updateButtonNum(id, num) {
-    var el = document.getElementById(id);
-  let currentValue = parseInt(el.textContent);
-  let newValue = currentValue + num;
-  if (newValue < 0) {
-    newValue = 0;
+  
+function getCounterValue(id) {
+  const el = document.getElementById(id);
+  if (!el) return 0;
+  const raw = el.tagName === 'INPUT' ? el.value : el.textContent;
+  const parsed = parseInt(raw, 10);
+  return Number.isNaN(parsed) ? 0 : parsed;
+}
+
+function setCounterValue(id, value) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const safeValue = Math.max(0, value);
+  if (el.tagName === 'INPUT') {
+    el.value = safeValue;
+  } else {
+    el.textContent = safeValue;
   }
-  el.textContent = newValue;
+}
+
+function addPressFeedback(button) {
+  if (!button) return;
+  button.classList.add('counter-button-active');
+  setTimeout(() => button.classList.remove('counter-button-active'), 140);
+  if (navigator.vibrate) {
+    navigator.vibrate(10);
   }
+}
+
+function initializeCounterInputs() {
+  const counterIds = new Set();
+  const buttons = document.querySelectorAll('button[onclick*="updateButtonNum("]');
+  buttons.forEach((button) => {
+    const match = button.getAttribute('onclick').match(/updateButtonNum\('([^']+)'/);
+    if (match) counterIds.add(match[1]);
+  });
+
+  counterIds.forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el || el.tagName === 'INPUT') return;
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = id;
+    input.inputMode = 'numeric';
+    input.setAttribute('pattern', '[0-9]*');
+    input.setAttribute('enterkeyhint', 'done');
+    input.className = 'counter-input';
+    input.value = getCounterValue(id);
+
+    input.addEventListener('input', () => {
+      const digitsOnly = input.value.replace(/\D/g, '');
+      input.value = digitsOnly === '' ? '' : String(parseInt(digitsOnly, 10));
+    });
+
+    input.addEventListener('focus', () => {
+      input.select();
+    });
+
+    input.addEventListener('blur', () => {
+      if (input.value.trim() === '') input.value = '0';
+    });
+
+    el.replaceWith(input);
+  });
+}
+
+function initializeCounterButtonInteractions() {
+  const buttons = document.querySelectorAll('button[onclick*="updateButtonNum("]');
+  buttons.forEach((button) => {
+    const match = button.getAttribute('onclick').match(/updateButtonNum\('([^']+)'\s*,\s*(-?\d+)/);
+    if (!match) return;
+
+    const counterId = match[1];
+    const delta = parseInt(match[2], 10);
+    let holdTimer = null;
+    let repeatTimer = null;
+    let wasLongPress = false;
+
+    const clearTimers = () => {
+      if (holdTimer) clearTimeout(holdTimer);
+      if (repeatTimer) clearInterval(repeatTimer);
+      holdTimer = null;
+      repeatTimer = null;
+      setTimeout(() => {
+        wasLongPress = false;
+      }, 0);
+      button.classList.remove('counter-button-active');
+    };
+
+    const startHold = (event) => {
+      if (event) {
+        event.preventDefault();
+      }
+      button.classList.add('counter-button-active');
+      holdTimer = setTimeout(() => {
+        wasLongPress = true;
+        repeatTimer = setInterval(() => {
+          updateButtonNum(counterId, delta);
+          addPressFeedback(button);
+        }, 90);
+      }, 260);
+    };
+
+    button.addEventListener('click', (event) => {
+      if (wasLongPress) {
+        event.preventDefault();
+        return;
+      }
+      addPressFeedback(button);
+    });
+
+    button.addEventListener('touchstart', startHold, { passive: false });
+    button.addEventListener('touchend', clearTimers);
+    button.addEventListener('touchcancel', clearTimers);
+
+    button.addEventListener('mousedown', (event) => {
+      if (event.button !== 0) return;
+      startHold(event);
+    });
+    button.addEventListener('mouseup', clearTimers);
+    button.addEventListener('mouseleave', clearTimers);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initializeCounterInputs();
+  initializeCounterButtonInteractions();
+});
+
+function updateButtonNum(id, num) {
+  const currentValue = getCounterValue(id);
+  const newValue = currentValue + num;
+  setCounterValue(id, newValue);
+}
   
   function updateQRCodeOnSubmit() {
     // Get required fields
@@ -170,29 +296,29 @@ if ('serviceWorker' in navigator) {
     gameData.moved = document.getElementById('moved').checked;
     
     // Capture Auto widget values
-    gameData.L1autoscored = parseInt(document.getElementById('L1autoscored').textContent);
-    gameData.L1automissed = parseInt(document.getElementById('L1automissed').textContent);
-    gameData.L2autoscored = parseInt(document.getElementById('L2autoscored').textContent);
-    gameData.L2automissed = parseInt(document.getElementById('L2automissed').textContent);
-    gameData.L3autoscored = parseInt(document.getElementById('L3autoscored').textContent);
-    gameData.L3automissed = parseInt(document.getElementById('L3automissed').textContent);
-    gameData.L4autoscored = parseInt(document.getElementById('L4autoscored').textContent);
-    gameData.L4automissed = parseInt(document.getElementById('L4automissed').textContent);
-    gameData.ProcessorScored_Auto = parseInt(document.getElementById('ProcessorScored_Auto').textContent);
-    gameData.ProcessorMissed_Auto = parseInt(document.getElementById('ProcessorMissed_Auto').textContent);
+    gameData.L1autoscored = getCounterValue('L1autoscored');
+    gameData.L1automissed = getCounterValue('L1automissed');
+    gameData.L2autoscored = getCounterValue('L2autoscored');
+    gameData.L2automissed = getCounterValue('L2automissed');
+    gameData.L3autoscored = getCounterValue('L3autoscored');
+    gameData.L3automissed = getCounterValue('L3automissed');
+    gameData.L4autoscored = getCounterValue('L4autoscored');
+    gameData.L4automissed = getCounterValue('L4automissed');
+    gameData.ProcessorScored_Auto = getCounterValue('ProcessorScored_Auto');
+    gameData.ProcessorMissed_Auto = getCounterValue('ProcessorMissed_Auto');
     
     
     // Capture TeleOp widget values
-    gameData.L1Telescored = parseInt(document.getElementById('L1Telescored').textContent);
-    gameData.L1Telemissed = parseInt(document.getElementById('L1Telemissed').textContent);
-    gameData.L2Telescored = parseInt(document.getElementById('L2Telescored').textContent);
-    gameData.L2Telemissed = parseInt(document.getElementById('L2Telemissed').textContent);
-    gameData.L3Telescored = parseInt(document.getElementById('L3Telescored').textContent);
-    gameData.L3Telemissed = parseInt(document.getElementById('L3Telemissed').textContent);
-    gameData.L4Telescored = parseInt(document.getElementById('L4Telescored').textContent);
-    gameData.L4Telemissed = parseInt(document.getElementById('L4Telemissed').textContent);
-    gameData.ProcessorScored_TeleOp = parseInt(document.getElementById('ProcessorScored_TeleOp').textContent);
-    gameData.ProcessorMissed_TeleOp = parseInt(document.getElementById('ProcessorMissed_TeleOp').textContent);
+    gameData.L1Telescored = getCounterValue('L1Telescored');
+    gameData.L1Telemissed = getCounterValue('L1Telemissed');
+    gameData.L2Telescored = getCounterValue('L2Telescored');
+    gameData.L2Telemissed = getCounterValue('L2Telemissed');
+    gameData.L3Telescored = getCounterValue('L3Telescored');
+    gameData.L3Telemissed = getCounterValue('L3Telemissed');
+    gameData.L4Telescored = getCounterValue('L4Telescored');
+    gameData.L4Telemissed = getCounterValue('L4Telemissed');
+    gameData.ProcessorScored_TeleOp = getCounterValue('ProcessorScored_TeleOp');
+    gameData.ProcessorMissed_TeleOp = getCounterValue('ProcessorMissed_TeleOp');
     
     // Capture additional algae data from Auto and TeleOp sections
     
@@ -217,10 +343,10 @@ if ('serviceWorker' in navigator) {
   
   function generateQRCode() {
     // Create a string from gameData (using spaces then replace with tilde delimiter)
-    const autoAlgaeScored = parseInt(document.getElementById('AlgaeScoredinBarge_Auto').textContent);
-    const autoAlgaeMissed = parseInt(document.getElementById('AlgaeMissedBarge_Auto').textContent);
-    const teleopAlgaeScored = parseInt(document.getElementById('AlgaeScoredinBarge_TeleOp').textContent);
-    const teleopAlgaeMissed = parseInt(document.getElementById('AlgaeMissedBarge_TeleOp').textContent);
+    const autoAlgaeScored = getCounterValue('AlgaeScoredinBarge_Auto');
+    const autoAlgaeMissed = getCounterValue('AlgaeMissedBarge_Auto');
+    const teleopAlgaeScored = getCounterValue('AlgaeScoredinBarge_TeleOp');
+    const teleopAlgaeMissed = getCounterValue('AlgaeMissedBarge_TeleOp');
     const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.L1autoscored} ${gameData.L1automissed} ${gameData.L2autoscored} ${gameData.L2automissed} ${gameData.L3autoscored} ${gameData.L3automissed} ${gameData.L4autoscored} ${gameData.L4automissed} ${autoAlgaeScored} ${autoAlgaeMissed} ${gameData.ProcessorScored_Auto} ${gameData.ProcessorMissed_Auto} ${gameData.L1Telescored} ${gameData.L1Telemissed} ${gameData.L2Telescored} ${gameData.L2Telemissed} ${gameData.L3Telescored} ${gameData.L3Telemissed} ${gameData.L4Telescored} ${gameData.L4Telemissed} ${teleopAlgaeScored} ${teleopAlgaeMissed} ${gameData.ProcessorScored_TeleOp} ${gameData.ProcessorMissed_TeleOp} ${gameData.climbed} ${gameData.TippedDuring} ${gameData.speed}`;
     
     const qrCodeContainer = document.getElementById('qr-code-popup');
