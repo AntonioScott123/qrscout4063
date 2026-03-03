@@ -223,7 +223,8 @@ button {
     background-color: #f8fdff;
 }
 
-#speed {
+#speed,
+#endgame-speed {
     display: block;
     width: 100%;
     max-width: 100%;

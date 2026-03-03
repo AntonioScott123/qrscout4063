@@ -27,6 +27,7 @@ if ('serviceWorker' in navigator) {
     autoFuelMissed: 0,
     autoClimb: false,
     intakeSpeed: 3,
+    endgameSpeed: 3,
     intakeFloor: false,
     intakeDepot: false,
     intakeOutpost: false,
@@ -83,6 +84,9 @@ if ('serviceWorker' in navigator) {
     document.getElementById('speed').value = '3';
     const speedValue = document.getElementById('speed-value');
     if (speedValue) speedValue.textContent = '3';
+    document.getElementById('endgame-speed').value = '3';
+    const endgameSpeedValue = document.getElementById('endgame-speed-value');
+    if (endgameSpeedValue) endgameSpeedValue.textContent = '3';
     document.getElementById('intakeFloor').checked = false;
     document.getElementById('intakeDepot').checked = false;
     document.getElementById('intakeOutpost').checked = false;
@@ -233,9 +237,9 @@ function initializeCounterButtonInteractions() {
 }
 
 
-function initializeSpeedSlider() {
-  const speedSlider = document.getElementById('speed');
-  const speedValue = document.getElementById('speed-value');
+function initializeSpeedSlider(sliderId = 'speed', valueId = 'speed-value') {
+  const speedSlider = document.getElementById(sliderId);
+  const speedValue = document.getElementById(valueId);
   if (!speedSlider || !speedValue) return;
 
   const syncSpeed = () => {
@@ -310,7 +314,8 @@ function initializeRungVisibility() {
 document.addEventListener('DOMContentLoaded', () => {
   initializeCounterInputs();
   initializeCounterButtonInteractions();
-  initializeSpeedSlider();
+  initializeSpeedSlider('speed', 'speed-value');
+  initializeSpeedSlider('endgame-speed', 'endgame-speed-value');
   initializeCheckboxAnimations();
   initializeRungButtons();
   initializeRungVisibility();
@@ -370,6 +375,7 @@ function updateButtonNum(id, num) {
     gameData.autoClimb = document.getElementById('autoClimb').checked;
 
     gameData.intakeSpeed = document.getElementById('speed').value;
+    gameData.endgameSpeed = document.getElementById('endgame-speed').value;
     gameData.intakeFloor = document.getElementById('intakeFloor').checked;
     gameData.intakeDepot = document.getElementById('intakeDepot').checked;
     gameData.intakeOutpost = document.getElementById('intakeOutpost').checked;
@@ -391,7 +397,7 @@ function updateButtonNum(id, num) {
 
   function generateQRCode() {
     // Keep output format: space-separated payload, then replace spaces with tildes.
-    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.autoFuelScored} ${gameData.autoFuelMissed} ${gameData.autoClimb} ${gameData.intakeSpeed} ${gameData.intakeFloor} ${gameData.intakeDepot} ${gameData.intakeOutpost} ${gameData.teleopFuelScored} ${gameData.teleopFuelMissed} ${gameData.attemptedClimb} ${gameData.successfulClimb} ${gameData.rung}`;
+    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.autoFuelScored} ${gameData.autoFuelMissed} ${gameData.autoClimb} ${gameData.intakeSpeed} ${gameData.intakeFloor} ${gameData.intakeDepot} ${gameData.intakeOutpost} ${gameData.teleopFuelScored} ${gameData.teleopFuelMissed} ${gameData.attemptedClimb} ${gameData.successfulClimb} ${gameData.rung} ${gameData.endgameSpeed}`;
 
     const qrCodeContainer = document.getElementById('qr-code-popup');
     qrCodeContainer.innerHTML = '';
