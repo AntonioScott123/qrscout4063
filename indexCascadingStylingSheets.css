@@ -13,7 +13,8 @@
 body {
     font-family: 'SF Sports Night NS', sans-serif;
     text-align: center;
-    margin: 20px;
+    margin: 0;
+    padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
     /* Smoother ocean-inspired background */
     background: linear-gradient(to bottom, #E0F7F9, #F0F0F0 75%, #0083AE);
     font-size: 24px;
@@ -23,9 +24,11 @@ h1 {
     font-family: 'SF Sports Night', sans-serif;
     color: #0083AE; /* Deep ocean blue */
     font-size: 64px;
-    margin: 20px;
+    margin: 20px 0;
     text-shadow: 0 4px 8px rgba(0, 131, 174, 0.7);
     letter-spacing: 5px;
+    width: 100%;
+    text-align: center;
 }
 
 h2 {
@@ -100,6 +103,18 @@ button {
     border-radius: 5px;
     background-color: #FF69B4;
     color: #ffffff;
+}
+
+
+/* Improve tap responsiveness on iPhone/iOS */
+button,
+input,
+select,
+textarea,
+label,
+a {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 /* Checkbox styling */
