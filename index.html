@@ -50,7 +50,8 @@
       </div>
       <div class="mini-box">
         <h3>ROBOT TYPE</h3>
-        <select id="prematch-robot" style="width: 98%;">
+        <div class="fancy-select-wrapper">
+        <select id="prematch-robot" class="fancy-select" style="width: 98%;">
           <option value="Choose_Answer">Choose Answer</option>
           <option value="Red_1">Red 1</option>
           <option value="Red_2">Red 2</option>
@@ -59,6 +60,7 @@
           <option value="Blue_2">Blue 2</option>
           <option value="Blue_3">Blue 3</option>
         </select>
+        </div>
       </div>
     </div>
 
@@ -226,24 +228,20 @@
       <h2>Endgame</h2>
       <div class="mini-box">
         <h3>END POSITION</h3>
-        <select id="climbed" style="width: 98%;">
+        <div class="fancy-select-wrapper">
+        <select id="climbed" class="fancy-select" style="width: 98%;">
           <option value="Choose_Answer">Choose Answer</option>
           <option value="No_Cage">No Cage</option>
           <option value="Parked">Parked</option>
           <option value="Shallow_Cage">Shallow Cage</option>
           <option value="Deep_Cage">Deep Cage</option>
         </select>
+        </div>
       </div>
       <div class="mini-box">
-        <h3>Speed</h3>
-        <select id="speed" style="width: 98%;">
-          <option value="0">0</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
+        <h3>SPEED (1-5)</h3>
+        <input type="range" id="speed" min="1" max="5" step="1" value="3">
+        <div id="speed-value" class="speed-value">3</div>
       </div>
       <div class="mini-box">
         <h3>Tipped During Match?</h3>

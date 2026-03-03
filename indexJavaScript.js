@@ -108,7 +108,9 @@ if ('serviceWorker' in navigator) {
     
     // Clear Endgame widget fields
     document.getElementById('climbed').value = 'Choose_Answer';
-    document.getElementById('speed').value = '0';
+    document.getElementById('speed').value = '3';
+    const speedValue = document.getElementById('speed-value');
+    if (speedValue) speedValue.textContent = '3';
     document.getElementById('Tipped-During-Match').checked = false;
     // Clear Postmatch field
     document.getElementById('Comments').value = '';
@@ -183,14 +185,23 @@ function initializeCounterInputs() {
 function initializeCounterButtonInteractions() {
   const buttons = document.querySelectorAll('button[onclick*="updateButtonNum("]');
   buttons.forEach((button) => {
-    const match = button.getAttribute('onclick').match(/updateButtonNum\('([^']+)'\s*,\s*(-?\d+)/);
+    const onclickValue = button.getAttribute('onclick') || '';
+    const match = onclickValue.match(/updateButtonNum\('([^']+)'\s*,\s*(-?\d+)/);
     if (!match) return;
 
     const counterId = match[1];
     const delta = parseInt(match[2], 10);
+    button.removeAttribute('onclick');
+
     let holdTimer = null;
     let repeatTimer = null;
     let wasLongPress = false;
+    let suppressNextClick = false;
+
+    const stepCounter = () => {
+      updateButtonNum(counterId, delta);
+      addPressFeedback(button);
+    };
 
     const clearTimers = () => {
       if (holdTimer) clearTimeout(holdTimer);
@@ -203,44 +214,77 @@ function initializeCounterButtonInteractions() {
       button.classList.remove('counter-button-active');
     };
 
-    const startHold = (event) => {
-      if (event) {
-        event.preventDefault();
-      }
+    const startHold = () => {
       button.classList.add('counter-button-active');
       holdTimer = setTimeout(() => {
         wasLongPress = true;
         repeatTimer = setInterval(() => {
-          updateButtonNum(counterId, delta);
-          addPressFeedback(button);
+          stepCounter();
         }, 90);
       }, 260);
     };
 
     button.addEventListener('click', (event) => {
-      if (wasLongPress) {
-        event.preventDefault();
+      event.preventDefault();
+      if (suppressNextClick || wasLongPress) {
+        suppressNextClick = false;
         return;
       }
-      addPressFeedback(button);
+      stepCounter();
     });
 
-    button.addEventListener('touchstart', startHold, { passive: false });
-    button.addEventListener('touchend', clearTimers);
+    button.addEventListener('touchstart', startHold, { passive: true });
+    button.addEventListener('touchend', () => {
+      if (!wasLongPress) {
+        stepCounter();
+      }
+      suppressNextClick = true;
+      clearTimers();
+    });
     button.addEventListener('touchcancel', clearTimers);
 
     button.addEventListener('mousedown', (event) => {
       if (event.button !== 0) return;
-      startHold(event);
+      startHold();
     });
     button.addEventListener('mouseup', clearTimers);
     button.addEventListener('mouseleave', clearTimers);
   });
 }
 
+
+function initializeSpeedSlider() {
+  const speedSlider = document.getElementById('speed');
+  const speedValue = document.getElementById('speed-value');
+  if (!speedSlider || !speedValue) return;
+
+  const syncSpeed = () => {
+    speedValue.textContent = speedSlider.value;
+  };
+
+  speedSlider.addEventListener('input', syncSpeed);
+  syncSpeed();
+}
+
+function initializeCheckboxAnimations() {
+  const checkboxes = document.querySelectorAll('.custom-checkbox');
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) return;
+      const label = document.querySelector(`label[for="${checkbox.id}"]`);
+      if (!label) return;
+      label.classList.remove('checkbox-false-pop');
+      void label.offsetWidth;
+      label.classList.add('checkbox-false-pop');
+    });
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initializeCounterInputs();
   initializeCounterButtonInteractions();
+  initializeSpeedSlider();
+  initializeCheckboxAnimations();
 });
 
 function updateButtonNum(id, num) {
