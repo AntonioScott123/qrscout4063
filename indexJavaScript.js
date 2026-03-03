@@ -88,7 +88,7 @@ if ('serviceWorker' in navigator) {
     document.getElementById('intakeOutpost').checked = false;
     document.getElementById('attemptedClimb').checked = false;
     document.getElementById('successfulClimb').checked = false;
-    document.getElementById('rung').value = 'Choose_Answer';
+    clearRungSelection();
     const rungContainer = document.getElementById('rung-container');
     if (rungContainer) rungContainer.style.display = 'none';
 
@@ -268,17 +268,38 @@ function initializeCheckboxAnimations() {
 }
 
 
+function clearRungSelection() {
+  const selected = document.querySelector('.rung-button.is-selected');
+  if (selected) {
+    selected.classList.remove('is-selected');
+  }
+}
+
+function initializeRungButtons() {
+  const buttons = document.querySelectorAll('.rung-button');
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      buttons.forEach((b) => b.classList.remove('is-selected'));
+      button.classList.add('is-selected');
+    });
+  });
+}
+
+function getSelectedRung() {
+  const selected = document.querySelector('.rung-button.is-selected');
+  return selected ? selected.dataset.rung : 'NA';
+}
+
 function initializeRungVisibility() {
   const successfulClimb = document.getElementById('successfulClimb');
   const rungContainer = document.getElementById('rung-container');
-  const rungSelect = document.getElementById('rung');
-  if (!successfulClimb || !rungContainer || !rungSelect) return;
+  if (!successfulClimb || !rungContainer) return;
 
   const syncRung = () => {
     const show = successfulClimb.checked;
     rungContainer.style.display = show ? 'block' : 'none';
     if (!show) {
-      rungSelect.value = 'Choose_Answer';
+      clearRungSelection();
     }
   };
 
@@ -291,6 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeCounterButtonInteractions();
   initializeSpeedSlider();
   initializeCheckboxAnimations();
+  initializeRungButtons();
   initializeRungVisibility();
 });
 
@@ -356,7 +378,7 @@ function updateButtonNum(id, num) {
 
     gameData.attemptedClimb = document.getElementById('attemptedClimb').checked;
     gameData.successfulClimb = document.getElementById('successfulClimb').checked;
-    gameData.rung = gameData.successfulClimb ? document.getElementById('rung').value : 'NA';
+    gameData.rung = gameData.successfulClimb ? getSelectedRung() : 'NA';
 
     gameData.comments = document.getElementById('Comments').value;
 

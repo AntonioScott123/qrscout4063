@@ -266,6 +266,27 @@ input[type="range"] {
     font-size: 14px;
 }
 
+
+.rung-button-group {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.rung-button {
+    width: 62px;
+    height: 30px;
+    margin: 0;
+    font-size: 13px;
+    background-color: #5f59ff;
+}
+
+.rung-button.is-selected {
+    background-color: #0083AE;
+    transform: scale(0.96);
+}
+
 /* Checkbox styling */
 .checkbox-container {
     text-align: center;
