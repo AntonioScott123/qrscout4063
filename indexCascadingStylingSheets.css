@@ -252,6 +252,20 @@ input[type="range"] {
     text-align-last: left;
 }
 
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    margin: 6px 0;
+}
+
+.checkbox-row span {
+    font-family: tahoma, sans-serif;
+    font-size: 14px;
+}
+
 /* Checkbox styling */
 .checkbox-container {
     text-align: center;

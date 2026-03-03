@@ -21,38 +21,21 @@ if ('serviceWorker' in navigator) {
     initials: "",
     matchNum: 0,
     robot: "",
+    teamNum: 0,
     moved: false,
-    L1autoscored: 0,
-    L1automissed: 0,
-    L2autoscored: 0,
-    L2automissed: 0,
-    L3autoscored: 0,
-    L3automissed: 0,
-    L4autoscored: 0,
-    L4automissed: 0,
-    L1Telescored: 0,
-    L1Telemissed: 0,
-    L2Telescored: 0,
-    L2Telemissed: 0,
-    L3Telescored: 0,
-    L3Telemissed: 0,
-    L4Telescored: 0,
-    L4Telemissed: 0,
-    // We'll sum the algae scores from Auto and TeleOp:
-    AlgaeScoredinBarge: 0,
-    AlgaeMissedBarge: 0,
-    climbed: "",
-    TippedDuring: false,
-    DefenseDuring: false,
-    speed: "",
-    comments: "",
-    ProcessorScored_Auto: 0,
-    ProcessorMissed_Auto:0,
-    ProcessorScored_TeleOp: 0,
-    ProcessorMissed_TeleOp: 0
-    
-
-
+    autoFuelScored: 0,
+    autoFuelMissed: 0,
+    autoClimb: false,
+    intakeSpeed: 3,
+    intakeFloor: false,
+    intakeDepot: false,
+    intakeOutpost: false,
+    teleopFuelScored: 0,
+    teleopFuelMissed: 0,
+    attemptedClimb: false,
+    successfulClimb: false,
+    rung: "",
+    comments: ""
   };
   
   // Optional smallify object for abbreviating common values
@@ -91,27 +74,24 @@ if ('serviceWorker' in navigator) {
     document.getElementById('prematch-match-number').value = '';
     document.getElementById('prematch-team-number').value = '';
     document.getElementById('moved').checked = false;
-    
-    // Clear Auto widget counters
-    ['L1autoscored', 'L1automissed', 'L2autoscored', 'L2automissed', 'L3autoscored', 'L3automissed', 'L4autoscored', 'L4automissed',
-     'AlgaeScoredinBarge_Auto', 'AlgaeMissedBarge_Auto','ProcessorScored_Auto','ProcessorMissed_Auto'
-    ].forEach(id => {
+
+    ['autoFuelScored', 'autoFuelMissed', 'teleopFuelScored', 'teleopFuelMissed'].forEach(id => {
       setCounterValue(id, 0);
     });
-    
-    // Clear TeleOp widget counters
-    ['L1Telescored', 'L1Telemissed', 'L2Telescored', 'L2Telemissed', 'L3Telescored', 'L3Telemissed', 'L4Telescored', 'L4Telemissed',
-     'AlgaeScoredinBarge_TeleOp', 'AlgaeMissedBarge_TeleOp','ProcessorScored_TeleOp','ProcessorMissed_TeleOp'
-    ].forEach(id => {
-      setCounterValue(id, 0);
-    });
-    
-    // Clear Endgame widget fields
-    document.getElementById('climbed').value = 'Choose_Answer';
+
+    document.getElementById('autoClimb').checked = false;
     document.getElementById('speed').value = '3';
     const speedValue = document.getElementById('speed-value');
     if (speedValue) speedValue.textContent = '3';
-    document.getElementById('Tipped-During-Match').checked = false;
+    document.getElementById('intakeFloor').checked = false;
+    document.getElementById('intakeDepot').checked = false;
+    document.getElementById('intakeOutpost').checked = false;
+    document.getElementById('attemptedClimb').checked = false;
+    document.getElementById('successfulClimb').checked = false;
+    document.getElementById('rung').value = 'Choose_Answer';
+    const rungContainer = document.getElementById('rung-container');
+    if (rungContainer) rungContainer.style.display = 'none';
+
     // Clear Postmatch field
     document.getElementById('Comments').value = '';
   }
@@ -287,11 +267,31 @@ function initializeCheckboxAnimations() {
   });
 }
 
+
+function initializeRungVisibility() {
+  const successfulClimb = document.getElementById('successfulClimb');
+  const rungContainer = document.getElementById('rung-container');
+  const rungSelect = document.getElementById('rung');
+  if (!successfulClimb || !rungContainer || !rungSelect) return;
+
+  const syncRung = () => {
+    const show = successfulClimb.checked;
+    rungContainer.style.display = show ? 'block' : 'none';
+    if (!show) {
+      rungSelect.value = 'Choose_Answer';
+    }
+  };
+
+  successfulClimb.addEventListener('change', syncRung);
+  syncRung();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initializeCounterInputs();
   initializeCounterButtonInteractions();
   initializeSpeedSlider();
   initializeCheckboxAnimations();
+  initializeRungVisibility();
 });
 
 function updateButtonNum(id, num) {
@@ -306,13 +306,13 @@ function updateButtonNum(id, num) {
     let matchNumField = document.getElementById('prematch-match-number');
     let teamNumField = document.getElementById('prematch-team-number');
     let robotField = document.getElementById('prematch-robot');
-    
+
     // Remove previous error styling if any
     initialsField.classList.remove('error');
     matchNumField.classList.remove('error');
     teamNumField.classList.remove('error');
     robotField.classList.remove('error');
-    
+
     // Validate required fields
     let valid = true;
     if (initialsField.value.trim() === "") {
@@ -327,94 +327,62 @@ function updateButtonNum(id, num) {
       teamNumField.classList.add('error');
       valid = false;
     }
-    // Assuming "Choose_Answer" means not selected
     if (robotField.value === "Choose_Answer") {
       robotField.classList.add('error');
       valid = false;
     }
-    
-    // If any required field is invalid, scroll to top and exit
+
     if (!valid) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    
-    // All required fields are filled—capture the values.
-    gameData.initials = initialsField.value.trim();
-    gameData.matchNum = parseInt(matchNumField.value.trim());
-    gameData.robot = smallify[robotField.value] || robotField.value;
-    gameData.teamNum = parseInt(teamNumField.value.trim());
-    gameData.moved = document.getElementById('moved').checked;
-    
-    // Capture Auto widget values
-    gameData.L1autoscored = getCounterValue('L1autoscored');
-    gameData.L1automissed = getCounterValue('L1automissed');
-    gameData.L2autoscored = getCounterValue('L2autoscored');
-    gameData.L2automissed = getCounterValue('L2automissed');
-    gameData.L3autoscored = getCounterValue('L3autoscored');
-    gameData.L3automissed = getCounterValue('L3automissed');
-    gameData.L4autoscored = getCounterValue('L4autoscored');
-    gameData.L4automissed = getCounterValue('L4automissed');
-    gameData.ProcessorScored_Auto = getCounterValue('ProcessorScored_Auto');
-    gameData.ProcessorMissed_Auto = getCounterValue('ProcessorMissed_Auto');
-    
-    
-    // Capture TeleOp widget values
-    gameData.L1Telescored = getCounterValue('L1Telescored');
-    gameData.L1Telemissed = getCounterValue('L1Telemissed');
-    gameData.L2Telescored = getCounterValue('L2Telescored');
-    gameData.L2Telemissed = getCounterValue('L2Telemissed');
-    gameData.L3Telescored = getCounterValue('L3Telescored');
-    gameData.L3Telemissed = getCounterValue('L3Telemissed');
-    gameData.L4Telescored = getCounterValue('L4Telescored');
-    gameData.L4Telemissed = getCounterValue('L4Telemissed');
-    gameData.ProcessorScored_TeleOp = getCounterValue('ProcessorScored_TeleOp');
-    gameData.ProcessorMissed_TeleOp = getCounterValue('ProcessorMissed_TeleOp');
-    
-    // Capture additional algae data from Auto and TeleOp sections
-    
-    // Capture Endgame widget values
-    gameData.climbed = document.getElementById('climbed').value;
-    gameData.speed = document.getElementById('speed').value;
-    gameData.TippedDuring = document.getElementById('Tipped-During-Match').checked ? "Yes" : "No";
 
-    
-    // Capture Postmatch widget value
+    gameData.initials = initialsField.value.trim();
+    gameData.matchNum = parseInt(matchNumField.value.trim(), 10);
+    gameData.robot = smallify[robotField.value] || robotField.value;
+    gameData.teamNum = parseInt(teamNumField.value.trim(), 10);
+    gameData.moved = document.getElementById('moved').checked;
+
+    gameData.autoFuelScored = getCounterValue('autoFuelScored');
+    gameData.autoFuelMissed = getCounterValue('autoFuelMissed');
+    gameData.autoClimb = document.getElementById('autoClimb').checked;
+
+    gameData.intakeSpeed = document.getElementById('speed').value;
+    gameData.intakeFloor = document.getElementById('intakeFloor').checked;
+    gameData.intakeDepot = document.getElementById('intakeDepot').checked;
+    gameData.intakeOutpost = document.getElementById('intakeOutpost').checked;
+    gameData.teleopFuelScored = getCounterValue('teleopFuelScored');
+    gameData.teleopFuelMissed = getCounterValue('teleopFuelMissed');
+
+    gameData.attemptedClimb = document.getElementById('attemptedClimb').checked;
+    gameData.successfulClimb = document.getElementById('successfulClimb').checked;
+    gameData.rung = gameData.successfulClimb ? document.getElementById('rung').value : 'NA';
+
     gameData.comments = document.getElementById('Comments').value;
-    
-    // Validate team number using teamsCompeting array (or your custom logic)
+
     if (checkIfTeam(gameData.teamNum)) {
       generateQRCode();
     } else {
-      openPopup();  
+      openPopup();
     }
   }
-  
-  
-  
+
   function generateQRCode() {
-    // Create a string from gameData (using spaces then replace with tilde delimiter)
-    const autoAlgaeScored = getCounterValue('AlgaeScoredinBarge_Auto');
-    const autoAlgaeMissed = getCounterValue('AlgaeMissedBarge_Auto');
-    const teleopAlgaeScored = getCounterValue('AlgaeScoredinBarge_TeleOp');
-    const teleopAlgaeMissed = getCounterValue('AlgaeMissedBarge_TeleOp');
-    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.L1autoscored} ${gameData.L1automissed} ${gameData.L2autoscored} ${gameData.L2automissed} ${gameData.L3autoscored} ${gameData.L3automissed} ${gameData.L4autoscored} ${gameData.L4automissed} ${autoAlgaeScored} ${autoAlgaeMissed} ${gameData.ProcessorScored_Auto} ${gameData.ProcessorMissed_Auto} ${gameData.L1Telescored} ${gameData.L1Telemissed} ${gameData.L2Telescored} ${gameData.L2Telemissed} ${gameData.L3Telescored} ${gameData.L3Telemissed} ${gameData.L4Telescored} ${gameData.L4Telemissed} ${teleopAlgaeScored} ${teleopAlgaeMissed} ${gameData.ProcessorScored_TeleOp} ${gameData.ProcessorMissed_TeleOp} ${gameData.climbed} ${gameData.TippedDuring} ${gameData.speed}`;
-    
+    // Keep output format: space-separated payload, then replace spaces with tildes.
+    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.autoFuelScored} ${gameData.autoFuelMissed} ${gameData.autoClimb} ${gameData.intakeSpeed} ${gameData.intakeFloor} ${gameData.intakeDepot} ${gameData.intakeOutpost} ${gameData.teleopFuelScored} ${gameData.teleopFuelMissed} ${gameData.attemptedClimb} ${gameData.successfulClimb} ${gameData.rung}`;
+
     const qrCodeContainer = document.getElementById('qr-code-popup');
-    qrCodeContainer.innerHTML = '';  // Clear previous QR code content
-    
-    // Generate QR code using a tilde delimiter
+    qrCodeContainer.innerHTML = '';
+
     new QRCode(qrCodeContainer, {
       text: qrCodeData.split(' ').join('~') + "~" + gameData.comments,
       width: 300,
       height: 300,
     });
 
-    
-    // Display the QR code popup
     document.getElementById('popupQR').style.display = 'flex';
   }
-  
+
   function closePopupQR() {
     document.getElementById('popupQR').style.display = 'none';
     document.getElementById('qr-code-popup').innerHTML = '';
