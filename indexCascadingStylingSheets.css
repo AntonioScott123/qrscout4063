@@ -74,6 +74,58 @@ h2 {
     letter-spacing: 2px;
 }
 
+.help-dropdown {
+    width: fit-content;
+    margin: 0 auto 14px auto;
+    position: relative;
+}
+
+.help-button {
+    list-style: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #0083AE;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin: 0 auto;
+}
+
+.help-button::-webkit-details-marker {
+    display: none;
+}
+
+.help-content {
+    margin-top: 8px;
+    width: min(94vw, 760px);
+    text-align: left;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 10px 14px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.16);
+    font-size: 14px;
+}
+
+.help-content h3 {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.help-content ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.help-content li {
+    margin: 4px 0;
+}
+
+
 .dashboard {
     display: flex;
     flex-wrap: wrap;
@@ -224,7 +276,10 @@ button {
 }
 
 #speed,
-#endgame-speed {
+#endgame-speed,
+#reliability,
+#fuel-score-rating,
+#overall-impact {
     display: block;
     width: 100%;
     max-width: 100%;

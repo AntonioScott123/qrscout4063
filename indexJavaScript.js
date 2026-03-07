@@ -36,6 +36,9 @@ if ('serviceWorker' in navigator) {
     attemptedClimb: false,
     successfulClimb: false,
     rung: "",
+    reliability: 3,
+    fuelScoreRating: 3,
+    overallImpact: 3,
     comments: ""
   };
   
@@ -95,6 +98,16 @@ if ('serviceWorker' in navigator) {
     clearRungSelection();
     const rungContainer = document.getElementById('rung-container');
     if (rungContainer) rungContainer.style.display = 'none';
+
+    document.getElementById('reliability').value = '3';
+    const reliabilityValue = document.getElementById('reliability-value');
+    if (reliabilityValue) reliabilityValue.textContent = '3';
+    document.getElementById('fuel-score-rating').value = '3';
+    const fuelScoreRatingValue = document.getElementById('fuel-score-rating-value');
+    if (fuelScoreRatingValue) fuelScoreRatingValue.textContent = '3';
+    document.getElementById('overall-impact').value = '3';
+    const overallImpactValue = document.getElementById('overall-impact-value');
+    if (overallImpactValue) overallImpactValue.textContent = '3';
 
     // Clear Postmatch field
     document.getElementById('Comments').value = '';
@@ -316,6 +329,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeCounterButtonInteractions();
   initializeSpeedSlider('speed', 'speed-value');
   initializeSpeedSlider('endgame-speed', 'endgame-speed-value');
+  initializeSpeedSlider('reliability', 'reliability-value');
+  initializeSpeedSlider('fuel-score-rating', 'fuel-score-rating-value');
+  initializeSpeedSlider('overall-impact', 'overall-impact-value');
   initializeCheckboxAnimations();
   initializeRungButtons();
   initializeRungVisibility();
@@ -386,6 +402,9 @@ function updateButtonNum(id, num) {
     gameData.successfulClimb = document.getElementById('successfulClimb').checked;
     gameData.rung = gameData.successfulClimb ? getSelectedRung() : 'NA';
 
+    gameData.reliability = document.getElementById('reliability').value;
+    gameData.fuelScoreRating = document.getElementById('fuel-score-rating').value;
+    gameData.overallImpact = document.getElementById('overall-impact').value;
     gameData.comments = document.getElementById('Comments').value;
 
     if (checkIfTeam(gameData.teamNum)) {
@@ -397,7 +416,7 @@ function updateButtonNum(id, num) {
 
   function generateQRCode() {
     // Keep output format: space-separated payload, then replace spaces with tildes.
-    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.autoFuelScored} ${gameData.autoFuelMissed} ${gameData.autoClimb} ${gameData.intakeSpeed} ${gameData.intakeFloor} ${gameData.intakeDepot} ${gameData.intakeOutpost} ${gameData.teleopFuelScored} ${gameData.teleopFuelMissed} ${gameData.attemptedClimb} ${gameData.successfulClimb} ${gameData.rung} ${gameData.endgameSpeed}`;
+    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.autoFuelScored} ${gameData.autoFuelMissed} ${gameData.autoClimb} ${gameData.intakeSpeed} ${gameData.intakeFloor} ${gameData.intakeDepot} ${gameData.intakeOutpost} ${gameData.teleopFuelScored} ${gameData.teleopFuelMissed} ${gameData.attemptedClimb} ${gameData.successfulClimb} ${gameData.rung} ${gameData.endgameSpeed} ${gameData.reliability} ${gameData.fuelScoreRating} ${gameData.overallImpact}`;
 
     const qrCodeContainer = document.getElementById('qr-code-popup');
     qrCodeContainer.innerHTML = '';
