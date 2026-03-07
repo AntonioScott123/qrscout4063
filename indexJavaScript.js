@@ -21,40 +21,29 @@ if ('serviceWorker' in navigator) {
     initials: "",
     matchNum: 0,
     robot: "",
+    teamNum: 0,
     moved: false,
-    L1autoscored: 0,
-    L1automissed: 0,
-    L2autoscored: 0,
-    L2automissed: 0,
-    L3autoscored: 0,
-    L3automissed: 0,
-    L4autoscored: 0,
-    L4automissed: 0,
-    L1Telescored: 0,
-    L1Telemissed: 0,
-    L2Telescored: 0,
-    L2Telemissed: 0,
-    L3Telescored: 0,
-    L3Telemissed: 0,
-    L4Telescored: 0,
-    L4Telemissed: 0,
-    // We'll sum the algae scores from Auto and TeleOp:
-    AlgaeScoredinBarge: 0,
-    AlgaeMissedBarge: 0,
-    climbed: "",
-    TippedDuring: false,
-    DefenseDuring: false,
-    speed: "",
-    comments: "",
-    ProcessorScored_Auto: 0,
-    ProcessorMissed_Auto:0,
-    ProcessorScored_TeleOp: 0,
-    ProcessorMissed_TeleOp: 0
-    
-
-
+    autoFuelScored: 0,
+    autoFuelMissed: 0,
+    autoClimb: false,
+    intakeSpeed: 3,
+    endgameSpeed: 3,
+    intakeFloor: false,
+    intakeDepot: false,
+    intakeOutpost: false,
+    teleopFuelScored: 0,
+    teleopFuelMissed: 0,
+    attemptedClimb: false,
+    successfulClimb: false,
+    rung: "",
+    reliability: 3,
+    fuelScoringCapability: 3,
+    overallImpact: 3,
+    comments: ""
   };
-  
+
+  const MAX_QR_TEXT_LENGTH = 900;
+
   // Optional smallify object for abbreviating common values
   let smallify = {
     "Not_Observed": "NOB",
@@ -67,9 +56,6 @@ if ('serviceWorker' in navigator) {
     "no": "no"
   };
   
-  // Example teams competing array
-  var teamsCompeting = [67,70,78,114,175,179,219,226,578,604,1058,1114,1160,1288,1318,1391,1410,1458,1501,1533,1591,1727,1730,1731,2073,2338,2522,2609,2611,2614,2689,2713,2930,2987,3075,3341,3534,3539,3544,4063,4125,4285,4322,4400,4501,4630,5417,5427,5461,5712,5885,5892,6217,6329,6413,6459,6586,6740,6800,6902,7174,7428,7457,7763,8019,8033,8840,9431,9452,9458,9483,9498,9535,9636,9764];
-  
   function openPopup() {
     document.getElementById('popup').style.display = 'block';
   }
@@ -79,7 +65,9 @@ if ('serviceWorker' in navigator) {
   }
   
   function checkIfTeam(enteredTeam) {
-    return true
+    if (window.allowAllTeams === true) return true;
+    if (!Array.isArray(window.teamsCompeting)) return true;
+    return window.teamsCompeting.includes(Number(enteredTeam));
   }
   
   function ClearAll() {
@@ -91,25 +79,37 @@ if ('serviceWorker' in navigator) {
     document.getElementById('prematch-match-number').value = '';
     document.getElementById('prematch-team-number').value = '';
     document.getElementById('moved').checked = false;
-    
-    // Clear Auto widget counters
-    ['L1autoscored', 'L1automissed', 'L2autoscored', 'L2automissed', 'L3autoscored', 'L3automissed', 'L4autoscored', 'L4automissed',
-     'AlgaeScoredinBarge_Auto', 'AlgaeMissedBarge_Auto','ProcessorScored_Auto','ProcessorMissed_Auto'
-    ].forEach(id => {
+
+    ['autoFuelScored', 'autoFuelMissed', 'teleopFuelScored', 'teleopFuelMissed'].forEach(id => {
       setCounterValue(id, 0);
     });
-    
-    // Clear TeleOp widget counters
-    ['L1Telescored', 'L1Telemissed', 'L2Telescored', 'L2Telemissed', 'L3Telescored', 'L3Telemissed', 'L4Telescored', 'L4Telemissed',
-     'AlgaeScoredinBarge_TeleOp', 'AlgaeMissedBarge_TeleOp','ProcessorScored_TeleOp','ProcessorMissed_TeleOp'
-    ].forEach(id => {
-      setCounterValue(id, 0);
-    });
-    
-    // Clear Endgame widget fields
-    document.getElementById('climbed').value = 'Choose_Answer';
-    document.getElementById('speed').value = '0';
-    document.getElementById('Tipped-During-Match').checked = false;
+
+    document.getElementById('autoClimb').checked = false;
+    document.getElementById('speed').value = '3';
+    const speedValue = document.getElementById('speed-value');
+    if (speedValue) speedValue.textContent = '3';
+    document.getElementById('endgame-speed').value = '3';
+    const endgameSpeedValue = document.getElementById('endgame-speed-value');
+    if (endgameSpeedValue) endgameSpeedValue.textContent = '3';
+    document.getElementById('intakeFloor').checked = false;
+    document.getElementById('intakeDepot').checked = false;
+    document.getElementById('intakeOutpost').checked = false;
+    document.getElementById('attemptedClimb').checked = false;
+    document.getElementById('successfulClimb').checked = false;
+    clearRungSelection();
+    const rungContainer = document.getElementById('rung-container');
+    if (rungContainer) rungContainer.style.display = 'none';
+
+    document.getElementById('reliability').value = '3';
+    const reliabilityValue = document.getElementById('reliability-value');
+    if (reliabilityValue) reliabilityValue.textContent = '3';
+    document.getElementById('fuel-score-rating').value = '3';
+    const fuelScoringCapabilityValue = document.getElementById('fuel-score-rating-value');
+    if (fuelScoringCapabilityValue) fuelScoringCapabilityValue.textContent = '3';
+    document.getElementById('overall-impact').value = '3';
+    const overallImpactValue = document.getElementById('overall-impact-value');
+    if (overallImpactValue) overallImpactValue.textContent = '3';
+
     // Clear Postmatch field
     document.getElementById('Comments').value = '';
   }
@@ -183,14 +183,23 @@ function initializeCounterInputs() {
 function initializeCounterButtonInteractions() {
   const buttons = document.querySelectorAll('button[onclick*="updateButtonNum("]');
   buttons.forEach((button) => {
-    const match = button.getAttribute('onclick').match(/updateButtonNum\('([^']+)'\s*,\s*(-?\d+)/);
+    const onclickValue = button.getAttribute('onclick') || '';
+    const match = onclickValue.match(/updateButtonNum\('([^']+)'\s*,\s*(-?\d+)/);
     if (!match) return;
 
     const counterId = match[1];
     const delta = parseInt(match[2], 10);
+    button.removeAttribute('onclick');
+
     let holdTimer = null;
     let repeatTimer = null;
     let wasLongPress = false;
+    let suppressNextClick = false;
+
+    const stepCounter = () => {
+      updateButtonNum(counterId, delta);
+      addPressFeedback(button);
+    };
 
     const clearTimers = () => {
       if (holdTimer) clearTimeout(holdTimer);
@@ -203,44 +212,130 @@ function initializeCounterButtonInteractions() {
       button.classList.remove('counter-button-active');
     };
 
-    const startHold = (event) => {
-      if (event) {
-        event.preventDefault();
-      }
+    const startHold = () => {
       button.classList.add('counter-button-active');
       holdTimer = setTimeout(() => {
         wasLongPress = true;
         repeatTimer = setInterval(() => {
-          updateButtonNum(counterId, delta);
-          addPressFeedback(button);
+          stepCounter();
         }, 90);
       }, 260);
     };
 
     button.addEventListener('click', (event) => {
-      if (wasLongPress) {
-        event.preventDefault();
+      event.preventDefault();
+      if (suppressNextClick || wasLongPress) {
+        suppressNextClick = false;
         return;
       }
-      addPressFeedback(button);
+      stepCounter();
     });
 
-    button.addEventListener('touchstart', startHold, { passive: false });
-    button.addEventListener('touchend', clearTimers);
+    button.addEventListener('touchstart', startHold, { passive: true });
+    button.addEventListener('touchend', () => {
+      if (!wasLongPress) {
+        stepCounter();
+      }
+      suppressNextClick = true;
+      clearTimers();
+    });
     button.addEventListener('touchcancel', clearTimers);
 
     button.addEventListener('mousedown', (event) => {
       if (event.button !== 0) return;
-      startHold(event);
+      startHold();
     });
     button.addEventListener('mouseup', clearTimers);
     button.addEventListener('mouseleave', clearTimers);
   });
 }
 
+
+function initializeSpeedSlider(sliderId = 'speed', valueId = 'speed-value') {
+  const speedSlider = document.getElementById(sliderId);
+  const speedValue = document.getElementById(valueId);
+  if (!speedSlider || !speedValue) return;
+
+  const syncSpeed = () => {
+    speedValue.textContent = speedSlider.value;
+  };
+
+  speedSlider.addEventListener('input', syncSpeed);
+  syncSpeed();
+}
+
+function initializeCheckboxAnimations() {
+  const checkboxes = document.querySelectorAll('.custom-checkbox');
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', () => {
+      const label = document.querySelector(`label[for="${checkbox.id}"]`);
+      if (!label) return;
+
+      if (checkbox.checked) {
+        label.classList.remove('checkbox-true-pop');
+        void label.offsetWidth;
+        label.classList.add('checkbox-true-pop');
+        return;
+      }
+
+      label.classList.remove('checkbox-false-pop');
+      void label.offsetWidth;
+      label.classList.add('checkbox-false-pop');
+    });
+  });
+}
+
+
+function clearRungSelection() {
+  const selected = document.querySelector('.rung-button.is-selected');
+  if (selected) {
+    selected.classList.remove('is-selected');
+  }
+}
+
+function initializeRungButtons() {
+  const buttons = document.querySelectorAll('.rung-button');
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      buttons.forEach((b) => b.classList.remove('is-selected'));
+      button.classList.add('is-selected');
+    });
+  });
+}
+
+function getSelectedRung() {
+  const selected = document.querySelector('.rung-button.is-selected');
+  return selected ? selected.dataset.rung : 'NA';
+}
+
+function initializeRungVisibility() {
+  const successfulClimb = document.getElementById('successfulClimb');
+  const rungContainer = document.getElementById('rung-container');
+  if (!successfulClimb || !rungContainer) return;
+
+  const syncRung = () => {
+    const show = successfulClimb.checked;
+    rungContainer.style.display = show ? 'block' : 'none';
+    if (!show) {
+      clearRungSelection();
+    }
+  };
+
+  successfulClimb.addEventListener('change', syncRung);
+  syncRung();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initializeCounterInputs();
   initializeCounterButtonInteractions();
+  initializeSpeedSlider('speed', 'speed-value');
+  initializeSpeedSlider('endgame-speed', 'endgame-speed-value');
+  initializeSpeedSlider('reliability', 'reliability-value');
+  initializeSpeedSlider('fuel-score-rating', 'fuel-score-rating-value');
+  initializeSpeedSlider('overall-impact', 'overall-impact-value');
+  initializeCheckboxAnimations();
+  initializeRungButtons();
+  initializeRungVisibility();
 });
 
 function updateButtonNum(id, num) {
@@ -255,13 +350,13 @@ function updateButtonNum(id, num) {
     let matchNumField = document.getElementById('prematch-match-number');
     let teamNumField = document.getElementById('prematch-team-number');
     let robotField = document.getElementById('prematch-robot');
-    
+
     // Remove previous error styling if any
     initialsField.classList.remove('error');
     matchNumField.classList.remove('error');
     teamNumField.classList.remove('error');
     robotField.classList.remove('error');
-    
+
     // Validate required fields
     let valid = true;
     if (initialsField.value.trim() === "") {
@@ -276,94 +371,76 @@ function updateButtonNum(id, num) {
       teamNumField.classList.add('error');
       valid = false;
     }
-    // Assuming "Choose_Answer" means not selected
     if (robotField.value === "Choose_Answer") {
       robotField.classList.add('error');
       valid = false;
     }
-    
-    // If any required field is invalid, scroll to top and exit
+
     if (!valid) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    
-    // All required fields are filled—capture the values.
-    gameData.initials = initialsField.value.trim();
-    gameData.matchNum = parseInt(matchNumField.value.trim());
-    gameData.robot = smallify[robotField.value] || robotField.value;
-    gameData.teamNum = parseInt(teamNumField.value.trim());
-    gameData.moved = document.getElementById('moved').checked;
-    
-    // Capture Auto widget values
-    gameData.L1autoscored = getCounterValue('L1autoscored');
-    gameData.L1automissed = getCounterValue('L1automissed');
-    gameData.L2autoscored = getCounterValue('L2autoscored');
-    gameData.L2automissed = getCounterValue('L2automissed');
-    gameData.L3autoscored = getCounterValue('L3autoscored');
-    gameData.L3automissed = getCounterValue('L3automissed');
-    gameData.L4autoscored = getCounterValue('L4autoscored');
-    gameData.L4automissed = getCounterValue('L4automissed');
-    gameData.ProcessorScored_Auto = getCounterValue('ProcessorScored_Auto');
-    gameData.ProcessorMissed_Auto = getCounterValue('ProcessorMissed_Auto');
-    
-    
-    // Capture TeleOp widget values
-    gameData.L1Telescored = getCounterValue('L1Telescored');
-    gameData.L1Telemissed = getCounterValue('L1Telemissed');
-    gameData.L2Telescored = getCounterValue('L2Telescored');
-    gameData.L2Telemissed = getCounterValue('L2Telemissed');
-    gameData.L3Telescored = getCounterValue('L3Telescored');
-    gameData.L3Telemissed = getCounterValue('L3Telemissed');
-    gameData.L4Telescored = getCounterValue('L4Telescored');
-    gameData.L4Telemissed = getCounterValue('L4Telemissed');
-    gameData.ProcessorScored_TeleOp = getCounterValue('ProcessorScored_TeleOp');
-    gameData.ProcessorMissed_TeleOp = getCounterValue('ProcessorMissed_TeleOp');
-    
-    // Capture additional algae data from Auto and TeleOp sections
-    
-    // Capture Endgame widget values
-    gameData.climbed = document.getElementById('climbed').value;
-    gameData.speed = document.getElementById('speed').value;
-    gameData.TippedDuring = document.getElementById('Tipped-During-Match').checked ? "Yes" : "No";
 
-    
-    // Capture Postmatch widget value
-    gameData.comments = document.getElementById('Comments').value;
-    
-    // Validate team number using teamsCompeting array (or your custom logic)
+    gameData.initials = initialsField.value.trim();
+    gameData.matchNum = parseInt(matchNumField.value.trim(), 10);
+    gameData.robot = smallify[robotField.value] || robotField.value;
+    gameData.teamNum = parseInt(teamNumField.value.trim(), 10);
+    gameData.moved = document.getElementById('moved').checked;
+
+    gameData.autoFuelScored = getCounterValue('autoFuelScored');
+    gameData.autoFuelMissed = getCounterValue('autoFuelMissed');
+    gameData.autoClimb = document.getElementById('autoClimb').checked;
+
+    gameData.intakeSpeed = document.getElementById('speed').value;
+    gameData.endgameSpeed = document.getElementById('endgame-speed').value;
+    gameData.intakeFloor = document.getElementById('intakeFloor').checked;
+    gameData.intakeDepot = document.getElementById('intakeDepot').checked;
+    gameData.intakeOutpost = document.getElementById('intakeOutpost').checked;
+    gameData.teleopFuelScored = getCounterValue('teleopFuelScored');
+    gameData.teleopFuelMissed = getCounterValue('teleopFuelMissed');
+
+    gameData.attemptedClimb = document.getElementById('attemptedClimb').checked;
+    gameData.successfulClimb = document.getElementById('successfulClimb').checked;
+    gameData.rung = gameData.successfulClimb ? getSelectedRung() : 'NA';
+
+    gameData.reliability = document.getElementById('reliability').value;
+    gameData.fuelScoringCapability = document.getElementById('fuel-score-rating').value;
+    gameData.overallImpact = document.getElementById('overall-impact').value;
+    const commentsField = document.getElementById('Comments');
+    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.autoFuelScored} ${gameData.autoFuelMissed} ${gameData.autoClimb} ${gameData.intakeSpeed} ${gameData.intakeFloor} ${gameData.intakeDepot} ${gameData.intakeOutpost} ${gameData.teleopFuelScored} ${gameData.teleopFuelMissed} ${gameData.attemptedClimb} ${gameData.successfulClimb} ${gameData.rung} ${gameData.endgameSpeed} ${gameData.reliability} ${gameData.fuelScoringCapability} ${gameData.overallImpact}`;
+    const basePayload = qrCodeData.split(' ').join('~') + "~";
+    const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - basePayload.length);
+    commentsField.maxLength = allowedCommentLength;
+    gameData.comments = commentsField.value.slice(0, allowedCommentLength);
+
     if (checkIfTeam(gameData.teamNum)) {
       generateQRCode();
     } else {
-      openPopup();  
+      openPopup();
     }
   }
-  
-  
-  
+
   function generateQRCode() {
-    // Create a string from gameData (using spaces then replace with tilde delimiter)
-    const autoAlgaeScored = getCounterValue('AlgaeScoredinBarge_Auto');
-    const autoAlgaeMissed = getCounterValue('AlgaeMissedBarge_Auto');
-    const teleopAlgaeScored = getCounterValue('AlgaeScoredinBarge_TeleOp');
-    const teleopAlgaeMissed = getCounterValue('AlgaeMissedBarge_TeleOp');
-    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.L1autoscored} ${gameData.L1automissed} ${gameData.L2autoscored} ${gameData.L2automissed} ${gameData.L3autoscored} ${gameData.L3automissed} ${gameData.L4autoscored} ${gameData.L4automissed} ${autoAlgaeScored} ${autoAlgaeMissed} ${gameData.ProcessorScored_Auto} ${gameData.ProcessorMissed_Auto} ${gameData.L1Telescored} ${gameData.L1Telemissed} ${gameData.L2Telescored} ${gameData.L2Telemissed} ${gameData.L3Telescored} ${gameData.L3Telemissed} ${gameData.L4Telescored} ${gameData.L4Telemissed} ${teleopAlgaeScored} ${teleopAlgaeMissed} ${gameData.ProcessorScored_TeleOp} ${gameData.ProcessorMissed_TeleOp} ${gameData.climbed} ${gameData.TippedDuring} ${gameData.speed}`;
-    
+    // Keep output format: space-separated payload, then replace spaces with tildes.
+    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.autoFuelScored} ${gameData.autoFuelMissed} ${gameData.autoClimb} ${gameData.intakeSpeed} ${gameData.intakeFloor} ${gameData.intakeDepot} ${gameData.intakeOutpost} ${gameData.teleopFuelScored} ${gameData.teleopFuelMissed} ${gameData.attemptedClimb} ${gameData.successfulClimb} ${gameData.rung} ${gameData.endgameSpeed} ${gameData.reliability} ${gameData.fuelScoringCapability} ${gameData.overallImpact}`;
+    const basePayload = qrCodeData.split(' ').join('~') + "~";
+
+    // Truncate comments when needed so long notes stay QR-friendly.
+    const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - basePayload.length);
+    const safeComment = (gameData.comments || '').slice(0, allowedCommentLength);
+
     const qrCodeContainer = document.getElementById('qr-code-popup');
-    qrCodeContainer.innerHTML = '';  // Clear previous QR code content
-    
-    // Generate QR code using a tilde delimiter
+    qrCodeContainer.innerHTML = '';
+
     new QRCode(qrCodeContainer, {
-      text: qrCodeData.split(' ').join('~') + "~" + gameData.comments,
+      text: basePayload + safeComment,
       width: 300,
       height: 300,
     });
 
-    
-    // Display the QR code popup
     document.getElementById('popupQR').style.display = 'flex';
   }
-  
+
   function closePopupQR() {
     document.getElementById('popupQR').style.display = 'none';
     document.getElementById('qr-code-popup').innerHTML = '';

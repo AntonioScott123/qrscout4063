@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="indexCascadingStylingSheets.css">
   <!-- QR Code Generation Library -->
   <script src="QR-CodeGen.js"></script>
+  <!-- Team data list -->
+  <script defer src="teamsAllowedData.js"></script>
   <!-- Main JavaScript file loaded with defer -->
   <script defer src="indexJavaScript.js"></script>
   <script>
@@ -32,6 +34,32 @@
 </head>
 <body>
   <h1>QRScout 4063</h1>
+  <details class="help-dropdown">
+    <summary class="help-button" aria-label="Help and parameter guide">?</summary>
+    <div class="help-content">
+      <h3>Guide</h3>
+      <ul>
+        <li><strong>Scouter Initials:</strong> Your initials.</li>
+        <li><strong>Match Number:</strong> Official match number.</li>
+        <li><strong>Team Number:</strong> Team being scouted.</li>
+        <li><strong>Robot Type:</strong> Match station assignment (Red/Blue position).</li>
+        <li><strong>Moved?:</strong> Robot moved in auto (true/false).</li>
+        <li><strong>Auto Fuel Scored/Missed:</strong> Count made/missed in auto.</li>
+        <li><strong>Climb? (Auto):</strong> Auto climb occurred (true/false).</li>
+        <li><strong>TeleOp Fuel Scored/Missed:</strong> Count made/missed in teleop.</li>
+        <li><strong>Intake Speed (1-5):</strong> 1 = slow, 5 = very fast intake.</li>
+        <li><strong>Can Intake From:</strong> Floor / Depot / Outpost capabilities.</li>
+        <li><strong>Endgame Speed (1-5):</strong> 1 = slow endgame actions, 5 = very fast.</li>
+        <li><strong>Attempted Climb:</strong> Tried to climb (true/false).</li>
+        <li><strong>Successful Climb:</strong> Completed climb (true/false).</li>
+        <li><strong>Rung:</strong> Low / Mid / High (only if successful climb is true).</li>
+        <li><strong>Reliability (1-5):</strong> 1 = frequent issues, 5 = highly reliable.</li>
+        <li><strong>Fuel Scoring Capability (1-5):</strong> 1 = weak scoring impact, 5 = excellent scoring impact.</li>
+        <li><strong>Overall Impact (1-5):</strong> 1 = low impact, 5 = match-changing impact.</li>
+        <li><strong>Comments:</strong> Key notes and context.</li>
+      </ul>
+    </div>
+  </details>
   <div class="dashboard">
     <!-- Prematch Widget -->
     <div class="widget" id="prematch-widget">
@@ -50,7 +78,8 @@
       </div>
       <div class="mini-box">
         <h3>ROBOT TYPE</h3>
-        <select id="prematch-robot" style="width: 98%;">
+        <div class="fancy-select-wrapper">
+        <select id="prematch-robot" class="fancy-select" style="width: 98%;">
           <option value="Choose_Answer">Choose Answer</option>
           <option value="Red_1">Red 1</option>
           <option value="Red_2">Red 2</option>
@@ -59,6 +88,7 @@
           <option value="Blue_2">Blue 2</option>
           <option value="Blue_3">Blue 3</option>
         </select>
+        </div>
       </div>
     </div>
 
@@ -71,76 +101,21 @@
         <label for="moved"></label>
       </div>
       <div class="mini-box">
-        <h3>L1 Coral Scored</h3>
-        <button onclick="updateButtonNum('L1autoscored', -1)">-</button>
-        <span id="L1autoscored">0</span>
-        <button onclick="updateButtonNum('L1autoscored', 1)">+</button>
+        <h3>FUEL SCORED</h3>
+        <button onclick="updateButtonNum('autoFuelScored', -1)">-</button>
+        <span id="autoFuelScored">0</span>
+        <button onclick="updateButtonNum('autoFuelScored', 1)">+</button>
       </div>
       <div class="mini-box">
-        <h3>L1 Coral Missed</h3>
-        <button onclick="updateButtonNum('L1automissed', -1)">-</button>
-        <span id="L1automissed">0</span>
-        <button onclick="updateButtonNum('L1automissed', 1)">+</button>
+        <h3>FUEL MISSED</h3>
+        <button onclick="updateButtonNum('autoFuelMissed', -1)">-</button>
+        <span id="autoFuelMissed">0</span>
+        <button onclick="updateButtonNum('autoFuelMissed', 1)">+</button>
       </div>
       <div class="mini-box">
-        <h3>L2 Coral Scored</h3>
-        <button onclick="updateButtonNum('L2autoscored', -1)">-</button>
-        <span id="L2autoscored">0</span>
-        <button onclick="updateButtonNum('L2autoscored', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>L2 Coral Missed</h3>
-        <button onclick="updateButtonNum('L2automissed', -1)">-</button>
-        <span id="L2automissed">0</span>
-        <button onclick="updateButtonNum('L2automissed', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>L3 Coral Scored</h3>
-        <button onclick="updateButtonNum('L3autoscored', -1)">-</button>
-        <span id="L3autoscored">0</span>
-        <button onclick="updateButtonNum('L3autoscored', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>L3 Coral Missed</h3>
-        <button onclick="updateButtonNum('L3automissed', -1)">-</button>
-        <span id="L3automissed">0</span>
-        <button onclick="updateButtonNum('L3automissed', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>L4 Coral Scored</h3>
-        <button onclick="updateButtonNum('L4autoscored', -1)">-</button>
-        <span id="L4autoscored">0</span>
-        <button onclick="updateButtonNum('L4autoscored', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>L4 Coral Missed</h3>
-        <button onclick="updateButtonNum('L4automissed', -1)">-</button>
-        <span id="L4automissed">0</span>
-        <button onclick="updateButtonNum('L4automissed', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>Algae in Barge Scored</h3>
-        <button onclick="updateButtonNum('AlgaeScoredinBarge_Auto', -1)">-</button>
-        <span id="AlgaeScoredinBarge_Auto">0</span>
-        <button onclick="updateButtonNum('AlgaeScoredinBarge_Auto', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>Algae in Barge Missed</h3>
-        <button onclick="updateButtonNum('AlgaeMissedBarge_Auto', -1)">-</button>
-        <span id="AlgaeMissedBarge_Auto">0</span>
-        <button onclick="updateButtonNum('AlgaeMissedBarge_Auto', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>Processor Scored</h3>
-        <button onclick="updateButtonNum('ProcessorScored_Auto', -1)">-</button>
-        <span id="ProcessorScored_Auto">0</span>
-        <button onclick="updateButtonNum('ProcessorScored_Auto', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>Processor Missed</h3>
-        <button onclick="updateButtonNum('ProcessorMissed_Auto', -1)">-</button>
-        <span id="ProcessorMissed_Auto">0</span>
-        <button onclick="updateButtonNum('ProcessorMissed_Auto', 1)">+</button>
+        <h3>CLIMB?</h3>
+        <input type="checkbox" class="custom-checkbox" id="autoClimb">
+        <label for="autoClimb"></label>
       </div>
     </div>
 
@@ -148,76 +123,39 @@
     <div class="widget" id="TeleOp-Widget">
       <h2>TeleOp</h2>
       <div class="mini-box">
-        <h3>L1 Coral Scored</h3>
-        <button onclick="updateButtonNum('L1Telescored', -1)">-</button>
-        <span id="L1Telescored">0</span>
-        <button onclick="updateButtonNum('L1Telescored', 1)">+</button>
+        <h3>FUEL SCORED</h3>
+        <button onclick="updateButtonNum('teleopFuelScored', -1)">-</button>
+        <span id="teleopFuelScored">0</span>
+        <button onclick="updateButtonNum('teleopFuelScored', 1)">+</button>
       </div>
       <div class="mini-box">
-        <h3>L1 Coral Missed</h3>
-        <button onclick="updateButtonNum('L1Telemissed', -1)">-</button>
-        <span id="L1Telemissed">0</span>
-        <button onclick="updateButtonNum('L1Telemissed', 1)">+</button>
+        <h3>FUEL MISSED</h3>
+        <button onclick="updateButtonNum('teleopFuelMissed', -1)">-</button>
+        <span id="teleopFuelMissed">0</span>
+        <button onclick="updateButtonNum('teleopFuelMissed', 1)">+</button>
       </div>
       <div class="mini-box">
-        <h3>L2 Coral Scored</h3>
-        <button onclick="updateButtonNum('L2Telescored', -1)">-</button>
-        <span id="L2Telescored">0</span>
-        <button onclick="updateButtonNum('L2Telescored', 1)">+</button>
+        <h3>INTAKE SPEED (1-5)</h3>
+        <input type="range" id="speed" min="1" max="5" step="1" value="3">
+        <div id="speed-value" class="speed-value">3</div>
       </div>
       <div class="mini-box">
-        <h3>L2 Coral Missed</h3>
-        <button onclick="updateButtonNum('L2Telemissed', -1)">-</button>
-        <span id="L2Telemissed">0</span>
-        <button onclick="updateButtonNum('L2Telemissed', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>L3 Coral Scored</h3>
-        <button onclick="updateButtonNum('L3Telescored', -1)">-</button>
-        <span id="L3Telescored">0</span>
-        <button onclick="updateButtonNum('L3Telescored', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>L3 Coral Missed</h3>
-        <button onclick="updateButtonNum('L3Telemissed', -1)">-</button>
-        <span id="L3Telemissed">0</span>
-        <button onclick="updateButtonNum('L3Telemissed', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>L4 Coral Scored</h3>
-        <button onclick="updateButtonNum('L4Telescored', -1)">-</button>
-        <span id="L4Telescored">0</span>
-        <button onclick="updateButtonNum('L4Telescored', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>L4 Coral Missed</h3>
-        <button onclick="updateButtonNum('L4Telemissed', -1)">-</button>
-        <span id="L4Telemissed">0</span>
-        <button onclick="updateButtonNum('L4Telemissed', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>Algae in Barge Scored</h3>
-        <button onclick="updateButtonNum('AlgaeScoredinBarge_TeleOp', -1)">-</button>
-        <span id="AlgaeScoredinBarge_TeleOp">0</span>
-        <button onclick="updateButtonNum('AlgaeScoredinBarge_TeleOp', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>Algae in Barge Missed</h3>
-        <button onclick="updateButtonNum('AlgaeMissedBarge_TeleOp', -1)">-</button>
-        <span id="AlgaeMissedBarge_TeleOp">0</span>
-        <button onclick="updateButtonNum('AlgaeMissedBarge_TeleOp', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>Processor Scored</h3>
-        <button onclick="updateButtonNum('ProcessorScored_TeleOp', -1)">-</button>
-        <span id="ProcessorScored_TeleOp">0</span>
-        <button onclick="updateButtonNum('ProcessorScored_TeleOp', 1)">+</button>
-      </div>
-      <div class="mini-box">
-        <h3>Processor Missed</h3>
-        <button onclick="updateButtonNum('ProcessorMissed_TeleOp', -1)">-</button>
-        <span id="ProcessorMissed_TeleOp">0</span>
-        <button onclick="updateButtonNum('ProcessorMissed_TeleOp', 1)">+</button>
+        <h3>CAN INTAKE FROM</h3>
+        <div class="checkbox-row">
+          <span>Floor?</span>
+          <input type="checkbox" class="custom-checkbox" id="intakeFloor">
+          <label for="intakeFloor"></label>
+        </div>
+        <div class="checkbox-row">
+          <span>Depot?</span>
+          <input type="checkbox" class="custom-checkbox" id="intakeDepot">
+          <label for="intakeDepot"></label>
+        </div>
+        <div class="checkbox-row">
+          <span>Outpost?</span>
+          <input type="checkbox" class="custom-checkbox" id="intakeOutpost">
+          <label for="intakeOutpost"></label>
+        </div>
       </div>
     </div>
 
@@ -225,30 +163,27 @@
     <div class="widget" id="Endgame-Widget">
       <h2>Endgame</h2>
       <div class="mini-box">
-        <h3>END POSITION</h3>
-        <select id="climbed" style="width: 98%;">
-          <option value="Choose_Answer">Choose Answer</option>
-          <option value="No_Cage">No Cage</option>
-          <option value="Parked">Parked</option>
-          <option value="Shallow_Cage">Shallow Cage</option>
-          <option value="Deep_Cage">Deep Cage</option>
-        </select>
+        <h3>SPEED (1-5)</h3>
+        <input type="range" id="endgame-speed" min="1" max="5" step="1" value="3">
+        <div id="endgame-speed-value" class="speed-value">3</div>
       </div>
       <div class="mini-box">
-        <h3>Speed</h3>
-        <select id="speed" style="width: 98%;">
-          <option value="0">0</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
+        <h3>ATTEMPTED CLIMB</h3>
+        <input type="checkbox" class="custom-checkbox" id="attemptedClimb">
+        <label for="attemptedClimb"></label>
       </div>
       <div class="mini-box">
-        <h3>Tipped During Match?</h3>
-        <input type="checkbox" class="custom-checkbox" id="Tipped-During-Match">
-        <label for="Tipped-During-Match"></label>
+        <h3>SUCCESSFUL CLIMB</h3>
+        <input type="checkbox" class="custom-checkbox" id="successfulClimb">
+        <label for="successfulClimb"></label>
+      </div>
+      <div class="mini-box" id="rung-container" style="display: none;">
+        <h3>RUNG</h3>
+        <div class="rung-button-group" id="rung" role="group" aria-label="Rung Selection">
+          <button type="button" class="rung-button" data-rung="Low">Low</button>
+          <button type="button" class="rung-button" data-rung="Mid">Mid</button>
+          <button type="button" class="rung-button" data-rung="High">High</button>
+        </div>
       </div>
     </div>
 
@@ -256,8 +191,23 @@
     <div class="widget" id="PostMatch">
       <h2>Postmatch</h2>
       <div class="mini-box">
+        <h3>RELIABILITY (1-5)</h3>
+        <input type="range" id="reliability" min="1" max="5" step="1" value="3">
+        <div id="reliability-value" class="speed-value">3</div>
+      </div>
+      <div class="mini-box">
+        <h3>FUEL SCORING CAPABILITY (1-5)</h3>
+        <input type="range" id="fuel-score-rating" min="1" max="5" step="1" value="3">
+        <div id="fuel-score-rating-value" class="speed-value">3</div>
+      </div>
+      <div class="mini-box">
+        <h3>OVERALL IMPACT (1-5)</h3>
+        <input type="range" id="overall-impact" min="1" max="5" step="1" value="3">
+        <div id="overall-impact-value" class="speed-value">3</div>
+      </div>
+      <div class="mini-box">
         <h3>COMMENTS</h3>
-        <textarea id="Comments" rows="10" cols="29"></textarea>
+        <textarea id="Comments" rows="10" cols="29" maxlength="900"></textarea>
       </div>
     </div>
   </div>
