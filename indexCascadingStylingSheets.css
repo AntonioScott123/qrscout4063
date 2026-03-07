@@ -93,6 +93,7 @@ h2 {
     align-items: center;
     justify-content: center;
     font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
     margin: 0 auto;
 }
 
@@ -109,11 +110,14 @@ h2 {
     padding: 10px 14px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.16);
     font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 400;
 }
 
 .help-content h3 {
     text-align: center;
     margin-bottom: 8px;
+    font-weight: 400;
 }
 
 .help-content ul {
@@ -123,6 +127,10 @@ h2 {
 
 .help-content li {
     margin: 4px 0;
+}
+
+.help-content strong {
+    font-weight: 400;
 }
 
 
