@@ -42,6 +42,8 @@ if ('serviceWorker' in navigator) {
     comments: ""
   };
 
+  const MAX_QR_TEXT_LENGTH = 900;
+
   // Optional smallify object for abbreviating common values
   let smallify = {
     "Not_Observed": "NOB",
@@ -404,7 +406,12 @@ function updateButtonNum(id, num) {
     gameData.reliability = document.getElementById('reliability').value;
     gameData.fuelScoringCapability = document.getElementById('fuel-score-rating').value;
     gameData.overallImpact = document.getElementById('overall-impact').value;
-    gameData.comments = document.getElementById('Comments').value;
+    const commentsField = document.getElementById('Comments');
+    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.autoFuelScored} ${gameData.autoFuelMissed} ${gameData.autoClimb} ${gameData.intakeSpeed} ${gameData.intakeFloor} ${gameData.intakeDepot} ${gameData.intakeOutpost} ${gameData.teleopFuelScored} ${gameData.teleopFuelMissed} ${gameData.attemptedClimb} ${gameData.successfulClimb} ${gameData.rung} ${gameData.endgameSpeed} ${gameData.reliability} ${gameData.fuelScoringCapability} ${gameData.overallImpact}`;
+    const basePayload = qrCodeData.split(' ').join('~') + "~";
+    const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - basePayload.length);
+    commentsField.maxLength = allowedCommentLength;
+    gameData.comments = commentsField.value.slice(0, allowedCommentLength);
 
     if (checkIfTeam(gameData.teamNum)) {
       generateQRCode();
@@ -419,7 +426,6 @@ function updateButtonNum(id, num) {
     const basePayload = qrCodeData.split(' ').join('~') + "~";
 
     // Truncate comments when needed so long notes stay QR-friendly.
-    const MAX_QR_TEXT_LENGTH = 900;
     const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - basePayload.length);
     const safeComment = (gameData.comments || '').slice(0, allowedCommentLength);
 
