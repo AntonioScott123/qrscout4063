@@ -37,7 +37,7 @@ if ('serviceWorker' in navigator) {
     successfulClimb: false,
     rung: "",
     reliability: 3,
-    fuelScoreRating: 3,
+    fuelScoringCapability: 3,
     overallImpact: 3,
     comments: ""
   };
@@ -102,8 +102,8 @@ if ('serviceWorker' in navigator) {
     const reliabilityValue = document.getElementById('reliability-value');
     if (reliabilityValue) reliabilityValue.textContent = '3';
     document.getElementById('fuel-score-rating').value = '3';
-    const fuelScoreRatingValue = document.getElementById('fuel-score-rating-value');
-    if (fuelScoreRatingValue) fuelScoreRatingValue.textContent = '3';
+    const fuelScoringCapabilityValue = document.getElementById('fuel-score-rating-value');
+    if (fuelScoringCapabilityValue) fuelScoringCapabilityValue.textContent = '3';
     document.getElementById('overall-impact').value = '3';
     const overallImpactValue = document.getElementById('overall-impact-value');
     if (overallImpactValue) overallImpactValue.textContent = '3';
@@ -402,7 +402,7 @@ function updateButtonNum(id, num) {
     gameData.rung = gameData.successfulClimb ? getSelectedRung() : 'NA';
 
     gameData.reliability = document.getElementById('reliability').value;
-    gameData.fuelScoreRating = document.getElementById('fuel-score-rating').value;
+    gameData.fuelScoringCapability = document.getElementById('fuel-score-rating').value;
     gameData.overallImpact = document.getElementById('overall-impact').value;
     gameData.comments = document.getElementById('Comments').value;
 
@@ -415,13 +415,19 @@ function updateButtonNum(id, num) {
 
   function generateQRCode() {
     // Keep output format: space-separated payload, then replace spaces with tildes.
-    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.autoFuelScored} ${gameData.autoFuelMissed} ${gameData.autoClimb} ${gameData.intakeSpeed} ${gameData.intakeFloor} ${gameData.intakeDepot} ${gameData.intakeOutpost} ${gameData.teleopFuelScored} ${gameData.teleopFuelMissed} ${gameData.attemptedClimb} ${gameData.successfulClimb} ${gameData.rung} ${gameData.endgameSpeed} ${gameData.reliability} ${gameData.fuelScoreRating} ${gameData.overallImpact}`;
+    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.autoFuelScored} ${gameData.autoFuelMissed} ${gameData.autoClimb} ${gameData.intakeSpeed} ${gameData.intakeFloor} ${gameData.intakeDepot} ${gameData.intakeOutpost} ${gameData.teleopFuelScored} ${gameData.teleopFuelMissed} ${gameData.attemptedClimb} ${gameData.successfulClimb} ${gameData.rung} ${gameData.endgameSpeed} ${gameData.reliability} ${gameData.fuelScoringCapability} ${gameData.overallImpact}`;
+    const basePayload = qrCodeData.split(' ').join('~') + "~";
+
+    // Truncate comments when needed so long notes stay QR-friendly.
+    const MAX_QR_TEXT_LENGTH = 900;
+    const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - basePayload.length);
+    const safeComment = (gameData.comments || '').slice(0, allowedCommentLength);
 
     const qrCodeContainer = document.getElementById('qr-code-popup');
     qrCodeContainer.innerHTML = '';
 
     new QRCode(qrCodeContainer, {
-      text: qrCodeData.split(' ').join('~') + "~" + gameData.comments,
+      text: basePayload + safeComment,
       width: 300,
       height: 300,
     });
