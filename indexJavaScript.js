@@ -42,9 +42,6 @@ if ('serviceWorker' in navigator) {
     comments: ""
   };
 
-  // Team validation toggle: true allows any team number, false enforces teamsAllowedData.js list.
-  const allowAllTeams = false;
-
   // Optional smallify object for abbreviating common values
   let smallify = {
     "Not_Observed": "NOB",
@@ -66,7 +63,7 @@ if ('serviceWorker' in navigator) {
   }
   
   function checkIfTeam(enteredTeam) {
-    if (allowAllTeams) return true;
+    if (window.allowAllTeams === true) return true;
     if (!Array.isArray(window.teamsCompeting)) return true;
     return window.teamsCompeting.includes(Number(enteredTeam));
   }

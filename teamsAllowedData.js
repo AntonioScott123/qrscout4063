@@ -1,3 +1,6 @@
+// Team validation toggle: true allows any team number, false enforces this list.
+window.allowAllTeams = false;
+
 // Allowed teams list for validation/reference.
 window.teamsCompeting = [
   67, 70, 78, 114, 175, 179, 219, 226, 578, 604, 1058, 1114, 1160, 1288, 1318,
