@@ -135,29 +135,23 @@ h2 {
 
 
 .dashboard {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: stretch;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding: 8vw;
-    gap: 14px;
-    padding: 8px 8vw;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-.dashboard::-webkit-scrollbar {
-    display: none;
+    position: relative;
+    display: block;
+    width: min(100%, 1000px);
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 8px 0;
+    touch-action: pan-y;
 }
 
 .carousel-shell {
     position: relative;
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    width: min(100%, 1000px);
+    width: min(100%, 1100px);
     margin: 0 auto;
+    gap: 8px;
 }
 
 #dashboard-carousel {
@@ -166,28 +160,50 @@ h2 {
 
 /* Enhanced widget styling */
 .widget {
-    margin: 10px 0;
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    margin: 0;
     padding: 15px;
-    /* Underwater gradient from deep blue to lighter teal/seafoam */
     background: linear-gradient(to bottom, #0083AE, #00A9C9, #E0F7F9);
-    width: clamp(270px, 84vw, 360px);
+    width: min(82vw, 360px);
     min-height: auto;
-    flex: 0 0 clamp(270px, 84vw, 360px);
-    scroll-snap-align: center;
     border-radius: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
-    opacity: 0.42;
+    transition: transform 0.28s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.widget.is-active,
+.widget.is-prev,
+.widget.is-next {
+    pointer-events: auto;
 }
 
 .widget.is-active {
     opacity: 1;
-    transform: scale(1);
+    transform: translateX(-50%) scale(1);
+    z-index: 3;
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24);
 }
 
-.widget:not(.is-active) {
-    transform: scale(0.94);
+.widget.is-prev {
+    opacity: 0.35;
+    transform: translateX(-116%) scale(0.9);
+    z-index: 2;
+}
+
+.widget.is-next {
+    opacity: 0.35;
+    transform: translateX(16%) scale(0.9);
+    z-index: 2;
+}
+
+.widget.is-hidden {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.85);
+    z-index: 1;
 }
 
 .carousel-arrow {
@@ -572,10 +588,11 @@ input:focus, textarea:focus, select:focus {
     width: 44px;
     min-width: 44px;
     height: 44px;
-    margin: 0 4px;
+    margin: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    z-index: 5;
 }
 
 .action-widget .button-container {
@@ -585,16 +602,19 @@ input:focus, textarea:focus, select:focus {
 @media (max-width: 700px) {
     .carousel-shell {
         width: 100%;
-    }
-
-    .dashboard {
-        padding: 8px 6vw;
-        scroll-padding: 6vw;
-        gap: 12px;
+        grid-template-columns: 40px 1fr 40px;
+        gap: 4px;
     }
 
     .widget {
-        width: clamp(250px, 88vw, 340px);
-        flex-basis: clamp(250px, 88vw, 340px);
+        width: min(78vw, 340px);
+    }
+
+    .widget.is-prev {
+        transform: translateX(-112%) scale(0.88);
+    }
+
+    .widget.is-next {
+        transform: translateX(12%) scale(0.88);
     }
 }

@@ -323,26 +323,23 @@ function initializeWidgetCarousel() {
 
   const prevBtn = document.getElementById('carousel-prev');
   const nextBtn = document.getElementById('carousel-next');
+  let activeIndex = 0;
+
+  const clampIndex = (index) => Math.max(0, Math.min(index, widgets.length - 1));
 
   const updateCarouselState = () => {
-    const dashboardRect = dashboard.getBoundingClientRect();
-    const centerX = dashboardRect.left + (dashboardRect.width / 2);
-
-    let activeIndex = 0;
-    let closestDistance = Number.POSITIVE_INFINITY;
-
     widgets.forEach((widget, index) => {
-      const rect = widget.getBoundingClientRect();
-      const widgetCenter = rect.left + (rect.width / 2);
-      const distance = Math.abs(centerX - widgetCenter);
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        activeIndex = index;
+      widget.classList.remove('is-active', 'is-prev', 'is-next', 'is-hidden');
+
+      if (index === activeIndex) {
+        widget.classList.add('is-active');
+      } else if (index === activeIndex - 1) {
+        widget.classList.add('is-prev');
+      } else if (index === activeIndex + 1) {
+        widget.classList.add('is-next');
+      } else {
+        widget.classList.add('is-hidden');
       }
-    });
-
-    widgets.forEach((widget, index) => {
-      widget.classList.toggle('is-active', index === activeIndex);
     });
 
     const activeWidget = widgets[activeIndex];
@@ -352,37 +349,48 @@ function initializeWidgetCarousel() {
 
     if (prevBtn) prevBtn.disabled = activeIndex === 0;
     if (nextBtn) nextBtn.disabled = activeIndex === widgets.length - 1;
-
-    return activeIndex;
   };
 
-  const scrollToIndex = (index) => {
-    const safeIndex = Math.max(0, Math.min(index, widgets.length - 1));
-    const target = widgets[safeIndex];
-    if (!target) return;
-    target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  const goToIndex = (index) => {
+    const safeIndex = clampIndex(index);
+    if (safeIndex === activeIndex) return;
+    activeIndex = safeIndex;
+    updateCarouselState();
   };
 
-  goToCarouselPage = scrollToIndex;
+  goToCarouselPage = goToIndex;
 
   if (prevBtn) {
     prevBtn.addEventListener('click', () => {
-      const currentIndex = updateCarouselState();
-      scrollToIndex(currentIndex - 1);
+      goToIndex(activeIndex - 1);
     });
   }
 
   if (nextBtn) {
     nextBtn.addEventListener('click', () => {
-      const currentIndex = updateCarouselState();
-      scrollToIndex(currentIndex + 1);
+      goToIndex(activeIndex + 1);
     });
   }
 
-  let scrollTimer = null;
-  dashboard.addEventListener('scroll', () => {
-    if (scrollTimer) clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(updateCarouselState, 70);
+  let touchStartX = null;
+
+  dashboard.addEventListener('touchstart', (event) => {
+    touchStartX = event.touches[0]?.clientX ?? null;
+  }, { passive: true });
+
+  dashboard.addEventListener('touchend', (event) => {
+    if (touchStartX === null) return;
+    const touchEndX = event.changedTouches[0]?.clientX ?? touchStartX;
+    const deltaX = touchEndX - touchStartX;
+    const threshold = 45;
+
+    if (deltaX > threshold) {
+      goToIndex(activeIndex - 1);
+    } else if (deltaX < -threshold) {
+      goToIndex(activeIndex + 1);
+    }
+
+    touchStartX = null;
   }, { passive: true });
 
   window.addEventListener('resize', updateCarouselState);
