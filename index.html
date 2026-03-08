@@ -60,7 +60,9 @@
       </ul>
     </div>
   </details>
-  <div class="dashboard">
+  <div class="carousel-shell">
+    <button class="carousel-arrow carousel-arrow-left" id="carousel-prev" aria-label="Previous tab">&#10094;</button>
+    <div class="dashboard" id="dashboard-carousel">
     <!-- Prematch Widget -->
     <div class="widget" id="prematch-widget">
       <h2>Prematch</h2>
@@ -210,16 +212,21 @@
         <textarea id="Comments" rows="10" cols="29" maxlength="900"></textarea>
       </div>
     </div>
+    <div class="widget action-widget" id="actions-widget">
+      <h2>Actions</h2>
+      <div class="button-container">
+        <button id="submit-btn" onclick="updateQRCodeOnSubmit()">Generate QR Code</button>
+        <button id="clear-all-btn" onclick="ClearAll()">Clear All</button>
+      </div>
+    </div>
+    </div>
+    <button class="carousel-arrow carousel-arrow-right" id="carousel-next" aria-label="Next tab">&#10095;</button>
   </div>
 
   <div id="qr-code">
     <!-- Placeholder for QR code -->
   </div>
 
-  <div class="button-container">
-    <button id="submit-btn" onclick="updateQRCodeOnSubmit()">Generate QR Code</button>
-    <button id="clear-all-btn" onclick="ClearAll()">Clear All</button>
-  </div>
 
   <div id="popupQR" class="popup">
     <div id="qr-code-popup"></div>

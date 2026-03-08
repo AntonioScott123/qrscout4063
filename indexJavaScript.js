@@ -72,6 +72,9 @@ if ('serviceWorker' in navigator) {
   
   function ClearAll() {
     // Clear Prematch fields
+    if (typeof goToCarouselPage === "function") {
+      goToCarouselPage(0);
+    }
     window.scrollTo({
       top: 0,
       behavior: "smooth"
@@ -308,6 +311,84 @@ function getSelectedRung() {
   return selected ? selected.dataset.rung : 'NA';
 }
 
+
+let goToCarouselPage = null;
+
+function initializeWidgetCarousel() {
+  const dashboard = document.getElementById('dashboard-carousel');
+  if (!dashboard) return;
+
+  const widgets = Array.from(dashboard.querySelectorAll('.widget'));
+  if (widgets.length === 0) return;
+
+  const prevBtn = document.getElementById('carousel-prev');
+  const nextBtn = document.getElementById('carousel-next');
+
+  const updateCarouselState = () => {
+    const dashboardRect = dashboard.getBoundingClientRect();
+    const centerX = dashboardRect.left + (dashboardRect.width / 2);
+
+    let activeIndex = 0;
+    let closestDistance = Number.POSITIVE_INFINITY;
+
+    widgets.forEach((widget, index) => {
+      const rect = widget.getBoundingClientRect();
+      const widgetCenter = rect.left + (rect.width / 2);
+      const distance = Math.abs(centerX - widgetCenter);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        activeIndex = index;
+      }
+    });
+
+    widgets.forEach((widget, index) => {
+      widget.classList.toggle('is-active', index === activeIndex);
+    });
+
+    const activeWidget = widgets[activeIndex];
+    if (activeWidget) {
+      dashboard.style.height = `${activeWidget.offsetHeight + 24}px`;
+    }
+
+    if (prevBtn) prevBtn.disabled = activeIndex === 0;
+    if (nextBtn) nextBtn.disabled = activeIndex === widgets.length - 1;
+
+    return activeIndex;
+  };
+
+  const scrollToIndex = (index) => {
+    const safeIndex = Math.max(0, Math.min(index, widgets.length - 1));
+    const target = widgets[safeIndex];
+    if (!target) return;
+    target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  };
+
+  goToCarouselPage = scrollToIndex;
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      const currentIndex = updateCarouselState();
+      scrollToIndex(currentIndex - 1);
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      const currentIndex = updateCarouselState();
+      scrollToIndex(currentIndex + 1);
+    });
+  }
+
+  let scrollTimer = null;
+  dashboard.addEventListener('scroll', () => {
+    if (scrollTimer) clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(updateCarouselState, 70);
+  }, { passive: true });
+
+  window.addEventListener('resize', updateCarouselState);
+  updateCarouselState();
+}
+
 function initializeRungVisibility() {
   const successfulClimb = document.getElementById('successfulClimb');
   const rungContainer = document.getElementById('rung-container');
@@ -326,6 +407,7 @@ function initializeRungVisibility() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initializeWidgetCarousel();
   initializeCounterInputs();
   initializeCounterButtonInteractions();
   initializeSpeedSlider('speed', 'speed-value');

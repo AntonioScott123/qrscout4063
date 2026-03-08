@@ -136,36 +136,75 @@ h2 {
 
 .dashboard {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    align-items: flex-start;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 8vw;
+    gap: 14px;
+    padding: 8px 8vw;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.dashboard::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel-shell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: min(100%, 1000px);
+    margin: 0 auto;
+}
+
+#dashboard-carousel {
+    transition: height 0.25s ease;
 }
 
 /* Enhanced widget styling */
 .widget {
-    margin: 10px;
+    margin: 10px 0;
     padding: 15px;
     /* Underwater gradient from deep blue to lighter teal/seafoam */
     background: linear-gradient(to bottom, #0083AE, #00A9C9, #E0F7F9);
-    width: 275px;
-    min-height: 625px;
+    width: clamp(270px, 84vw, 360px);
+    min-height: auto;
+    flex: 0 0 clamp(270px, 84vw, 360px);
+    scroll-snap-align: center;
     border-radius: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+    opacity: 0.42;
 }
 
-.widget:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+.widget.is-active {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24);
 }
 
-/* Increase height for specific widgets if needed */
-#Auto-Widget {
-    min-height: 950px;
+.widget:not(.is-active) {
+    transform: scale(0.94);
 }
 
-#TeleOp-Widget {
-    min-height: 875px;
+.carousel-arrow {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    margin: 0;
+    font-size: 24px;
+    line-height: 1;
+    border: none;
+    background-color: rgba(0, 131, 174, 0.9);
+}
+
+.carousel-arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
 }
 
 /* Mini-box adjustments for a cleaner look */
@@ -526,4 +565,36 @@ input:focus, textarea:focus, select:focus {
 
 .checkbox-true-pop {
     animation: trueSplashPop 0.24s ease-out;
+}
+
+
+.carousel-shell .carousel-arrow {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    margin: 0 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-widget .button-container {
+    margin-top: 8px;
+}
+
+@media (max-width: 700px) {
+    .carousel-shell {
+        width: 100%;
+    }
+
+    .dashboard {
+        padding: 8px 6vw;
+        scroll-padding: 6vw;
+        gap: 12px;
+    }
+
+    .widget {
+        width: clamp(250px, 88vw, 340px);
+        flex-basis: clamp(250px, 88vw, 340px);
+    }
 }
