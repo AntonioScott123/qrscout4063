@@ -671,3 +671,33 @@ input:focus, textarea:focus, select:focus {
     width: 100%;
     accent-color: #0083AE;
 }
+
+
+.team-peek {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -82%);
+    width: min(38vw, 170px);
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.team-peek img {
+    width: 100%;
+    display: block;
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.28));
+}
+
+.team-peek.is-visible {
+    opacity: 1;
+    transform: translate(-50%, -28%);
+    transition: transform 0.46s ease-in, opacity 0.36s ease-in;
+}
+
+.team-peek.is-exiting {
+    opacity: 0;
+    transform: translate(-50%, -82%);
+    transition: transform 0.34s ease-out, opacity 0.28s ease-out;
+}

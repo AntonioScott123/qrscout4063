@@ -75,7 +75,9 @@ if ('serviceWorker' in navigator) {
       goToCarouselPage(0);
     }
     document.getElementById('prematch-match-number').value = '';
-    document.getElementById('prematch-team-number').value = '';
+    const teamField = document.getElementById('prematch-team-number');
+    teamField.value = '';
+    teamField.dispatchEvent(new Event('input'));
     clearRobotSelection();
     document.getElementById('moved').checked = false;
 
@@ -282,6 +284,36 @@ function initializeCheckboxAnimations() {
 }
 
 
+
+function initializeTeamPeekAnimation() {
+  const teamInput = document.getElementById('prematch-team-number');
+  const peekEl = document.getElementById('team-4063-peek');
+  if (!teamInput || !peekEl) return;
+
+  const showPeek = () => {
+    peekEl.classList.remove('is-exiting');
+    peekEl.classList.add('is-visible');
+  };
+
+  const hidePeek = () => {
+    if (!peekEl.classList.contains('is-visible')) return;
+    peekEl.classList.remove('is-visible');
+    peekEl.classList.add('is-exiting');
+  };
+
+  const syncPeekState = () => {
+    const normalized = teamInput.value.trim();
+    if (normalized === '4063') {
+      showPeek();
+    } else {
+      hidePeek();
+    }
+  };
+
+  teamInput.addEventListener('input', syncPeekState);
+  syncPeekState();
+}
+
 function clearRobotSelection() {
   document.querySelectorAll('.robot-choice.is-selected').forEach((button) => {
     button.classList.remove('is-selected');
@@ -473,6 +505,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeSpeedSlider('fuel-score-rating', 'fuel-score-rating-value');
   initializeSpeedSlider('overall-impact', 'overall-impact-value');
   initializeCheckboxAnimations();
+  initializeTeamPeekAnimation();
   initializeRobotButtons();
   initializeRungButtons();
   initializeRungVisibility();
