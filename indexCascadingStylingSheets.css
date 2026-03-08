@@ -166,7 +166,7 @@ h2 {
     margin: 0;
     padding: 15px;
     background: linear-gradient(to bottom, #0083AE, #00A9C9, #E0F7F9);
-    width: min(74vw, 320px);
+    width: min(66vw, 280px);
     min-height: auto;
     border-radius: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -607,7 +607,7 @@ input:focus, textarea:focus, select:focus {
     }
 
     .widget {
-        width: min(72vw, 300px);
+        width: min(64vw, 260px);
     }
 
     .widget.is-prev {
