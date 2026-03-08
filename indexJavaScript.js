@@ -76,6 +76,7 @@ if ('serviceWorker' in navigator) {
     }
     document.getElementById('prematch-match-number').value = '';
     document.getElementById('prematch-team-number').value = '';
+    clearRobotSelection();
     document.getElementById('moved').checked = false;
 
     ['autoFuelScored', 'autoFuelMissed', 'teleopFuelScored', 'teleopFuelMissed'].forEach(id => {
@@ -281,6 +282,31 @@ function initializeCheckboxAnimations() {
 }
 
 
+function clearRobotSelection() {
+  document.querySelectorAll('.robot-choice.is-selected').forEach((button) => {
+    button.classList.remove('is-selected');
+  });
+}
+
+function initializeRobotButtons() {
+  const buttons = document.querySelectorAll('.robot-choice');
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      buttons.forEach((b) => b.classList.remove('is-selected'));
+      button.classList.add('is-selected');
+      const robotField = document.getElementById('prematch-robot');
+      if (robotField) {
+        robotField.classList.remove('error');
+      }
+    });
+  });
+}
+
+function getSelectedRobot() {
+  const selected = document.querySelector('.robot-choice.is-selected');
+  return selected ? selected.dataset.robot : 'Choose_Answer';
+}
+
 function clearRungSelection() {
   const selected = document.querySelector('.rung-button.is-selected');
   if (selected) {
@@ -435,6 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeSpeedSlider('fuel-score-rating', 'fuel-score-rating-value');
   initializeSpeedSlider('overall-impact', 'overall-impact-value');
   initializeCheckboxAnimations();
+  initializeRobotButtons();
   initializeRungButtons();
   initializeRungVisibility();
 });
@@ -472,7 +499,7 @@ function updateButtonNum(id, num) {
       teamNumField.classList.add('error');
       valid = false;
     }
-    if (robotField.value === "Choose_Answer") {
+    if (getSelectedRobot() === "Choose_Answer") {
       robotField.classList.add('error');
       valid = false;
     }
@@ -486,7 +513,8 @@ function updateButtonNum(id, num) {
 
     gameData.initials = initialsField.value.trim();
     gameData.matchNum = parseInt(matchNumField.value.trim(), 10);
-    gameData.robot = smallify[robotField.value] || robotField.value;
+    const selectedRobot = getSelectedRobot();
+    gameData.robot = smallify[selectedRobot] || selectedRobot;
     gameData.teamNum = parseInt(teamNumField.value.trim(), 10);
     gameData.moved = document.getElementById('moved').checked;
 

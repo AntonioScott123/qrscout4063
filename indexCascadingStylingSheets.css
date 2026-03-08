@@ -299,6 +299,7 @@ button {
 .mini-box > input,
 .mini-box > textarea,
 .mini-box > .fancy-select-wrapper,
+.mini-box > .robot-button-group,
 .mini-box > #speed,
 .mini-box > .speed-value {
     margin-top: 8px;
@@ -383,6 +384,36 @@ input[type="range"] {
 }
 
 
+
+
+.robot-button-group {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.robot-choice {
+    width: auto;
+    min-height: 34px;
+    margin: 0;
+    padding: 6px 4px;
+    font-size: 12px;
+    border-radius: 6px;
+}
+
+.robot-choice-red {
+    background-color: #e53935;
+}
+
+.robot-choice-blue {
+    background-color: #1e88e5;
+}
+
+.robot-choice.is-selected {
+    outline: 2px solid #ffffff;
+    box-shadow: 0 0 0 2px rgba(0, 131, 174, 0.6);
+}
 .rung-button-group {
     display: flex;
     justify-content: center;
