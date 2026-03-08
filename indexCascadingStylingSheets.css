@@ -388,7 +388,7 @@ input[type="range"] {
 
 .robot-button-group {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
     margin-top: 8px;
 }
@@ -397,7 +397,7 @@ input[type="range"] {
     width: auto;
     min-height: 34px;
     margin: 0;
-    padding: 6px 4px;
+    padding: 7px 4px;
     font-size: 12px;
     border-radius: 6px;
 }
@@ -415,23 +415,26 @@ input[type="range"] {
     box-shadow: 0 0 0 2px rgba(0, 131, 174, 0.6);
 }
 .rung-button-group {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 6px;
     margin-top: 8px;
 }
 
 .rung-button {
-    width: 62px;
-    height: 30px;
+    width: auto;
+    height: 34px;
     margin: 0;
-    font-size: 13px;
+    font-size: 12px;
     background-color: #5f59ff;
+    border-radius: 6px;
 }
 
 .rung-button.is-selected {
     background-color: #0083AE;
-    transform: scale(0.96);
+    outline: 2px solid #ffffff;
+    box-shadow: 0 0 0 2px rgba(0, 131, 174, 0.6);
+    transform: none;
 }
 
 /* Checkbox styling */
