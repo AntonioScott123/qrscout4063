@@ -341,6 +341,7 @@ function initializeWidgetCarousel() {
 
   const prevBtn = document.getElementById('carousel-prev');
   const nextBtn = document.getElementById('carousel-next');
+  const progressSlider = document.getElementById('carousel-progress');
   let activeIndex = 0;
   let uniformCardHeight = null;
 
@@ -367,6 +368,7 @@ function initializeWidgetCarousel() {
 
     if (prevBtn) prevBtn.disabled = activeIndex === 0;
     if (nextBtn) nextBtn.disabled = activeIndex === widgets.length - 1;
+    if (progressSlider) progressSlider.value = String(activeIndex);
   };
 
 
@@ -392,6 +394,16 @@ function initializeWidgetCarousel() {
   };
 
   goToCarouselPage = goToIndex;
+
+  if (progressSlider) {
+    progressSlider.min = '0';
+    progressSlider.max = String(widgets.length - 1);
+    progressSlider.step = '1';
+    progressSlider.value = String(activeIndex);
+    progressSlider.addEventListener('input', () => {
+      goToIndex(parseInt(progressSlider.value, 10) || 0);
+    });
+  }
 
   if (prevBtn) {
     prevBtn.addEventListener('click', () => {
