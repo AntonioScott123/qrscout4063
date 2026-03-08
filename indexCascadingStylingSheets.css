@@ -38,7 +38,7 @@ body {
     overflow-x: hidden;
     padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
     /* Smoother ocean-inspired background */
-    font-size: 24px;
+    font-size: 18px;
 }
 
 
@@ -166,7 +166,7 @@ h2 {
     margin: 0;
     padding: 15px;
     background: linear-gradient(to bottom, #0083AE, #00A9C9, #E0F7F9);
-    width: min(82vw, 360px);
+    width: min(74vw, 320px);
     min-height: auto;
     border-radius: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -190,13 +190,13 @@ h2 {
 
 .widget.is-prev {
     opacity: 0.35;
-    transform: translateX(-116%) scale(0.9);
+    transform: translateX(-112%);
     z-index: 2;
 }
 
 .widget.is-next {
     opacity: 0.35;
-    transform: translateX(16%) scale(0.9);
+    transform: translateX(12%);
     z-index: 2;
 }
 
@@ -207,12 +207,12 @@ h2 {
 }
 
 .carousel-arrow {
-    width: 44px;
-    min-width: 44px;
-    height: 44px;
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
     border-radius: 50%;
     margin: 0;
-    font-size: 24px;
+    font-size: 18px;
     line-height: 1;
     border: none;
     background-color: rgba(0, 131, 174, 0.9);
@@ -585,9 +585,9 @@ input:focus, textarea:focus, select:focus {
 
 
 .carousel-shell .carousel-arrow {
-    width: 44px;
-    min-width: 44px;
-    height: 44px;
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
     margin: 0;
     display: inline-flex;
     align-items: center;
@@ -602,19 +602,19 @@ input:focus, textarea:focus, select:focus {
 @media (max-width: 700px) {
     .carousel-shell {
         width: 100%;
-        grid-template-columns: 40px 1fr 40px;
+        grid-template-columns: 30px 1fr 30px;
         gap: 4px;
     }
 
     .widget {
-        width: min(78vw, 340px);
+        width: min(72vw, 300px);
     }
 
     .widget.is-prev {
-        transform: translateX(-112%) scale(0.88);
+        transform: translateX(-108%);
     }
 
     .widget.is-next {
-        transform: translateX(12%) scale(0.88);
+        transform: translateX(8%);
     }
 }

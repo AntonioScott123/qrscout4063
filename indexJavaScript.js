@@ -75,10 +75,6 @@ if ('serviceWorker' in navigator) {
     if (typeof goToCarouselPage === "function") {
       goToCarouselPage(0);
     }
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
     document.getElementById('prematch-match-number').value = '';
     document.getElementById('prematch-team-number').value = '';
     document.getElementById('moved').checked = false;
@@ -324,6 +320,7 @@ function initializeWidgetCarousel() {
   const prevBtn = document.getElementById('carousel-prev');
   const nextBtn = document.getElementById('carousel-next');
   let activeIndex = 0;
+  let uniformCardHeight = null;
 
   const clampIndex = (index) => Math.max(0, Math.min(index, widgets.length - 1));
 
@@ -342,13 +339,27 @@ function initializeWidgetCarousel() {
       }
     });
 
-    const activeWidget = widgets[activeIndex];
-    if (activeWidget) {
-      dashboard.style.height = `${activeWidget.offsetHeight + 24}px`;
+    if (uniformCardHeight !== null) {
+      dashboard.style.height = `${uniformCardHeight + 24}px`;
     }
 
     if (prevBtn) prevBtn.disabled = activeIndex === 0;
     if (nextBtn) nextBtn.disabled = activeIndex === widgets.length - 1;
+  };
+
+
+  const syncUniformCardHeight = () => {
+    widgets.forEach((widget) => {
+      widget.style.height = 'auto';
+    });
+
+    uniformCardHeight = widgets.reduce((maxHeight, widget) => {
+      return Math.max(maxHeight, widget.offsetHeight);
+    }, 0);
+
+    widgets.forEach((widget) => {
+      widget.style.height = `${uniformCardHeight}px`;
+    });
   };
 
   const goToIndex = (index) => {
@@ -393,7 +404,12 @@ function initializeWidgetCarousel() {
     touchStartX = null;
   }, { passive: true });
 
-  window.addEventListener('resize', updateCarouselState);
+  window.addEventListener('resize', () => {
+    syncUniformCardHeight();
+    updateCarouselState();
+  });
+
+  syncUniformCardHeight();
   updateCarouselState();
 }
 
@@ -467,7 +483,9 @@ function updateButtonNum(id, num) {
     }
 
     if (!valid) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (typeof goToCarouselPage === "function") {
+        goToCarouselPage(0);
+      }
       return;
     }
 
