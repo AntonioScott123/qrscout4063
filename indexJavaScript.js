@@ -26,7 +26,6 @@ if ('serviceWorker' in navigator) {
     autoFuelScored: 0,
     autoFuelMissed: 0,
     autoClimb: false,
-    intakeSpeed: 3,
     endgameSpeed: 3,
     intakeFloor: false,
     intakeDepot: false,
@@ -39,6 +38,7 @@ if ('serviceWorker' in navigator) {
     reliability: 3,
     fuelScoringCapability: 3,
     overallImpact: 3,
+    hopperEstimate: 0,
     comments: ""
   };
 
@@ -72,22 +72,20 @@ if ('serviceWorker' in navigator) {
   
   function ClearAll() {
     // Clear Prematch fields
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
+    if (typeof goToCarouselPage === "function") {
+      goToCarouselPage(0);
+    }
     document.getElementById('prematch-match-number').value = '';
-    document.getElementById('prematch-team-number').value = '';
+    const teamField = document.getElementById('prematch-team-number');
+    teamField.value = '';
+    clearRobotSelection();
     document.getElementById('moved').checked = false;
 
-    ['autoFuelScored', 'autoFuelMissed', 'teleopFuelScored', 'teleopFuelMissed'].forEach(id => {
+    ['autoFuelScored', 'autoFuelMissed', 'teleopFuelScored', 'teleopFuelMissed', 'hopperEstimate'].forEach(id => {
       setCounterValue(id, 0);
     });
 
     document.getElementById('autoClimb').checked = false;
-    document.getElementById('speed').value = '3';
-    const speedValue = document.getElementById('speed-value');
-    if (speedValue) speedValue.textContent = '3';
     document.getElementById('endgame-speed').value = '3';
     const endgameSpeedValue = document.getElementById('endgame-speed-value');
     if (endgameSpeedValue) endgameSpeedValue.textContent = '3';
@@ -286,6 +284,32 @@ function initializeCheckboxAnimations() {
 }
 
 
+
+function clearRobotSelection() {
+  document.querySelectorAll('.robot-choice.is-selected').forEach((button) => {
+    button.classList.remove('is-selected');
+  });
+}
+
+function initializeRobotButtons() {
+  const buttons = document.querySelectorAll('.robot-choice');
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      buttons.forEach((b) => b.classList.remove('is-selected'));
+      button.classList.add('is-selected');
+      const robotField = document.getElementById('prematch-robot');
+      if (robotField) {
+        robotField.classList.remove('error');
+      }
+    });
+  });
+}
+
+function getSelectedRobot() {
+  const selected = document.querySelector('.robot-choice.is-selected');
+  return selected ? selected.dataset.robot : 'Choose_Answer';
+}
+
 function clearRungSelection() {
   const selected = document.querySelector('.rung-button.is-selected');
   if (selected) {
@@ -308,6 +332,124 @@ function getSelectedRung() {
   return selected ? selected.dataset.rung : 'NA';
 }
 
+
+let goToCarouselPage = null;
+
+function initializeWidgetCarousel() {
+  const dashboard = document.getElementById('dashboard-carousel');
+  if (!dashboard) return;
+
+  const widgets = Array.from(dashboard.querySelectorAll('.widget'));
+  if (widgets.length === 0) return;
+
+  const prevBtn = document.getElementById('carousel-prev');
+  const nextBtn = document.getElementById('carousel-next');
+  const progressSlider = document.getElementById('carousel-progress');
+  let activeIndex = 0;
+  let uniformCardHeight = null;
+
+  const clampIndex = (index) => Math.max(0, Math.min(index, widgets.length - 1));
+
+  const updateCarouselState = () => {
+    widgets.forEach((widget, index) => {
+      widget.classList.remove('is-active', 'is-prev', 'is-next', 'is-hidden');
+
+      if (index === activeIndex) {
+        widget.classList.add('is-active');
+      } else if (index === activeIndex - 1) {
+        widget.classList.add('is-prev');
+      } else if (index === activeIndex + 1) {
+        widget.classList.add('is-next');
+      } else {
+        widget.classList.add('is-hidden');
+      }
+    });
+
+    if (uniformCardHeight !== null) {
+      dashboard.style.height = `${uniformCardHeight + 24}px`;
+    }
+
+    if (prevBtn) prevBtn.disabled = activeIndex === 0;
+    if (nextBtn) nextBtn.disabled = activeIndex === widgets.length - 1;
+    if (progressSlider) progressSlider.value = String(activeIndex);
+  };
+
+
+  const syncUniformCardHeight = () => {
+    widgets.forEach((widget) => {
+      widget.style.height = 'auto';
+    });
+
+    uniformCardHeight = widgets.reduce((maxHeight, widget) => {
+      return Math.max(maxHeight, widget.offsetHeight);
+    }, 0);
+
+    widgets.forEach((widget) => {
+      widget.style.height = `${uniformCardHeight}px`;
+    });
+  };
+
+  const goToIndex = (index) => {
+    const safeIndex = clampIndex(index);
+    if (safeIndex === activeIndex) return;
+    activeIndex = safeIndex;
+    updateCarouselState();
+  };
+
+  goToCarouselPage = goToIndex;
+
+  if (progressSlider) {
+    progressSlider.min = '0';
+    progressSlider.max = String(widgets.length - 1);
+    progressSlider.step = '1';
+    progressSlider.value = String(activeIndex);
+    progressSlider.addEventListener('input', () => {
+      goToIndex(parseInt(progressSlider.value, 10) || 0);
+    });
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      goToIndex(activeIndex - 1);
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      goToIndex(activeIndex + 1);
+    });
+  }
+
+  let touchStartX = null;
+
+  dashboard.addEventListener('touchstart', (event) => {
+    touchStartX = event.touches[0]?.clientX ?? null;
+  }, { passive: true });
+
+  dashboard.addEventListener('touchend', (event) => {
+    if (touchStartX === null) return;
+    const touchEndX = event.changedTouches[0]?.clientX ?? touchStartX;
+    const deltaX = touchEndX - touchStartX;
+    const threshold = 45;
+
+    if (deltaX > threshold) {
+      goToIndex(activeIndex - 1);
+    } else if (deltaX < -threshold) {
+      goToIndex(activeIndex + 1);
+    }
+
+    touchStartX = null;
+  }, { passive: true });
+
+  window.addEventListener('resize', () => {
+    syncUniformCardHeight();
+    updateCarouselState();
+  });
+
+  syncUniformCardHeight();
+  updateCarouselState();
+}
+
 function initializeRungVisibility() {
   const successfulClimb = document.getElementById('successfulClimb');
   const rungContainer = document.getElementById('rung-container');
@@ -326,14 +468,15 @@ function initializeRungVisibility() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initializeWidgetCarousel();
   initializeCounterInputs();
   initializeCounterButtonInteractions();
-  initializeSpeedSlider('speed', 'speed-value');
   initializeSpeedSlider('endgame-speed', 'endgame-speed-value');
   initializeSpeedSlider('reliability', 'reliability-value');
   initializeSpeedSlider('fuel-score-rating', 'fuel-score-rating-value');
   initializeSpeedSlider('overall-impact', 'overall-impact-value');
   initializeCheckboxAnimations();
+  initializeRobotButtons();
   initializeRungButtons();
   initializeRungVisibility();
 });
@@ -371,19 +514,22 @@ function updateButtonNum(id, num) {
       teamNumField.classList.add('error');
       valid = false;
     }
-    if (robotField.value === "Choose_Answer") {
+    if (getSelectedRobot() === "Choose_Answer") {
       robotField.classList.add('error');
       valid = false;
     }
 
     if (!valid) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (typeof goToCarouselPage === "function") {
+        goToCarouselPage(0);
+      }
       return;
     }
 
     gameData.initials = initialsField.value.trim();
     gameData.matchNum = parseInt(matchNumField.value.trim(), 10);
-    gameData.robot = smallify[robotField.value] || robotField.value;
+    const selectedRobot = getSelectedRobot();
+    gameData.robot = smallify[selectedRobot] || selectedRobot;
     gameData.teamNum = parseInt(teamNumField.value.trim(), 10);
     gameData.moved = document.getElementById('moved').checked;
 
@@ -391,7 +537,6 @@ function updateButtonNum(id, num) {
     gameData.autoFuelMissed = getCounterValue('autoFuelMissed');
     gameData.autoClimb = document.getElementById('autoClimb').checked;
 
-    gameData.intakeSpeed = document.getElementById('speed').value;
     gameData.endgameSpeed = document.getElementById('endgame-speed').value;
     gameData.intakeFloor = document.getElementById('intakeFloor').checked;
     gameData.intakeDepot = document.getElementById('intakeDepot').checked;
@@ -406,12 +551,36 @@ function updateButtonNum(id, num) {
     gameData.reliability = document.getElementById('reliability').value;
     gameData.fuelScoringCapability = document.getElementById('fuel-score-rating').value;
     gameData.overallImpact = document.getElementById('overall-impact').value;
+    gameData.hopperEstimate = getCounterValue('hopperEstimate');
     const commentsField = document.getElementById('Comments');
-    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.autoFuelScored} ${gameData.autoFuelMissed} ${gameData.autoClimb} ${gameData.intakeSpeed} ${gameData.intakeFloor} ${gameData.intakeDepot} ${gameData.intakeOutpost} ${gameData.teleopFuelScored} ${gameData.teleopFuelMissed} ${gameData.attemptedClimb} ${gameData.successfulClimb} ${gameData.rung} ${gameData.endgameSpeed} ${gameData.reliability} ${gameData.fuelScoringCapability} ${gameData.overallImpact}`;
-    const basePayload = qrCodeData.split(' ').join('~') + "~";
+    const payloadFields = [
+      gameData.initials.toUpperCase(),
+      gameData.matchNum,
+      gameData.robot,
+      gameData.teamNum,
+      gameData.moved,
+      gameData.autoFuelScored,
+      gameData.autoFuelMissed,
+      gameData.autoClimb,
+      gameData.intakeFloor,
+      gameData.intakeDepot,
+      gameData.intakeOutpost,
+      gameData.teleopFuelScored,
+      gameData.teleopFuelMissed,
+      gameData.attemptedClimb,
+      gameData.successfulClimb,
+      gameData.rung,
+      gameData.endgameSpeed,
+      gameData.reliability,
+      gameData.fuelScoringCapability,
+      gameData.overallImpact,
+      gameData.hopperEstimate
+    ];
+    const basePayload = payloadFields.join('	') + '	';
     const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - basePayload.length);
     commentsField.maxLength = allowedCommentLength;
-    gameData.comments = commentsField.value.slice(0, allowedCommentLength);
+    gameData.comments = commentsField.value.replace(/[\t\n\r]+/g, ' ').slice(0, allowedCommentLength);
+
 
     if (checkIfTeam(gameData.teamNum)) {
       generateQRCode();
@@ -421,13 +590,35 @@ function updateButtonNum(id, num) {
   }
 
   function generateQRCode() {
-    // Keep output format: space-separated payload, then replace spaces with tildes.
-    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.autoFuelScored} ${gameData.autoFuelMissed} ${gameData.autoClimb} ${gameData.intakeSpeed} ${gameData.intakeFloor} ${gameData.intakeDepot} ${gameData.intakeOutpost} ${gameData.teleopFuelScored} ${gameData.teleopFuelMissed} ${gameData.attemptedClimb} ${gameData.successfulClimb} ${gameData.rung} ${gameData.endgameSpeed} ${gameData.reliability} ${gameData.fuelScoringCapability} ${gameData.overallImpact}`;
-    const basePayload = qrCodeData.split(' ').join('~') + "~";
+    // Keep output format scanner-friendly with tab-delimited fields.
+    const payloadFields = [
+      gameData.initials.toUpperCase(),
+      gameData.matchNum,
+      gameData.robot,
+      gameData.teamNum,
+      gameData.moved,
+      gameData.autoFuelScored,
+      gameData.autoFuelMissed,
+      gameData.autoClimb,
+      gameData.intakeFloor,
+      gameData.intakeDepot,
+      gameData.intakeOutpost,
+      gameData.teleopFuelScored,
+      gameData.teleopFuelMissed,
+      gameData.attemptedClimb,
+      gameData.successfulClimb,
+      gameData.rung,
+      gameData.endgameSpeed,
+      gameData.reliability,
+      gameData.fuelScoringCapability,
+      gameData.overallImpact,
+      gameData.hopperEstimate
+    ];
+    const basePayload = payloadFields.join('	') + '	';
 
     // Truncate comments when needed so long notes stay QR-friendly.
     const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - basePayload.length);
-    const safeComment = (gameData.comments || '').slice(0, allowedCommentLength);
+    const safeComment = (gameData.comments || '').replace(/[\t\n\r]+/g, ' ').slice(0, allowedCommentLength);
 
     const qrCodeContainer = document.getElementById('qr-code-popup');
     qrCodeContainer.innerHTML = '';
@@ -445,4 +636,3 @@ function updateButtonNum(id, num) {
     document.getElementById('popupQR').style.display = 'none';
     document.getElementById('qr-code-popup').innerHTML = '';
   }
-  

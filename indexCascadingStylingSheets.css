@@ -38,7 +38,7 @@ body {
     overflow-x: hidden;
     padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
     /* Smoother ocean-inspired background */
-    font-size: 24px;
+    font-size: 18px;
 }
 
 
@@ -82,19 +82,27 @@ h2 {
 
 .help-button {
     list-style: none;
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background: #0083AE;
     color: #ffffff;
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 18px;
     font-family: Arial, Helvetica, sans-serif;
     margin: 0 auto;
+    border: 2px solid #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28), 0 0 0 3px rgba(0, 131, 174, 0.25);
+}
+
+.help-dropdown[open] .help-button,
+.help-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.32), 0 0 0 4px rgba(0, 131, 174, 0.32);
 }
 
 .help-button::-webkit-details-marker {
@@ -135,37 +143,89 @@ h2 {
 
 
 .dashboard {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    align-items: flex-start;
+    position: relative;
+    display: block;
+    width: min(100%, 1000px);
+    margin: 0 auto;
+    overflow: visible;
+    padding: 8px 0;
+    touch-action: pan-y;
+}
+
+.carousel-shell {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    width: min(100%, 1100px);
+    margin: 0 auto;
+    gap: 8px;
+    overflow: visible;
+}
+
+#dashboard-carousel {
+    transition: height 0.25s ease;
 }
 
 /* Enhanced widget styling */
 .widget {
-    margin: 10px;
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    margin: 0;
     padding: 15px;
-    /* Underwater gradient from deep blue to lighter teal/seafoam */
     background: linear-gradient(to bottom, #0083AE, #00A9C9, #E0F7F9);
-    width: 275px;
-    min-height: 625px;
+    width: min(66vw, 280px);
+    min-height: auto;
     border-radius: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.28s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+    opacity: 0;
+    pointer-events: none;
 }
 
-.widget:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+.widget.is-active {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    z-index: 3;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24);
+    pointer-events: auto;
 }
 
-/* Increase height for specific widgets if needed */
-#Auto-Widget {
-    min-height: 950px;
+.widget.is-prev {
+    opacity: 0.35;
+    transform: translateX(-112%) scale(0.93);
+    z-index: 2;
 }
 
-#TeleOp-Widget {
-    min-height: 875px;
+.widget.is-next {
+    opacity: 0.35;
+    transform: translateX(12%) scale(0.93);
+    z-index: 2;
+}
+
+.widget.is-hidden {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.85);
+    z-index: 1;
+}
+
+.carousel-arrow {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    margin: 0;
+    font-size: 18px;
+    line-height: 1;
+    border: none;
+    background-color: rgba(0, 131, 174, 0.9);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28), 0 2px 6px rgba(0, 0, 0, 0.22);
+}
+
+.carousel-arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
 }
 
 /* Mini-box adjustments for a cleaner look */
@@ -247,6 +307,7 @@ button {
 .mini-box > input,
 .mini-box > textarea,
 .mini-box > .fancy-select-wrapper,
+.mini-box > .robot-button-group,
 .mini-box > #speed,
 .mini-box > .speed-value {
     margin-top: 8px;
@@ -331,24 +392,60 @@ input[type="range"] {
 }
 
 
+
+
+.robot-button-group {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.robot-choice {
+    width: auto;
+    min-height: 34px;
+    margin: 0;
+    padding: 7px 4px;
+    font-size: 12px;
+    border-radius: 6px;
+}
+
+.robot-choice-red {
+    background-color: #e53935;
+}
+
+.robot-choice-blue {
+    background-color: #1e88e5;
+}
+
+.robot-choice.is-selected {
+    outline: 3px solid #ffffff;
+    box-shadow: 0 0 0 4px rgba(0, 131, 174, 0.75), 0 8px 18px rgba(0, 0, 0, 0.28);
+    transform: translateY(-1px) scale(1.02);
+    filter: brightness(1.12);
+    font-weight: 700;
+}
 .rung-button-group {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 6px;
     margin-top: 8px;
 }
 
 .rung-button {
-    width: 62px;
-    height: 30px;
+    width: auto;
+    height: 34px;
     margin: 0;
-    font-size: 13px;
+    font-size: 12px;
     background-color: #5f59ff;
+    border-radius: 6px;
 }
 
 .rung-button.is-selected {
     background-color: #0083AE;
-    transform: scale(0.96);
+    outline: 2px solid #ffffff;
+    box-shadow: 0 0 0 2px rgba(0, 131, 174, 0.6);
+    transform: none;
 }
 
 /* Checkbox styling */
@@ -526,4 +623,51 @@ input:focus, textarea:focus, select:focus {
 
 .checkbox-true-pop {
     animation: trueSplashPop 0.24s ease-out;
+}
+
+
+.carousel-shell .carousel-arrow {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+.action-widget .button-container {
+    margin-top: 8px;
+}
+
+@media (max-width: 700px) {
+    .carousel-shell {
+        width: 100%;
+        grid-template-columns: 30px 1fr 30px;
+        gap: 4px;
+    }
+
+    .widget {
+        width: min(64vw, 260px);
+    }
+
+    .widget.is-prev {
+        transform: translateX(-108%) scale(0.92);
+    }
+
+    .widget.is-next {
+        transform: translateX(8%) scale(0.92);
+    }
+}
+
+
+.carousel-slider-wrap {
+    width: min(92vw, 420px);
+    margin: 8px auto 6px;
+}
+
+#carousel-progress {
+    width: 100%;
+    accent-color: #0083AE;
 }
