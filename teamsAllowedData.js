@@ -1,5 +1,5 @@
 // Team validation toggle: true allows any team number, false enforces this list.
-window.allowAllTeams = false;
+window.allowAllTeams = true;
 
 // Allowed teams list for validation/reference.
 window.teamsCompeting = [
