@@ -27,9 +27,6 @@ if ('serviceWorker' in navigator) {
     autoFuelMissed: 0,
     autoClimb: false,
     endgameSpeed: 3,
-    intakeFloor: false,
-    intakeDepot: false,
-    intakeOutpost: false,
     teleopFuelScored: 0,
     teleopFuelMissed: 0,
     attemptedClimb: false,
@@ -100,9 +97,6 @@ if ('serviceWorker' in navigator) {
     document.getElementById('endgame-speed').value = '3';
     const endgameSpeedValue = document.getElementById('endgame-speed-value');
     if (endgameSpeedValue) endgameSpeedValue.textContent = '3';
-    document.getElementById('intakeFloor').checked = false;
-    document.getElementById('intakeDepot').checked = false;
-    document.getElementById('intakeOutpost').checked = false;
     document.getElementById('attemptedClimb').checked = false;
     document.getElementById('successfulClimb').checked = false;
     clearRungSelection();
@@ -531,6 +525,19 @@ function initializeWidgetCarousel() {
   updateCarouselState();
 }
 
+
+function initializeClimbDependencies() {
+  const attemptedClimb = document.getElementById('attemptedClimb');
+  const successfulClimb = document.getElementById('successfulClimb');
+  if (!attemptedClimb || !successfulClimb) return;
+
+  successfulClimb.addEventListener('change', () => {
+    if (successfulClimb.checked) {
+      attemptedClimb.checked = true;
+    }
+  });
+}
+
 function initializeRungVisibility() {
   const successfulClimb = document.getElementById('successfulClimb');
   const rungContainer = document.getElementById('rung-container');
@@ -560,6 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeRobotButtons();
   initializeRungButtons();
   initializeRungVisibility();
+  initializeClimbDependencies();
   loadQrHistory();
   renderHistoryList();
 });
@@ -728,7 +736,7 @@ function exportHistoryCsv() {
   if (qrHistoryTexts.length === 0) return;
   const headers = [
     'initials', 'matchNum', 'robot', 'teamNum', 'moved', 'autoFuelScored', 'autoFuelMissed',
-    'autoClimb', 'intakeFloor', 'intakeDepot', 'intakeOutpost', 'teleopFuelScored',
+    'autoClimb', 'teleopFuelScored',
     'teleopFuelMissed', 'attemptedClimb', 'successfulClimb', 'rung', 'endgameSpeed',
     'reliability', 'fuelScoringCapability', 'overallImpact', 'hopperEstimate', 'comments'
   ];
@@ -815,9 +823,6 @@ function updateQRCodeOnSubmit() {
     gameData.autoClimb = document.getElementById('autoClimb').checked;
 
     gameData.endgameSpeed = document.getElementById('endgame-speed').value;
-    gameData.intakeFloor = document.getElementById('intakeFloor').checked;
-    gameData.intakeDepot = document.getElementById('intakeDepot').checked;
-    gameData.intakeOutpost = document.getElementById('intakeOutpost').checked;
     gameData.teleopFuelScored = getCounterValue('teleopFuelScored');
     gameData.teleopFuelMissed = getCounterValue('teleopFuelMissed');
 
@@ -839,9 +844,6 @@ function updateQRCodeOnSubmit() {
       gameData.autoFuelScored,
       gameData.autoFuelMissed,
       gameData.autoClimb,
-      gameData.intakeFloor,
-      gameData.intakeDepot,
-      gameData.intakeOutpost,
       gameData.teleopFuelScored,
       gameData.teleopFuelMissed,
       gameData.attemptedClimb,
@@ -877,9 +879,6 @@ function updateQRCodeOnSubmit() {
       gameData.autoFuelScored,
       gameData.autoFuelMissed,
       gameData.autoClimb,
-      gameData.intakeFloor,
-      gameData.intakeDepot,
-      gameData.intakeOutpost,
       gameData.teleopFuelScored,
       gameData.teleopFuelMissed,
       gameData.attemptedClimb,

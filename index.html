@@ -49,13 +49,12 @@
         <li><strong>Auto Fuel Scored/Missed:</strong> Count made/missed in auto.</li>
         <li><strong>Climb? (Auto):</strong> Auto climb occurred (true/false).</li>
         <li><strong>TeleOp Fuel Scored/Missed:</strong> Count made/missed in teleop.</li>
-        <li><strong>Can Intake From:</strong> Floor / Depot / Outpost capabilities.</li>
         <li><strong>Endgame Speed (1-5):</strong> 1 = slow endgame actions, 5 = very fast.</li>
         <li><strong>Attempted Climb:</strong> Tried to climb (true/false).</li>
         <li><strong>Successful Climb:</strong> Completed climb (true/false).</li>
         <li><strong>Rung:</strong> Low / Mid / High (only if successful climb is true).</li>
         <li><strong>Reliability (1-5):</strong> 1 = frequent issues, 5 = highly reliable.</li>
-        <li><strong>Fuel Scoring Capability (1-5):</strong> 1 = weak scoring impact, 5 = excellent scoring impact.</li>
+        <li><strong>Fuel Scoring Capability (1-5, TeleOp):</strong> 1 = weak scoring impact, 5 = excellent scoring impact.</li>
         <li><strong>Overall Impact (1-5):</strong> 1 = low impact, 5 = match-changing impact.</li>
         <li><strong>Hopper Estimate:</strong> Estimated hopper count in increments of 5.</li>
         <li><strong>Comments:</strong> Key notes and context.</li>
@@ -136,22 +135,9 @@
         <button onclick="updateButtonNum('teleopFuelMissed', 1)">+</button>
       </div>
       <div class="mini-box">
-        <h3>CAN INTAKE FROM</h3>
-        <div class="checkbox-row">
-          <span>Floor?</span>
-          <input type="checkbox" class="custom-checkbox" id="intakeFloor">
-          <label for="intakeFloor"></label>
-        </div>
-        <div class="checkbox-row">
-          <span>Depot?</span>
-          <input type="checkbox" class="custom-checkbox" id="intakeDepot">
-          <label for="intakeDepot"></label>
-        </div>
-        <div class="checkbox-row">
-          <span>Outpost?</span>
-          <input type="checkbox" class="custom-checkbox" id="intakeOutpost">
-          <label for="intakeOutpost"></label>
-        </div>
+        <h3>FUEL SCORING CAPABILITY (1-5)</h3>
+        <input type="range" id="fuel-score-rating" min="1" max="5" step="1" value="3">
+        <div id="fuel-score-rating-value" class="speed-value">3</div>
       </div>
     </div>
 
@@ -190,11 +176,6 @@
         <h3>RELIABILITY (1-5)</h3>
         <input type="range" id="reliability" min="1" max="5" step="1" value="3">
         <div id="reliability-value" class="speed-value">3</div>
-      </div>
-      <div class="mini-box">
-        <h3>FUEL SCORING CAPABILITY (1-5)</h3>
-        <input type="range" id="fuel-score-rating" min="1" max="5" step="1" value="3">
-        <div id="fuel-score-rating-value" class="speed-value">3</div>
       </div>
       <div class="mini-box">
         <h3>OVERALL IMPACT (1-5)</h3>
