@@ -33,6 +33,8 @@
   </script>
 </head>
 <body>
+
+
   <h1>QRScout 4063</h1>
   <details class="help-dropdown">
     <summary class="help-button" aria-label="Help and parameter guide">?</summary>
@@ -47,20 +49,21 @@
         <li><strong>Auto Fuel Scored/Missed:</strong> Count made/missed in auto.</li>
         <li><strong>Climb? (Auto):</strong> Auto climb occurred (true/false).</li>
         <li><strong>TeleOp Fuel Scored/Missed:</strong> Count made/missed in teleop.</li>
-        <li><strong>Intake Speed (1-5):</strong> 1 = slow, 5 = very fast intake.</li>
-        <li><strong>Can Intake From:</strong> Floor / Depot / Outpost capabilities.</li>
         <li><strong>Endgame Speed (1-5):</strong> 1 = slow endgame actions, 5 = very fast.</li>
         <li><strong>Attempted Climb:</strong> Tried to climb (true/false).</li>
         <li><strong>Successful Climb:</strong> Completed climb (true/false).</li>
         <li><strong>Rung:</strong> Low / Mid / High (only if successful climb is true).</li>
         <li><strong>Reliability (1-5):</strong> 1 = frequent issues, 5 = highly reliable.</li>
-        <li><strong>Fuel Scoring Capability (1-5):</strong> 1 = weak scoring impact, 5 = excellent scoring impact.</li>
+        <li><strong>Fuel Scoring Capability (1-5, TeleOp):</strong> 1 = weak scoring impact, 5 = excellent scoring impact.</li>
         <li><strong>Overall Impact (1-5):</strong> 1 = low impact, 5 = match-changing impact.</li>
+        <li><strong>Hopper Estimate:</strong> Estimated hopper count in increments of 5.</li>
         <li><strong>Comments:</strong> Key notes and context.</li>
       </ul>
     </div>
   </details>
-  <div class="dashboard">
+  <div class="carousel-shell">
+    <button class="carousel-arrow carousel-arrow-left" id="carousel-prev" aria-label="Previous tab">&#10094;</button>
+    <div class="dashboard" id="dashboard-carousel">
     <!-- Prematch Widget -->
     <div class="widget" id="prematch-widget">
       <h2>Prematch</h2>
@@ -70,24 +73,21 @@
       </div>
       <div class="mini-box">
         <h3>MATCH NUMBER</h3>
-        <input type="number" id="prematch-match-number" placeholder="Required" style="width: 92%;">
+        <input type="number" id="prematch-match-number" placeholder="Required" inputmode="numeric" pattern="[0-9]*" style="width: 92%;">
       </div>
       <div class="mini-box">
         <h3>TEAM NUMBER</h3>
-        <input type="number" id="prematch-team-number" placeholder="Required" style="width: 92%;">
+        <input type="number" id="prematch-team-number" placeholder="Required" inputmode="numeric" pattern="[0-9]*" style="width: 92%;">
       </div>
       <div class="mini-box">
         <h3>ROBOT TYPE</h3>
-        <div class="fancy-select-wrapper">
-        <select id="prematch-robot" class="fancy-select" style="width: 98%;">
-          <option value="Choose_Answer">Choose Answer</option>
-          <option value="Red_1">Red 1</option>
-          <option value="Red_2">Red 2</option>
-          <option value="Red_3">Red 3</option>
-          <option value="Blue_1">Blue 1</option>
-          <option value="Blue_2">Blue 2</option>
-          <option value="Blue_3">Blue 3</option>
-        </select>
+        <div class="robot-button-group" id="prematch-robot" role="group" aria-label="Robot Type Selection">
+          <button type="button" class="robot-choice robot-choice-blue" data-robot="Blue_1">Blue 1</button>
+          <button type="button" class="robot-choice robot-choice-red" data-robot="Red_1">Red 1</button>
+          <button type="button" class="robot-choice robot-choice-blue" data-robot="Blue_2">Blue 2</button>
+          <button type="button" class="robot-choice robot-choice-red" data-robot="Red_2">Red 2</button>
+          <button type="button" class="robot-choice robot-choice-blue" data-robot="Blue_3">Blue 3</button>
+          <button type="button" class="robot-choice robot-choice-red" data-robot="Red_3">Red 3</button>
         </div>
       </div>
     </div>
@@ -135,27 +135,9 @@
         <button onclick="updateButtonNum('teleopFuelMissed', 1)">+</button>
       </div>
       <div class="mini-box">
-        <h3>INTAKE SPEED (1-5)</h3>
-        <input type="range" id="speed" min="1" max="5" step="1" value="3">
-        <div id="speed-value" class="speed-value">3</div>
-      </div>
-      <div class="mini-box">
-        <h3>CAN INTAKE FROM</h3>
-        <div class="checkbox-row">
-          <span>Floor?</span>
-          <input type="checkbox" class="custom-checkbox" id="intakeFloor">
-          <label for="intakeFloor"></label>
-        </div>
-        <div class="checkbox-row">
-          <span>Depot?</span>
-          <input type="checkbox" class="custom-checkbox" id="intakeDepot">
-          <label for="intakeDepot"></label>
-        </div>
-        <div class="checkbox-row">
-          <span>Outpost?</span>
-          <input type="checkbox" class="custom-checkbox" id="intakeOutpost">
-          <label for="intakeOutpost"></label>
-        </div>
+        <h3>FUEL SCORING CAPABILITY (1-5)</h3>
+        <input type="range" id="fuel-score-rating" min="1" max="5" step="1" value="3">
+        <div id="fuel-score-rating-value" class="speed-value">3</div>
       </div>
     </div>
 
@@ -196,29 +178,58 @@
         <div id="reliability-value" class="speed-value">3</div>
       </div>
       <div class="mini-box">
-        <h3>FUEL SCORING CAPABILITY (1-5)</h3>
-        <input type="range" id="fuel-score-rating" min="1" max="5" step="1" value="3">
-        <div id="fuel-score-rating-value" class="speed-value">3</div>
-      </div>
-      <div class="mini-box">
         <h3>OVERALL IMPACT (1-5)</h3>
         <input type="range" id="overall-impact" min="1" max="5" step="1" value="3">
         <div id="overall-impact-value" class="speed-value">3</div>
+      </div>
+      <div class="mini-box">
+        <h3>HOPPER ESTIMATE (±5)</h3>
+        <button onclick="updateButtonNum('hopperEstimate', -5)">-</button>
+        <span id="hopperEstimate">0</span>
+        <button onclick="updateButtonNum('hopperEstimate', 5)">+</button>
       </div>
       <div class="mini-box">
         <h3>COMMENTS</h3>
         <textarea id="Comments" rows="10" cols="29" maxlength="900"></textarea>
       </div>
     </div>
+    <div class="widget action-widget" id="actions-widget">
+      <h2>Actions</h2>
+      <div class="button-container">
+        <button id="submit-btn" onclick="updateQRCodeOnSubmit()">Generate QR Code</button>
+        <button id="clear-all-btn" onclick="ClearAll()">Clear All / Next Match</button>
+        <button id="history-btn" onclick="toggleHistoryPanel(true)">History</button>
+      </div>
+    </div>
+    </div>
+    <button class="carousel-arrow carousel-arrow-right" id="carousel-next" aria-label="Next tab">&#10095;</button>
+  </div>
+
+  <div class="carousel-slider-wrap">
+    <input type="range" id="carousel-progress" min="0" max="0" value="0" step="1" aria-label="Carousel tab slider">
   </div>
 
   <div id="qr-code">
     <!-- Placeholder for QR code -->
   </div>
 
-  <div class="button-container">
-    <button id="submit-btn" onclick="updateQRCodeOnSubmit()">Generate QR Code</button>
-    <button id="clear-all-btn" onclick="ClearAll()">Clear All</button>
+
+
+  <div id="history-panel" class="history-panel" aria-hidden="true">
+    <div class="history-panel-content">
+      <div class="history-panel-header">
+        <button id="export-csv-btn" onclick="exportHistoryCsv()">Export as CSV</button>
+        <button id="share-history-btn" onclick="toggleHistoryShareMode(true)">Share</button>
+        <button id="clear-history-btn" onclick="clearHistory()">Clear History</button>
+        <button id="close-history-btn" onclick="toggleHistoryPanel(false)">Close</button>
+      </div>
+      <div id="history-share-toolbar" class="history-share-toolbar" style="display:none;">
+        <span>Select entries to share</span>
+        <button id="share-selected-btn" onclick="shareSelectedHistory()">Share Selected</button>
+        <button id="cancel-share-btn" onclick="toggleHistoryShareMode(false)">Cancel</button>
+      </div>
+      <div id="history-list" class="history-list"></div>
+    </div>
   </div>
 
   <div id="popupQR" class="popup">

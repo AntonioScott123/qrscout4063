@@ -26,11 +26,7 @@ if ('serviceWorker' in navigator) {
     autoFuelScored: 0,
     autoFuelMissed: 0,
     autoClimb: false,
-    intakeSpeed: 3,
     endgameSpeed: 3,
-    intakeFloor: false,
-    intakeDepot: false,
-    intakeOutpost: false,
     teleopFuelScored: 0,
     teleopFuelMissed: 0,
     attemptedClimb: false,
@@ -39,10 +35,15 @@ if ('serviceWorker' in navigator) {
     reliability: 3,
     fuelScoringCapability: 3,
     overallImpact: 3,
+    hopperEstimate: 0,
     comments: ""
   };
 
   const MAX_QR_TEXT_LENGTH = 900;
+  const QR_HISTORY_STORAGE_KEY = "qrScoutHistory";
+  let qrHistoryTexts = [];
+  let historyShareMode = false;
+  const selectedHistoryEntries = new Set();
 
   // Optional smallify object for abbreviating common values
   let smallify = {
@@ -72,28 +73,30 @@ if ('serviceWorker' in navigator) {
   
   function ClearAll() {
     // Clear Prematch fields
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-    document.getElementById('prematch-match-number').value = '';
-    document.getElementById('prematch-team-number').value = '';
+    if (typeof goToCarouselPage === "function") {
+      goToCarouselPage(0);
+    }
+
+    const matchField = document.getElementById('prematch-match-number');
+    const currentMatchNum = parseInt(matchField.value, 10);
+    if (Number.isFinite(currentMatchNum)) {
+      matchField.value = String(currentMatchNum + 1);
+    } else {
+      matchField.value = '';
+    }
+
+    const teamField = document.getElementById('prematch-team-number');
+    teamField.value = '';
     document.getElementById('moved').checked = false;
 
-    ['autoFuelScored', 'autoFuelMissed', 'teleopFuelScored', 'teleopFuelMissed'].forEach(id => {
+    ['autoFuelScored', 'autoFuelMissed', 'teleopFuelScored', 'teleopFuelMissed', 'hopperEstimate'].forEach(id => {
       setCounterValue(id, 0);
     });
 
     document.getElementById('autoClimb').checked = false;
-    document.getElementById('speed').value = '3';
-    const speedValue = document.getElementById('speed-value');
-    if (speedValue) speedValue.textContent = '3';
     document.getElementById('endgame-speed').value = '3';
     const endgameSpeedValue = document.getElementById('endgame-speed-value');
     if (endgameSpeedValue) endgameSpeedValue.textContent = '3';
-    document.getElementById('intakeFloor').checked = false;
-    document.getElementById('intakeDepot').checked = false;
-    document.getElementById('intakeOutpost').checked = false;
     document.getElementById('attemptedClimb').checked = false;
     document.getElementById('successfulClimb').checked = false;
     clearRungSelection();
@@ -286,6 +289,32 @@ function initializeCheckboxAnimations() {
 }
 
 
+
+function clearRobotSelection() {
+  document.querySelectorAll('.robot-choice.is-selected').forEach((button) => {
+    button.classList.remove('is-selected');
+  });
+}
+
+function initializeRobotButtons() {
+  const buttons = document.querySelectorAll('.robot-choice');
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      buttons.forEach((b) => b.classList.remove('is-selected'));
+      button.classList.add('is-selected');
+      const robotField = document.getElementById('prematch-robot');
+      if (robotField) {
+        robotField.classList.remove('error');
+      }
+    });
+  });
+}
+
+function getSelectedRobot() {
+  const selected = document.querySelector('.robot-choice.is-selected');
+  return selected ? selected.dataset.robot : 'Choose_Answer';
+}
+
 function clearRungSelection() {
   const selected = document.querySelector('.rung-button.is-selected');
   if (selected) {
@@ -308,6 +337,207 @@ function getSelectedRung() {
   return selected ? selected.dataset.rung : 'NA';
 }
 
+
+let goToCarouselPage = null;
+
+function initializeWidgetCarousel() {
+  const dashboard = document.getElementById('dashboard-carousel');
+  if (!dashboard) return;
+
+  const widgets = Array.from(dashboard.querySelectorAll('.widget'));
+  if (widgets.length === 0) return;
+
+  const prevBtn = document.getElementById('carousel-prev');
+  const nextBtn = document.getElementById('carousel-next');
+  const progressSlider = document.getElementById('carousel-progress');
+  let activeIndex = 0;
+  let uniformCardHeight = null;
+
+  const clampIndex = (index) => Math.max(0, Math.min(index, widgets.length - 1));
+
+  const updateCarouselState = () => {
+    widgets.forEach((widget, index) => {
+      widget.classList.remove('is-active', 'is-prev', 'is-next', 'is-hidden');
+
+      if (index === activeIndex) {
+        widget.classList.add('is-active');
+      } else if (index === activeIndex - 1) {
+        widget.classList.add('is-prev');
+      } else if (index === activeIndex + 1) {
+        widget.classList.add('is-next');
+      } else {
+        widget.classList.add('is-hidden');
+      }
+    });
+
+    if (uniformCardHeight !== null) {
+      dashboard.style.height = `${uniformCardHeight + 24}px`;
+    }
+
+    if (prevBtn) prevBtn.disabled = activeIndex === 0;
+    if (nextBtn) nextBtn.disabled = activeIndex === widgets.length - 1;
+    if (progressSlider) progressSlider.value = String(activeIndex);
+  };
+
+
+  const syncUniformCardHeight = () => {
+    widgets.forEach((widget) => {
+      widget.style.height = 'auto';
+    });
+
+    uniformCardHeight = widgets.reduce((maxHeight, widget) => {
+      return Math.max(maxHeight, widget.offsetHeight);
+    }, 0);
+
+    widgets.forEach((widget) => {
+      widget.style.height = `${uniformCardHeight}px`;
+    });
+  };
+
+  const goToIndex = (index) => {
+    const safeIndex = clampIndex(index);
+    if (safeIndex === activeIndex) return;
+    activeIndex = safeIndex;
+    updateCarouselState();
+  };
+
+  goToCarouselPage = goToIndex;
+
+  if (progressSlider) {
+    progressSlider.min = '0';
+    progressSlider.max = String(widgets.length - 1);
+    progressSlider.step = '1';
+    progressSlider.value = String(activeIndex);
+    progressSlider.addEventListener('input', () => {
+      goToIndex(parseInt(progressSlider.value, 10) || 0);
+    });
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      goToIndex(activeIndex - 1);
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      goToIndex(activeIndex + 1);
+    });
+  }
+
+  let touchStartX = null;
+  let touchStartY = null;
+  let touchStartTime = 0;
+  let touchLatestX = null;
+  let touchLatestY = null;
+
+  const resetTouchState = () => {
+    touchStartX = null;
+    touchStartY = null;
+    touchLatestX = null;
+    touchLatestY = null;
+    touchStartTime = 0;
+  };
+
+  const shouldIgnoreSwipeStart = (eventTarget, touch) => {
+    if (!eventTarget || !touch) return false;
+
+    if (eventTarget.closest('input[type="range"], #carousel-progress')) {
+      return true;
+    }
+
+    const activeWidget = widgets[activeIndex];
+    if (!activeWidget) return false;
+
+    const sliderProximityPx = 28;
+    const activeSliders = activeWidget.querySelectorAll('input[type="range"]');
+    for (const slider of activeSliders) {
+      const rect = slider.getBoundingClientRect();
+      const inHorizontalBounds = touch.clientX >= rect.left - sliderProximityPx && touch.clientX <= rect.right + sliderProximityPx;
+      const inVerticalBounds = touch.clientY >= rect.top - sliderProximityPx && touch.clientY <= rect.bottom + sliderProximityPx;
+      if (inHorizontalBounds && inVerticalBounds) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  dashboard.addEventListener('touchstart', (event) => {
+    const touch = event.touches[0];
+    if (!touch) return;
+    if (shouldIgnoreSwipeStart(event.target, touch)) {
+      resetTouchState();
+      return;
+    }
+
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+    touchLatestX = touch.clientX;
+    touchLatestY = touch.clientY;
+    touchStartTime = performance.now();
+  }, { passive: true });
+
+  dashboard.addEventListener('touchmove', (event) => {
+    if (touchStartX === null || touchStartY === null) return;
+    const touch = event.touches[0];
+    if (!touch) return;
+    touchLatestX = touch.clientX;
+    touchLatestY = touch.clientY;
+  }, { passive: true });
+
+  dashboard.addEventListener('touchend', (event) => {
+    if (touchStartX === null || touchStartY === null) return;
+    const changedTouch = event.changedTouches[0];
+    const endX = changedTouch ? changedTouch.clientX : (touchLatestX ?? touchStartX);
+    const endY = changedTouch ? changedTouch.clientY : (touchLatestY ?? touchStartY);
+
+    const deltaX = endX - touchStartX;
+    const deltaY = endY - touchStartY;
+    const elapsedMs = Math.max(1, performance.now() - touchStartTime);
+    const velocityX = Math.abs(deltaX) / elapsedMs;
+
+    const mostlyHorizontal = Math.abs(deltaX) > Math.abs(deltaY) * 1.2;
+    const longSwipe = Math.abs(deltaX) > 48;
+    const quickFlick = Math.abs(deltaX) > 18 && velocityX > 0.55;
+
+    if (mostlyHorizontal && (longSwipe || quickFlick)) {
+      if (deltaX > 0) {
+        goToIndex(activeIndex - 1);
+      } else {
+        goToIndex(activeIndex + 1);
+      }
+    }
+
+    resetTouchState();
+  }, { passive: true });
+
+  dashboard.addEventListener('touchcancel', () => {
+    resetTouchState();
+  }, { passive: true });
+
+  window.addEventListener('resize', () => {
+    syncUniformCardHeight();
+    updateCarouselState();
+  });
+
+  syncUniformCardHeight();
+  updateCarouselState();
+}
+
+
+function initializeClimbDependencies() {
+  const attemptedClimb = document.getElementById('attemptedClimb');
+  const successfulClimb = document.getElementById('successfulClimb');
+  if (!attemptedClimb || !successfulClimb) return;
+
+  successfulClimb.addEventListener('change', () => {
+    if (successfulClimb.checked) {
+      attemptedClimb.checked = true;
+    }
+  });
+}
+
 function initializeRungVisibility() {
   const successfulClimb = document.getElementById('successfulClimb');
   const rungContainer = document.getElementById('rung-container');
@@ -326,16 +556,20 @@ function initializeRungVisibility() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initializeWidgetCarousel();
   initializeCounterInputs();
   initializeCounterButtonInteractions();
-  initializeSpeedSlider('speed', 'speed-value');
   initializeSpeedSlider('endgame-speed', 'endgame-speed-value');
   initializeSpeedSlider('reliability', 'reliability-value');
   initializeSpeedSlider('fuel-score-rating', 'fuel-score-rating-value');
   initializeSpeedSlider('overall-impact', 'overall-impact-value');
   initializeCheckboxAnimations();
+  initializeRobotButtons();
   initializeRungButtons();
   initializeRungVisibility();
+  initializeClimbDependencies();
+  loadQrHistory();
+  renderHistoryList();
 });
 
 function updateButtonNum(id, num) {
@@ -344,7 +578,201 @@ function updateButtonNum(id, num) {
   setCounterValue(id, newValue);
 }
   
-  function updateQRCodeOnSubmit() {
+function saveQrHistory() {
+  try {
+    localStorage.setItem(QR_HISTORY_STORAGE_KEY, JSON.stringify(qrHistoryTexts));
+  } catch (error) {
+    // Storage can fail in private mode/quota; QR generation should still work.
+  }
+}
+
+function dedupeHistoryEntries() {
+  const seen = new Set();
+  qrHistoryTexts = qrHistoryTexts.filter((entry) => {
+    if (seen.has(entry)) return false;
+    seen.add(entry);
+    return true;
+  });
+}
+
+function loadQrHistory() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(QR_HISTORY_STORAGE_KEY) || '[]');
+    if (Array.isArray(parsed)) {
+      qrHistoryTexts = parsed.filter((item) => typeof item === 'string');
+      dedupeHistoryEntries();
+      saveQrHistory();
+    }
+  } catch (error) {
+    qrHistoryTexts = [];
+  }
+}
+
+function addQrHistoryEntry(text) {
+  qrHistoryTexts.unshift(text);
+  dedupeHistoryEntries();
+  if (qrHistoryTexts.length > 800) qrHistoryTexts = qrHistoryTexts.slice(0, 800);
+  saveQrHistory();
+  renderHistoryList();
+}
+
+function formatHistoryLabel(qrText, index) {
+  const cleaned = qrText.replace(/\r?\n$/, '');
+  const fields = cleaned.split('\t');
+  const initials = fields[0] || 'NA';
+  const matchNum = fields[1] || 'NA';
+  const robot = fields[2] || 'NA';
+  const team = fields[3] || 'NA';
+  return `#${index + 1} • Match ${matchNum} • Team ${team} • ${robot} • ${initials}`;
+}
+
+function renderHistoryList() {
+  const list = document.getElementById('history-list');
+  const shareToolbar = document.getElementById('history-share-toolbar');
+  if (!list) return;
+  list.innerHTML = '';
+  if (shareToolbar) {
+    shareToolbar.style.display = historyShareMode ? 'flex' : 'none';
+  }
+
+  if (qrHistoryTexts.length === 0) {
+    const empty = document.createElement('div');
+    empty.textContent = 'No history yet.';
+    list.appendChild(empty);
+    return;
+  }
+
+  qrHistoryTexts.forEach((text, index) => {
+    if (historyShareMode) {
+      const row = document.createElement('label');
+      row.className = 'history-item-select';
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = selectedHistoryEntries.has(index);
+      checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+          selectedHistoryEntries.add(index);
+        } else {
+          selectedHistoryEntries.delete(index);
+        }
+      });
+
+      const label = document.createElement('span');
+      label.textContent = formatHistoryLabel(text, index);
+      row.appendChild(checkbox);
+      row.appendChild(label);
+      list.appendChild(row);
+      return;
+    }
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'history-item-btn';
+    button.textContent = formatHistoryLabel(text, index);
+    button.addEventListener('click', () => {
+      const panel = document.getElementById('history-panel');
+      if (panel) panel.style.display = 'none';
+      showQrPopup(text);
+    });
+    list.appendChild(button);
+  });
+}
+
+function toggleHistoryShareMode(show) {
+  historyShareMode = show;
+  selectedHistoryEntries.clear();
+  renderHistoryList();
+}
+
+function clearHistory() {
+  if (qrHistoryTexts.length === 0) return;
+  qrHistoryTexts = [];
+  selectedHistoryEntries.clear();
+  historyShareMode = false;
+  saveQrHistory();
+  renderHistoryList();
+}
+
+async function shareSelectedHistory() {
+  const selectedTexts = Array.from(selectedHistoryEntries)
+    .sort((a, b) => a - b)
+    .map((index) => qrHistoryTexts[index])
+    .filter(Boolean);
+
+  if (selectedTexts.length === 0) return;
+
+  const shareText = selectedTexts.join('\n');
+
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: 'QRScout History Entries',
+        text: shareText,
+      });
+    } else {
+      await navigator.clipboard.writeText(shareText);
+      alert('Share is not available here. Selected entries were copied to clipboard.');
+    }
+    toggleHistoryShareMode(false);
+  } catch (error) {
+    // Ignore cancel/error from system share sheet.
+  }
+}
+
+function toggleHistoryPanel(show) {
+  const panel = document.getElementById('history-panel');
+  if (!panel) return;
+  panel.style.display = show ? 'flex' : 'none';
+  panel.setAttribute('aria-hidden', show ? 'false' : 'true');
+  if (!show) {
+    historyShareMode = false;
+    selectedHistoryEntries.clear();
+  }
+  if (show) renderHistoryList();
+}
+
+function exportHistoryCsv() {
+  if (qrHistoryTexts.length === 0) return;
+  const headers = [
+    'initials', 'matchNum', 'robot', 'teamNum', 'moved', 'autoFuelScored', 'autoFuelMissed',
+    'autoClimb', 'teleopFuelScored',
+    'teleopFuelMissed', 'attemptedClimb', 'successfulClimb', 'rung', 'endgameSpeed',
+    'reliability', 'fuelScoringCapability', 'overallImpact', 'hopperEstimate', 'comments'
+  ];
+
+  const escapeCsv = (value) => `"${String(value).replace(/"/g, '""')}"`;
+  const rows = qrHistoryTexts.map((text) => {
+    const cleaned = text.replace(/\r?\n$/, '');
+    const cells = cleaned.split('\t');
+    while (cells.length < headers.length) cells.push('');
+    return cells.slice(0, headers.length).map(escapeCsv).join(',');
+  });
+
+  const csvText = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csvText], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'qr-history.csv';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function showQrPopup(qrText) {
+  const qrCodeContainer = document.getElementById('qr-code-popup');
+  qrCodeContainer.innerHTML = '';
+  new QRCode(qrCodeContainer, {
+    text: qrText,
+    width: 300,
+    height: 300,
+  });
+  document.getElementById('popupQR').style.display = 'flex';
+}
+
+function updateQRCodeOnSubmit() {
     // Get required fields
     let initialsField = document.getElementById('prematch-scout-initials');
     let matchNumField = document.getElementById('prematch-match-number');
@@ -371,19 +799,22 @@ function updateButtonNum(id, num) {
       teamNumField.classList.add('error');
       valid = false;
     }
-    if (robotField.value === "Choose_Answer") {
+    if (getSelectedRobot() === "Choose_Answer") {
       robotField.classList.add('error');
       valid = false;
     }
 
     if (!valid) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (typeof goToCarouselPage === "function") {
+        goToCarouselPage(0);
+      }
       return;
     }
 
     gameData.initials = initialsField.value.trim();
     gameData.matchNum = parseInt(matchNumField.value.trim(), 10);
-    gameData.robot = smallify[robotField.value] || robotField.value;
+    const selectedRobot = getSelectedRobot();
+    gameData.robot = smallify[selectedRobot] || selectedRobot;
     gameData.teamNum = parseInt(teamNumField.value.trim(), 10);
     gameData.moved = document.getElementById('moved').checked;
 
@@ -391,11 +822,7 @@ function updateButtonNum(id, num) {
     gameData.autoFuelMissed = getCounterValue('autoFuelMissed');
     gameData.autoClimb = document.getElementById('autoClimb').checked;
 
-    gameData.intakeSpeed = document.getElementById('speed').value;
     gameData.endgameSpeed = document.getElementById('endgame-speed').value;
-    gameData.intakeFloor = document.getElementById('intakeFloor').checked;
-    gameData.intakeDepot = document.getElementById('intakeDepot').checked;
-    gameData.intakeOutpost = document.getElementById('intakeOutpost').checked;
     gameData.teleopFuelScored = getCounterValue('teleopFuelScored');
     gameData.teleopFuelMissed = getCounterValue('teleopFuelMissed');
 
@@ -406,12 +833,33 @@ function updateButtonNum(id, num) {
     gameData.reliability = document.getElementById('reliability').value;
     gameData.fuelScoringCapability = document.getElementById('fuel-score-rating').value;
     gameData.overallImpact = document.getElementById('overall-impact').value;
+    gameData.hopperEstimate = getCounterValue('hopperEstimate');
     const commentsField = document.getElementById('Comments');
-    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.autoFuelScored} ${gameData.autoFuelMissed} ${gameData.autoClimb} ${gameData.intakeSpeed} ${gameData.intakeFloor} ${gameData.intakeDepot} ${gameData.intakeOutpost} ${gameData.teleopFuelScored} ${gameData.teleopFuelMissed} ${gameData.attemptedClimb} ${gameData.successfulClimb} ${gameData.rung} ${gameData.endgameSpeed} ${gameData.reliability} ${gameData.fuelScoringCapability} ${gameData.overallImpact}`;
-    const basePayload = qrCodeData.split(' ').join('~') + "~";
-    const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - basePayload.length);
+    const payloadFields = [
+      gameData.initials.toUpperCase(),
+      gameData.matchNum,
+      gameData.robot,
+      gameData.teamNum,
+      gameData.moved,
+      gameData.autoFuelScored,
+      gameData.autoFuelMissed,
+      gameData.autoClimb,
+      gameData.teleopFuelScored,
+      gameData.teleopFuelMissed,
+      gameData.attemptedClimb,
+      gameData.successfulClimb,
+      gameData.rung,
+      gameData.endgameSpeed,
+      gameData.reliability,
+      gameData.fuelScoringCapability,
+      gameData.overallImpact,
+      gameData.hopperEstimate
+    ];
+    const basePayload = payloadFields.join('	') + '	';
+    const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - (basePayload.length + 2));
     commentsField.maxLength = allowedCommentLength;
-    gameData.comments = commentsField.value.slice(0, allowedCommentLength);
+    gameData.comments = commentsField.value.replace(/[\t\n\r]+/g, ' ').slice(0, allowedCommentLength);
+
 
     if (checkIfTeam(gameData.teamNum)) {
       generateQRCode();
@@ -421,28 +869,39 @@ function updateButtonNum(id, num) {
   }
 
   function generateQRCode() {
-    // Keep output format: space-separated payload, then replace spaces with tildes.
-    const qrCodeData = `${gameData.initials.toUpperCase()} ${gameData.matchNum} ${gameData.robot} ${gameData.teamNum} ${gameData.moved} ${gameData.autoFuelScored} ${gameData.autoFuelMissed} ${gameData.autoClimb} ${gameData.intakeSpeed} ${gameData.intakeFloor} ${gameData.intakeDepot} ${gameData.intakeOutpost} ${gameData.teleopFuelScored} ${gameData.teleopFuelMissed} ${gameData.attemptedClimb} ${gameData.successfulClimb} ${gameData.rung} ${gameData.endgameSpeed} ${gameData.reliability} ${gameData.fuelScoringCapability} ${gameData.overallImpact}`;
-    const basePayload = qrCodeData.split(' ').join('~') + "~";
+    // Keep output format scanner-friendly with tab-delimited fields.
+    const payloadFields = [
+      gameData.initials.toUpperCase(),
+      gameData.matchNum,
+      gameData.robot,
+      gameData.teamNum,
+      gameData.moved,
+      gameData.autoFuelScored,
+      gameData.autoFuelMissed,
+      gameData.autoClimb,
+      gameData.teleopFuelScored,
+      gameData.teleopFuelMissed,
+      gameData.attemptedClimb,
+      gameData.successfulClimb,
+      gameData.rung,
+      gameData.endgameSpeed,
+      gameData.reliability,
+      gameData.fuelScoringCapability,
+      gameData.overallImpact,
+      gameData.hopperEstimate
+    ];
+    const basePayload = payloadFields.join('	') + '	';
 
     // Truncate comments when needed so long notes stay QR-friendly.
-    const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - basePayload.length);
-    const safeComment = (gameData.comments || '').slice(0, allowedCommentLength);
+    const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - (basePayload.length + 2));
+    const safeComment = (gameData.comments || '').replace(/[\t\n\r]+/g, ' ').slice(0, allowedCommentLength);
 
-    const qrCodeContainer = document.getElementById('qr-code-popup');
-    qrCodeContainer.innerHTML = '';
-
-    new QRCode(qrCodeContainer, {
-      text: basePayload + safeComment,
-      width: 300,
-      height: 300,
-    });
-
-    document.getElementById('popupQR').style.display = 'flex';
+    const qrText = basePayload + safeComment + '\r\n';
+    addQrHistoryEntry(qrText);
+    showQrPopup(qrText);
   }
 
   function closePopupQR() {
     document.getElementById('popupQR').style.display = 'none';
     document.getElementById('qr-code-popup').innerHTML = '';
   }
-  
