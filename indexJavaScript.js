@@ -577,7 +577,7 @@ function updateButtonNum(id, num) {
       gameData.hopperEstimate
     ];
     const basePayload = payloadFields.join('	') + '	';
-    const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - basePayload.length);
+    const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - (basePayload.length + 2));
     commentsField.maxLength = allowedCommentLength;
     gameData.comments = commentsField.value.replace(/[\t\n\r]+/g, ' ').slice(0, allowedCommentLength);
 
@@ -617,14 +617,14 @@ function updateButtonNum(id, num) {
     const basePayload = payloadFields.join('	') + '	';
 
     // Truncate comments when needed so long notes stay QR-friendly.
-    const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - basePayload.length);
+    const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - (basePayload.length + 2));
     const safeComment = (gameData.comments || '').replace(/[\t\n\r]+/g, ' ').slice(0, allowedCommentLength);
 
     const qrCodeContainer = document.getElementById('qr-code-popup');
     qrCodeContainer.innerHTML = '';
 
     new QRCode(qrCodeContainer, {
-      text: basePayload + safeComment,
+      text: basePayload + safeComment + '\r\n',
       width: 300,
       height: 300,
     });
