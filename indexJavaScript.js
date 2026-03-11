@@ -428,9 +428,46 @@ function initializeWidgetCarousel() {
   let touchLatestX = null;
   let touchLatestY = null;
 
+  const resetTouchState = () => {
+    touchStartX = null;
+    touchStartY = null;
+    touchLatestX = null;
+    touchLatestY = null;
+    touchStartTime = 0;
+  };
+
+  const shouldIgnoreSwipeStart = (eventTarget, touch) => {
+    if (!eventTarget || !touch) return false;
+
+    if (eventTarget.closest('input[type="range"], #carousel-progress')) {
+      return true;
+    }
+
+    const activeWidget = widgets[activeIndex];
+    if (!activeWidget) return false;
+
+    const sliderProximityPx = 28;
+    const activeSliders = activeWidget.querySelectorAll('input[type="range"]');
+    for (const slider of activeSliders) {
+      const rect = slider.getBoundingClientRect();
+      const inHorizontalBounds = touch.clientX >= rect.left - sliderProximityPx && touch.clientX <= rect.right + sliderProximityPx;
+      const inVerticalBounds = touch.clientY >= rect.top - sliderProximityPx && touch.clientY <= rect.bottom + sliderProximityPx;
+      if (inHorizontalBounds && inVerticalBounds) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
   dashboard.addEventListener('touchstart', (event) => {
     const touch = event.touches[0];
     if (!touch) return;
+    if (shouldIgnoreSwipeStart(event.target, touch)) {
+      resetTouchState();
+      return;
+    }
+
     touchStartX = touch.clientX;
     touchStartY = touch.clientY;
     touchLatestX = touch.clientX;
@@ -439,6 +476,7 @@ function initializeWidgetCarousel() {
   }, { passive: true });
 
   dashboard.addEventListener('touchmove', (event) => {
+    if (touchStartX === null || touchStartY === null) return;
     const touch = event.touches[0];
     if (!touch) return;
     touchLatestX = touch.clientX;
@@ -468,19 +506,11 @@ function initializeWidgetCarousel() {
       }
     }
 
-    touchStartX = null;
-    touchStartY = null;
-    touchLatestX = null;
-    touchLatestY = null;
-    touchStartTime = 0;
+    resetTouchState();
   }, { passive: true });
 
   dashboard.addEventListener('touchcancel', () => {
-    touchStartX = null;
-    touchStartY = null;
-    touchLatestX = null;
-    touchLatestY = null;
-    touchStartTime = 0;
+    resetTouchState();
   }, { passive: true });
 
   window.addEventListener('resize', () => {
