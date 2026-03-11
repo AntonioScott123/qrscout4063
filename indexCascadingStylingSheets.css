@@ -17,8 +17,10 @@
 html,
 body {
     min-height: 100%;
+    max-width: 100%;
     margin: 0;
     overscroll-behavior: none;
+    overflow-x: hidden;
 }
 
 html {
@@ -151,7 +153,8 @@ h2 {
     display: block;
     width: min(100%, 1000px);
     margin: 0 auto;
-    overflow: visible;
+    overflow-x: clip;
+    overflow-y: visible;
     padding: 8px 0;
     touch-action: pan-y;
 }
@@ -164,7 +167,8 @@ h2 {
     width: min(100%, 1100px);
     margin: 0 auto;
     gap: 8px;
-    overflow: visible;
+    overflow-x: clip;
+    overflow-y: visible;
 }
 
 #dashboard-carousel {
@@ -667,11 +671,11 @@ input:focus, textarea:focus, select:focus {
     }
 
     .widget.is-prev {
-        transform: translateX(-108%) scale(0.92);
+        transform: translateX(-104%) scale(0.92);
     }
 
     .widget.is-next {
-        transform: translateX(8%) scale(0.92);
+        transform: translateX(4%) scale(0.92);
     }
 }
 
@@ -694,12 +698,12 @@ input:focus, textarea:focus, select:focus {
 
     .widget.is-prev {
         opacity: 0.3;
-        transform: translateX(-108%) scale(0.92);
+        transform: translateX(-104%) scale(0.92);
     }
 
     .widget.is-next {
         opacity: 0.3;
-        transform: translateX(8%) scale(0.92);
+        transform: translateX(4%) scale(0.92);
     }
 
     .carousel-shell {
