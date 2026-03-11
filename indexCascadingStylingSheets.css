@@ -153,8 +153,7 @@ h2 {
     display: block;
     width: min(100%, 1000px);
     margin: 0 auto;
-    overflow-x: clip;
-    overflow-y: visible;
+    overflow: visible;
     padding: 8px 0;
     touch-action: pan-y;
 }
@@ -167,8 +166,7 @@ h2 {
     width: min(100%, 1100px);
     margin: 0 auto;
     gap: 8px;
-    overflow-x: clip;
-    overflow-y: visible;
+    overflow: visible;
 }
 
 #dashboard-carousel {
@@ -244,6 +242,7 @@ h2 {
     border-radius: 8px;
     background-color: #ffffff;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+    text-align: center;
 }
 
 /* h3 adjustments */
@@ -256,6 +255,10 @@ h3 {
     text-align: left;
     margin-top: 0;
     border-radius: 0px;
+}
+
+.mini-box h3 {
+    text-align: center;
 }
 
 /* Button styling for small counter buttons remains unchanged */
@@ -390,9 +393,10 @@ input[type="range"] {
 .checkbox-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     font-size: 16px;
     margin: 6px 0;
+    gap: 14px;
 }
 
 .checkbox-row span {
