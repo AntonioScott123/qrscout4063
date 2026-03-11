@@ -217,6 +217,7 @@
       <div class="button-container">
         <button id="submit-btn" onclick="updateQRCodeOnSubmit()">Generate QR Code</button>
         <button id="clear-all-btn" onclick="ClearAll()">Clear All</button>
+        <button id="history-btn" onclick="toggleHistoryPanel(true)">History</button>
       </div>
     </div>
     </div>
@@ -231,6 +232,17 @@
     <!-- Placeholder for QR code -->
   </div>
 
+
+
+  <div id="history-panel" class="history-panel" aria-hidden="true">
+    <div class="history-panel-content">
+      <div class="history-panel-header">
+        <button id="export-csv-btn" onclick="exportHistoryCsv()">Export as CSV</button>
+        <button id="close-history-btn" onclick="toggleHistoryPanel(false)">Close</button>
+      </div>
+      <div id="history-list" class="history-list"></div>
+    </div>
+  </div>
 
   <div id="popupQR" class="popup">
     <div id="qr-code-popup"></div>

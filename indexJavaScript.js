@@ -43,6 +43,8 @@ if ('serviceWorker' in navigator) {
   };
 
   const MAX_QR_TEXT_LENGTH = 900;
+  const QR_HISTORY_STORAGE_KEY = "qrScoutHistory";
+  let qrHistoryTexts = [];
 
   // Optional smallify object for abbreviating common values
   let smallify = {
@@ -479,6 +481,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeRobotButtons();
   initializeRungButtons();
   initializeRungVisibility();
+  loadQrHistory();
+  renderHistoryList();
 });
 
 function updateButtonNum(id, num) {
@@ -487,7 +491,113 @@ function updateButtonNum(id, num) {
   setCounterValue(id, newValue);
 }
   
-  function updateQRCodeOnSubmit() {
+function saveQrHistory() {
+  localStorage.setItem(QR_HISTORY_STORAGE_KEY, JSON.stringify(qrHistoryTexts));
+}
+
+function loadQrHistory() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(QR_HISTORY_STORAGE_KEY) || '[]');
+    if (Array.isArray(parsed)) {
+      qrHistoryTexts = parsed.filter((item) => typeof item === 'string');
+    }
+  } catch (error) {
+    qrHistoryTexts = [];
+  }
+}
+
+function addQrHistoryEntry(text) {
+  qrHistoryTexts.unshift(text);
+  if (qrHistoryTexts.length > 800) qrHistoryTexts = qrHistoryTexts.slice(0, 800);
+  saveQrHistory();
+  renderHistoryList();
+}
+
+function formatHistoryLabel(qrText, index) {
+  const cleaned = qrText.replace(/\r?\n$/, '');
+  const fields = cleaned.split('\t');
+  const initials = fields[0] || 'NA';
+  const matchNum = fields[1] || 'NA';
+  const robot = fields[2] || 'NA';
+  const team = fields[3] || 'NA';
+  return `#${index + 1} • Match ${matchNum} • Team ${team} • ${robot} • ${initials}`;
+}
+
+function renderHistoryList() {
+  const list = document.getElementById('history-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  if (qrHistoryTexts.length === 0) {
+    const empty = document.createElement('div');
+    empty.textContent = 'No history yet.';
+    list.appendChild(empty);
+    return;
+  }
+
+  qrHistoryTexts.forEach((text, index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'history-item-btn';
+    button.textContent = formatHistoryLabel(text, index);
+    button.addEventListener('click', () => {
+      const panel = document.getElementById('history-panel');
+      if (panel) panel.style.display = 'none';
+      showQrPopup(text);
+    });
+    list.appendChild(button);
+  });
+}
+
+function toggleHistoryPanel(show) {
+  const panel = document.getElementById('history-panel');
+  if (!panel) return;
+  panel.style.display = show ? 'flex' : 'none';
+  panel.setAttribute('aria-hidden', show ? 'false' : 'true');
+  if (show) renderHistoryList();
+}
+
+function exportHistoryCsv() {
+  if (qrHistoryTexts.length === 0) return;
+  const headers = [
+    'initials', 'matchNum', 'robot', 'teamNum', 'moved', 'autoFuelScored', 'autoFuelMissed',
+    'autoClimb', 'intakeFloor', 'intakeDepot', 'intakeOutpost', 'teleopFuelScored',
+    'teleopFuelMissed', 'attemptedClimb', 'successfulClimb', 'rung', 'endgameSpeed',
+    'reliability', 'fuelScoringCapability', 'overallImpact', 'hopperEstimate', 'comments'
+  ];
+
+  const escapeCsv = (value) => `"${String(value).replace(/"/g, '""')}"`;
+  const rows = qrHistoryTexts.map((text) => {
+    const cleaned = text.replace(/\r?\n$/, '');
+    const cells = cleaned.split('\t');
+    while (cells.length < headers.length) cells.push('');
+    return cells.slice(0, headers.length).map(escapeCsv).join(',');
+  });
+
+  const csvText = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csvText], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'qr-history.csv';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function showQrPopup(qrText) {
+  const qrCodeContainer = document.getElementById('qr-code-popup');
+  qrCodeContainer.innerHTML = '';
+  new QRCode(qrCodeContainer, {
+    text: qrText,
+    width: 300,
+    height: 300,
+  });
+  document.getElementById('popupQR').style.display = 'flex';
+}
+
+function updateQRCodeOnSubmit() {
     // Get required fields
     let initialsField = document.getElementById('prematch-scout-initials');
     let matchNumField = document.getElementById('prematch-match-number');
@@ -620,16 +730,9 @@ function updateButtonNum(id, num) {
     const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - (basePayload.length + 2));
     const safeComment = (gameData.comments || '').replace(/[\t\n\r]+/g, ' ').slice(0, allowedCommentLength);
 
-    const qrCodeContainer = document.getElementById('qr-code-popup');
-    qrCodeContainer.innerHTML = '';
-
-    new QRCode(qrCodeContainer, {
-      text: basePayload + safeComment + '\r\n',
-      width: 300,
-      height: 300,
-    });
-
-    document.getElementById('popupQR').style.display = 'flex';
+    const qrText = basePayload + safeComment + '\r\n';
+    addQrHistoryEntry(qrText);
+    showQrPopup(qrText);
   }
 
   function closePopupQR() {
