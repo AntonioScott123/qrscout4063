@@ -22,22 +22,26 @@ body {
 }
 
 html {
-    background: var(--app-gradient) no-repeat fixed;
+    width: 100%;
+    background: var(--app-gradient) no-repeat;
     background-size: 100% 100%;
     background-color: #E0F7F9;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
+    width: 100%;
     position: relative;
     isolation: isolate;
     background: transparent;
     font-family: 'SF Sports Night NS', sans-serif;
     text-align: center;
+    min-height: 100svh;
     min-height: 100dvh;
     overscroll-behavior-y: none;
     overflow-x: hidden;
-    padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
-    /* Smoother ocean-inspired background */
+    padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    box-sizing: border-box;
     font-size: 18px;
 }
 
@@ -147,7 +151,7 @@ h2 {
     display: block;
     width: min(100%, 1000px);
     margin: 0 auto;
-    overflow: visible;
+    overflow: hidden;
     padding: 8px 0;
     touch-action: pan-y;
 }
@@ -160,7 +164,7 @@ h2 {
     width: min(100%, 1100px);
     margin: 0 auto;
     gap: 8px;
-    overflow: visible;
+    overflow: hidden;
 }
 
 #dashboard-carousel {
@@ -565,6 +569,7 @@ input, textarea, select {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 8px;
+    font-size: 16px;
     transition: border-color 0.3s ease;
 }
 input:focus, textarea:focus, select:focus {
@@ -666,6 +671,43 @@ input:focus, textarea:focus, select:focus {
 
     .widget.is-next {
         transform: translateX(8%) scale(0.92);
+    }
+}
+
+
+@media (max-width: 430px) {
+    h1 {
+        font-size: clamp(36px, 11vw, 48px);
+        letter-spacing: 2px;
+        margin: 8px 0 14px;
+    }
+
+    .help-content {
+        width: min(96vw, 760px);
+    }
+
+    .widget {
+        width: min(82vw, 320px);
+        padding: 12px;
+    }
+
+    .widget.is-prev,
+    .widget.is-next {
+        opacity: 0;
+        transform: translateX(-50%) scale(0.95);
+    }
+
+    .carousel-shell {
+        grid-template-columns: 34px 1fr 34px;
+        gap: 2px;
+    }
+
+    #submit-btn,
+    #clear-all-btn,
+    #history-btn {
+        width: min(84vw, 280px);
+        height: 48px;
+        font-size: 18px;
     }
 }
 
