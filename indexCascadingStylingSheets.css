@@ -22,23 +22,27 @@ body {
 }
 
 html {
-    background: var(--app-gradient) no-repeat fixed;
+    width: 100%;
+    background: var(--app-gradient) no-repeat;
     background-size: 100% 100%;
     background-color: #E0F7F9;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
+    width: 100%;
     position: relative;
     isolation: isolate;
     background: transparent;
     font-family: 'SF Sports Night NS', sans-serif;
     text-align: center;
+    min-height: 100svh;
     min-height: 100dvh;
     overscroll-behavior-y: none;
     overflow-x: hidden;
-    padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
-    /* Smoother ocean-inspired background */
-    font-size: 24px;
+    padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    box-sizing: border-box;
+    font-size: 18px;
 }
 
 
@@ -82,19 +86,27 @@ h2 {
 
 .help-button {
     list-style: none;
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background: #0083AE;
     color: #ffffff;
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 18px;
     font-family: Arial, Helvetica, sans-serif;
     margin: 0 auto;
+    border: 2px solid #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28), 0 0 0 3px rgba(0, 131, 174, 0.25);
+}
+
+.help-dropdown[open] .help-button,
+.help-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.32), 0 0 0 4px rgba(0, 131, 174, 0.32);
 }
 
 .help-button::-webkit-details-marker {
@@ -135,37 +147,90 @@ h2 {
 
 
 .dashboard {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    align-items: flex-start;
+    position: relative;
+    display: block;
+    width: min(100%, 1000px);
+    margin: 0 auto;
+    overflow: visible;
+    padding: 8px 0;
+    touch-action: pan-y;
+}
+
+.carousel-shell {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    width: min(100%, 1100px);
+    margin: 0 auto;
+    gap: 8px;
+    overflow: visible;
+}
+
+#dashboard-carousel {
+    transition: height 0.25s ease;
 }
 
 /* Enhanced widget styling */
 .widget {
-    margin: 10px;
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    margin: 0;
     padding: 15px;
-    /* Underwater gradient from deep blue to lighter teal/seafoam */
     background: linear-gradient(to bottom, #0083AE, #00A9C9, #E0F7F9);
-    width: 275px;
-    min-height: 625px;
+    width: min(74vw, 320px);
+    min-height: auto;
     border-radius: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.28s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+    opacity: 0;
+    pointer-events: none;
 }
 
-.widget:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+.widget.is-active {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    z-index: 3;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24);
+    pointer-events: auto;
 }
 
-/* Increase height for specific widgets if needed */
-#Auto-Widget {
-    min-height: 950px;
+.widget.is-prev {
+    opacity: 0.35;
+    transform: translateX(-112%) scale(0.93);
+    z-index: 2;
 }
 
-#TeleOp-Widget {
-    min-height: 875px;
+.widget.is-next {
+    opacity: 0.35;
+    transform: translateX(12%) scale(0.93);
+    z-index: 2;
+}
+
+.widget.is-hidden {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.85);
+    z-index: 1;
+}
+
+.carousel-arrow {
+    width: 38px;
+    min-width: 38px;
+    height: 64px;
+    border-radius: 999px;
+    margin: 0;
+    font-size: 26px;
+    line-height: 1;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: linear-gradient(to bottom, rgba(0, 131, 174, 0.34), rgba(0, 131, 174, 0.2));
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.16);
+    color: #ffffff;
+}
+
+.carousel-arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
 }
 
 /* Mini-box adjustments for a cleaner look */
@@ -247,6 +312,7 @@ button {
 .mini-box > input,
 .mini-box > textarea,
 .mini-box > .fancy-select-wrapper,
+.mini-box > .robot-button-group,
 .mini-box > #speed,
 .mini-box > .speed-value {
     margin-top: 8px;
@@ -331,24 +397,60 @@ input[type="range"] {
 }
 
 
+
+
+.robot-button-group {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.robot-choice {
+    width: auto;
+    min-height: 34px;
+    margin: 0;
+    padding: 7px 4px;
+    font-size: 12px;
+    border-radius: 6px;
+}
+
+.robot-choice-red {
+    background-color: #e53935;
+}
+
+.robot-choice-blue {
+    background-color: #1e88e5;
+}
+
+.robot-choice.is-selected {
+    outline: 3px solid #ffffff;
+    box-shadow: 0 0 0 4px rgba(0, 131, 174, 0.75), 0 8px 18px rgba(0, 0, 0, 0.28);
+    transform: translateY(-1px) scale(1.02);
+    filter: brightness(1.12);
+    font-weight: 700;
+}
 .rung-button-group {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 6px;
     margin-top: 8px;
 }
 
 .rung-button {
-    width: 62px;
-    height: 30px;
+    width: auto;
+    height: 34px;
     margin: 0;
-    font-size: 13px;
+    font-size: 12px;
     background-color: #5f59ff;
+    border-radius: 6px;
 }
 
 .rung-button.is-selected {
     background-color: #0083AE;
-    transform: scale(0.96);
+    outline: 2px solid #ffffff;
+    box-shadow: 0 0 0 2px rgba(0, 131, 174, 0.6);
+    transform: none;
 }
 
 /* Checkbox styling */
@@ -468,6 +570,7 @@ input, textarea, select {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 8px;
+    font-size: 16px;
     transition: border-color 0.3s ease;
 }
 input:focus, textarea:focus, select:focus {
@@ -480,7 +583,7 @@ input:focus, textarea:focus, select:focus {
     text-align: center;
     margin-top: 20px;
 }
-#submit-btn, #clear-all-btn {
+#submit-btn, #clear-all-btn, #history-btn {
     display: block;
     margin: 10px auto;
     width: 220px;
@@ -507,6 +610,14 @@ input:focus, textarea:focus, select:focus {
     background-color: #e55a5a;
     transform: scale(1.03);
 }
+#history-btn {
+    background-color: #5f59ff;
+    color: white;
+}
+#history-btn:hover {
+    background-color: #4b46cc;
+    transform: scale(1.03);
+}
 
 @keyframes falsePop {
     0% { transform: scale(1); }
@@ -526,4 +637,200 @@ input:focus, textarea:focus, select:focus {
 
 .checkbox-true-pop {
     animation: trueSplashPop 0.24s ease-out;
+}
+
+
+.carousel-shell .carousel-arrow {
+    width: 38px;
+    min-width: 38px;
+    height: 64px;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+.action-widget .button-container {
+    margin-top: 8px;
+}
+
+@media (max-width: 700px) {
+    .carousel-shell {
+        width: 100%;
+        grid-template-columns: 40px 1fr 40px;
+        gap: 4px;
+    }
+
+    .widget {
+        width: min(74vw, 320px);
+    }
+
+    .widget.is-prev {
+        transform: translateX(-108%) scale(0.92);
+    }
+
+    .widget.is-next {
+        transform: translateX(8%) scale(0.92);
+    }
+}
+
+
+@media (max-width: 430px) {
+    h1 {
+        font-size: clamp(36px, 11vw, 48px);
+        letter-spacing: 2px;
+        margin: 8px 0 14px;
+    }
+
+    .help-content {
+        width: min(96vw, 760px);
+    }
+
+    .widget {
+        width: min(74vw, 320px);
+        padding: 12px;
+    }
+
+    .widget.is-prev {
+        opacity: 0.3;
+        transform: translateX(-108%) scale(0.92);
+    }
+
+    .widget.is-next {
+        opacity: 0.3;
+        transform: translateX(8%) scale(0.92);
+    }
+
+    .carousel-shell {
+        grid-template-columns: 42px 1fr 42px;
+        gap: 2px;
+    }
+
+    #submit-btn,
+    #clear-all-btn,
+    #history-btn {
+        width: min(84vw, 280px);
+        height: 48px;
+        font-size: 18px;
+    }
+}
+
+
+.carousel-slider-wrap {
+    width: min(92vw, 420px);
+    margin: 8px auto 6px;
+}
+
+#carousel-progress {
+    width: 100%;
+    accent-color: #0083AE;
+}
+
+
+.history-panel {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 9998;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.history-panel-content {
+    width: min(94vw, 620px);
+    max-height: 82vh;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 12px;
+    overflow: auto;
+}
+
+.history-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+#export-csv-btn,
+#share-history-btn,
+#clear-history-btn,
+#close-history-btn,
+#share-selected-btn,
+#cancel-share-btn {
+    width: auto;
+    min-width: 110px;
+    height: 38px;
+    margin: 0;
+    padding: 0 10px;
+    font-size: 14px;
+}
+
+#export-csv-btn {
+    background-color: #0083AE;
+}
+
+#share-history-btn,
+#share-selected-btn {
+    background-color: #2a9d54;
+}
+
+#clear-history-btn {
+    background-color: #cc4545;
+}
+
+#close-history-btn,
+#cancel-share-btn {
+    background-color: #888888;
+}
+
+.history-share-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #1a2e3f;
+}
+
+.history-list {
+    margin-top: 10px;
+    display: grid;
+    gap: 8px;
+}
+
+.history-item-btn {
+    width: 100%;
+    height: auto;
+    min-height: 40px;
+    margin: 0;
+    padding: 10px;
+    font-size: 13px;
+    text-align: left;
+    background-color: #f3f8ff;
+    color: #00263a;
+}
+
+
+.history-item-select {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f3f8ff;
+    color: #00263a;
+    text-align: left;
+    font-size: 13px;
+}
+
+.history-item-select input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
 }
