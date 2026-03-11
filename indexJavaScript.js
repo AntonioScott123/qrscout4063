@@ -492,7 +492,11 @@ function updateButtonNum(id, num) {
 }
   
 function saveQrHistory() {
-  localStorage.setItem(QR_HISTORY_STORAGE_KEY, JSON.stringify(qrHistoryTexts));
+  try {
+    localStorage.setItem(QR_HISTORY_STORAGE_KEY, JSON.stringify(qrHistoryTexts));
+  } catch (error) {
+    // Storage can fail in private mode/quota; QR generation should still work.
+  }
 }
 
 function loadQrHistory() {
