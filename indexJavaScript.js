@@ -79,10 +79,17 @@ if ('serviceWorker' in navigator) {
     if (typeof goToCarouselPage === "function") {
       goToCarouselPage(0);
     }
-    document.getElementById('prematch-match-number').value = '';
+
+    const matchField = document.getElementById('prematch-match-number');
+    const currentMatchNum = parseInt(matchField.value, 10);
+    if (Number.isFinite(currentMatchNum)) {
+      matchField.value = String(currentMatchNum + 1);
+    } else {
+      matchField.value = '';
+    }
+
     const teamField = document.getElementById('prematch-team-number');
     teamField.value = '';
-    clearRobotSelection();
     document.getElementById('moved').checked = false;
 
     ['autoFuelScored', 'autoFuelMissed', 'teleopFuelScored', 'teleopFuelMissed', 'hopperEstimate'].forEach(id => {
