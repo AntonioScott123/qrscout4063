@@ -113,6 +113,15 @@
         <button onclick="updateButtonNum('autoFuelMissed', 1)">+</button>
       </div>
       <div class="mini-box">
+        <h3>INTERVAL</h3>
+        <div class="interval-btn-group" id="auto-interval-group">
+          <button type="button" class="interval-btn is-selected" data-interval="1" data-group="auto">1</button>
+          <button type="button" class="interval-btn" data-interval="2" data-group="auto">2</button>
+          <button type="button" class="interval-btn" data-interval="3" data-group="auto">3</button>
+          <button type="button" class="interval-btn" data-interval="5" data-group="auto">5</button>
+        </div>
+      </div>
+      <div class="mini-box">
         <h3>CLIMB?</h3>
         <input type="checkbox" class="custom-checkbox" id="autoClimb">
         <label for="autoClimb"></label>
@@ -133,6 +142,15 @@
         <button onclick="updateButtonNum('teleopFuelMissed', -1)">-</button>
         <span id="teleopFuelMissed">0</span>
         <button onclick="updateButtonNum('teleopFuelMissed', 1)">+</button>
+      </div>
+      <div class="mini-box">
+        <h3>INTERVAL</h3>
+        <div class="interval-btn-group" id="teleop-interval-group">
+          <button type="button" class="interval-btn is-selected" data-interval="1" data-group="teleop">1</button>
+          <button type="button" class="interval-btn" data-interval="2" data-group="teleop">2</button>
+          <button type="button" class="interval-btn" data-interval="3" data-group="teleop">3</button>
+          <button type="button" class="interval-btn" data-interval="5" data-group="teleop">5</button>
+        </div>
       </div>
       <div class="mini-box">
         <h3>FUEL SCORING CAPABILITY (1-5)</h3>
@@ -167,6 +185,16 @@
           <button type="button" class="rung-button" data-rung="High">High</button>
         </div>
       </div>
+      <div class="mini-box">
+        <h3>BUMP CAPABLE?</h3>
+        <input type="checkbox" class="custom-checkbox" id="bumpCapable">
+        <label for="bumpCapable"></label>
+      </div>
+      <div class="mini-box">
+        <h3>TRENCH CAPABLE?</h3>
+        <input type="checkbox" class="custom-checkbox" id="trenchCapable">
+        <label for="trenchCapable"></label>
+      </div>
     </div>
 
     <!-- Postmatch Widget -->
@@ -189,6 +217,16 @@
         <button onclick="updateButtonNum('hopperEstimate', 5)">+</button>
       </div>
       <div class="mini-box">
+        <h3>PLAYS DEFENSE?</h3>
+        <input type="checkbox" class="custom-checkbox" id="playsDefense">
+        <label for="playsDefense"></label>
+      </div>
+      <div class="mini-box" id="defense-rating-container" style="display: none;">
+        <h3>DEFENSE RATING (1-5)</h3>
+        <input type="range" id="defense-rating" min="1" max="5" step="1" value="3">
+        <div id="defense-rating-value" class="speed-value">3</div>
+      </div>
+      <div class="mini-box">
         <h3>COMMENTS</h3>
         <textarea id="Comments" rows="10" cols="29" maxlength="900"></textarea>
       </div>
@@ -196,7 +234,7 @@
     <div class="widget action-widget" id="actions-widget">
       <h2>Actions</h2>
       <div class="button-container">
-        <button id="submit-btn" onclick="updateQRCodeOnSubmit()">Generate QR Code</button>
+        <button id="submit-btn">Generate QR Code</button>
         <button id="clear-all-btn" onclick="ClearAll()">Clear All / Next Match</button>
         <button id="history-btn" onclick="toggleHistoryPanel(true)">History</button>
       </div>

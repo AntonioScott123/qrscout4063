@@ -1,20 +1,4 @@
-// Service Worker Registration
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(function (registration) {
-          console.log('ServiceWorker registration successful with scope:', registration.scope);
-        })
-        .catch(function (err) {
-          console.log('ServiceWorker registration failed:', err);
-        });
-    });
-  } else {
-    const prematchWidget = document.getElementById("prematch-widget");
-    if (prematchWidget) {
-      prematchWidget.style.display = "none";
-    }
-  }
+// Service worker is registered in index.html on page load.
   
   // Global gameData object holds all form data
   const gameData = {
@@ -36,8 +20,15 @@ if ('serviceWorker' in navigator) {
     fuelScoringCapability: 3,
     overallImpact: 3,
     hopperEstimate: 0,
+    bumpCapable: false,
+    trenchCapable: false,
+    playsDefense: false,
+    defenseRating: 3,
     comments: ""
   };
+
+  // Interval step per counter group (auto / teleop)
+  const fuelIntervals = { auto: 1, teleop: 1 };
 
   const MAX_QR_TEXT_LENGTH = 900;
   const QR_HISTORY_STORAGE_KEY = "qrScoutHistory";
@@ -58,11 +49,11 @@ if ('serviceWorker' in navigator) {
   };
   
   function openPopup() {
-    document.getElementById('popup').style.display = 'block';
+    document.getElementById('popupQR').style.display = 'flex';
   }
   
   function closePopup() {
-    document.getElementById('popup').style.display = 'none';
+    document.getElementById('popupQR').style.display = 'none';
   }
   
   function checkIfTeam(enteredTeam) {
@@ -93,6 +84,14 @@ if ('serviceWorker' in navigator) {
       setCounterValue(id, 0);
     });
 
+    // Reset intervals to 1
+    fuelIntervals.auto = 1;
+    fuelIntervals.teleop = 1;
+    ['auto-interval-group', 'teleop-interval-group'].forEach(groupId => {
+      const g = document.getElementById(groupId);
+      if (g) g.querySelectorAll('.interval-btn').forEach(b => b.classList.toggle('is-selected', b.dataset.interval === '1'));
+    });
+
     document.getElementById('autoClimb').checked = false;
     document.getElementById('endgame-speed').value = '3';
     const endgameSpeedValue = document.getElementById('endgame-speed-value');
@@ -115,6 +114,16 @@ if ('serviceWorker' in navigator) {
 
     // Clear Postmatch field
     document.getElementById('Comments').value = '';
+
+    // Reset new fields
+    document.getElementById('bumpCapable').checked = false;
+    document.getElementById('trenchCapable').checked = false;
+    document.getElementById('playsDefense').checked = false;
+    const defenseContainer = document.getElementById('defense-rating-container');
+    if (defenseContainer) defenseContainer.style.display = 'none';
+    document.getElementById('defense-rating').value = '3';
+    const defenseRatingValue = document.getElementById('defense-rating-value');
+    if (defenseRatingValue) defenseRatingValue.textContent = '3';
   }
   
 function getCounterValue(id) {
@@ -555,6 +564,26 @@ function initializeRungVisibility() {
   syncRung();
 }
 
+function initializeIntervalButtons() {
+  document.querySelectorAll('.interval-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const group = btn.dataset.group;
+      fuelIntervals[group] = parseInt(btn.dataset.interval, 10);
+      const groupEl = document.getElementById(group + '-interval-group');
+      if (groupEl) groupEl.querySelectorAll('.interval-btn').forEach(b => b.classList.toggle('is-selected', b === btn));
+    });
+  });
+}
+
+function initializeDefenseVisibility() {
+  const playsDefense = document.getElementById('playsDefense');
+  const container = document.getElementById('defense-rating-container');
+  if (!playsDefense || !container) return;
+  const sync = () => { container.style.display = playsDefense.checked ? 'block' : 'none'; };
+  playsDefense.addEventListener('change', sync);
+  sync();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initializeWidgetCarousel();
   initializeCounterInputs();
@@ -568,14 +597,42 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeRungButtons();
   initializeRungVisibility();
   initializeClimbDependencies();
+  initializeIntervalButtons();
+  initializeDefenseVisibility();
+  initializeSpeedSlider('defense-rating', 'defense-rating-value');
   loadQrHistory();
   renderHistoryList();
+
+  // Fix iOS double-fire: the submit button's onclick fires once via touchend
+  // and again via the synthetic click ~300ms later. Replace onclick with a
+  // touch-aware listener that suppresses the redundant click event.
+  const submitBtn = document.getElementById('submit-btn');
+  if (submitBtn) {
+    let submitPending = false;
+    submitBtn.removeAttribute('onclick');
+    submitBtn.addEventListener('touchend', (e) => {
+      e.preventDefault(); // stop the synthetic click from firing
+      if (submitPending) return;
+      submitPending = true;
+      updateQRCodeOnSubmit();
+      setTimeout(() => { submitPending = false; }, 600);
+    }, { passive: false });
+    submitBtn.addEventListener('click', (e) => {
+      // Only handle genuine mouse clicks (not touch-originated ones)
+      if (e.detail === 0) return; // detail=0 means synthesized / non-mouse
+      if (submitPending) return;
+      submitPending = true;
+      updateQRCodeOnSubmit();
+      setTimeout(() => { submitPending = false; }, 600);
+    });
+  }
 });
 
-function updateButtonNum(id, num) {
-  const currentValue = getCounterValue(id);
-  const newValue = currentValue + num;
-  setCounterValue(id, newValue);
+function updateButtonNum(id, direction) {
+  let step = direction;
+  if (['autoFuelScored', 'autoFuelMissed'].includes(id)) step = direction * fuelIntervals.auto;
+  else if (['teleopFuelScored', 'teleopFuelMissed'].includes(id)) step = direction * fuelIntervals.teleop;
+  setCounterValue(id, getCounterValue(id) + step);
 }
   
 function saveQrHistory() {
@@ -735,10 +792,13 @@ function toggleHistoryPanel(show) {
 function exportHistoryCsv() {
   if (qrHistoryTexts.length === 0) return;
   const headers = [
-    'initials', 'matchNum', 'robot', 'teamNum', 'moved', 'autoFuelScored', 'autoFuelMissed',
-    'autoClimb', 'teleopFuelScored',
-    'teleopFuelMissed', 'attemptedClimb', 'successfulClimb', 'rung', 'endgameSpeed',
-    'reliability', 'fuelScoringCapability', 'overallImpact', 'hopperEstimate', 'comments'
+    'initials', 'matchNum', 'robot', 'teamNum', 'moved',
+    'autoFuelScored', 'autoFuelMissed', 'autoClimb',
+    'teleopFuelScored', 'teleopFuelMissed',
+    'attemptedClimb', 'successfulClimb', 'rung', 'endgameSpeed',
+    'bumpCapable', 'trenchCapable',
+    'reliability', 'fuelScoringCapability', 'overallImpact', 'hopperEstimate',
+    'playsDefense', 'defenseRating', 'comments'
   ];
 
   const escapeCsv = (value) => `"${String(value).replace(/"/g, '""')}"`;
@@ -764,12 +824,20 @@ function exportHistoryCsv() {
 function showQrPopup(qrText) {
   const qrCodeContainer = document.getElementById('qr-code-popup');
   qrCodeContainer.innerHTML = '';
-  new QRCode(qrCodeContainer, {
-    text: qrText,
-    width: 300,
-    height: 300,
-  });
-  document.getElementById('popupQR').style.display = 'flex';
+  try {
+    new QRCode(qrCodeContainer, {
+      text: qrText,
+      width: 300,
+      height: 300,
+      correctLevel: QRCode.CorrectLevel.M,
+    });
+    document.getElementById('popupQR').style.display = 'flex';
+    return true;
+  } catch (err) {
+    qrCodeContainer.innerHTML = '';
+    alert('QR code generation failed. Your data may be too long — try shortening the Comments field and try again.\n\nError: ' + err.message);
+    return false;
+  }
 }
 
 function updateQRCodeOnSubmit() {
@@ -834,6 +902,10 @@ function updateQRCodeOnSubmit() {
     gameData.fuelScoringCapability = document.getElementById('fuel-score-rating').value;
     gameData.overallImpact = document.getElementById('overall-impact').value;
     gameData.hopperEstimate = getCounterValue('hopperEstimate');
+    gameData.bumpCapable = document.getElementById('bumpCapable').checked;
+    gameData.trenchCapable = document.getElementById('trenchCapable').checked;
+    gameData.playsDefense = document.getElementById('playsDefense').checked;
+    gameData.defenseRating = gameData.playsDefense ? document.getElementById('defense-rating').value : 'NA';
     const commentsField = document.getElementById('Comments');
     const payloadFields = [
       gameData.initials.toUpperCase(),
@@ -850,10 +922,14 @@ function updateQRCodeOnSubmit() {
       gameData.successfulClimb,
       gameData.rung,
       gameData.endgameSpeed,
+      gameData.bumpCapable,
+      gameData.trenchCapable,
       gameData.reliability,
       gameData.fuelScoringCapability,
       gameData.overallImpact,
-      gameData.hopperEstimate
+      gameData.hopperEstimate,
+      gameData.playsDefense,
+      gameData.defenseRating
     ];
     const basePayload = payloadFields.join('	') + '	';
     const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - (basePayload.length + 2));
@@ -885,10 +961,14 @@ function updateQRCodeOnSubmit() {
       gameData.successfulClimb,
       gameData.rung,
       gameData.endgameSpeed,
+      gameData.bumpCapable,
+      gameData.trenchCapable,
       gameData.reliability,
       gameData.fuelScoringCapability,
       gameData.overallImpact,
-      gameData.hopperEstimate
+      gameData.hopperEstimate,
+      gameData.playsDefense,
+      gameData.defenseRating
     ];
     const basePayload = payloadFields.join('	') + '	';
 
@@ -897,8 +977,9 @@ function updateQRCodeOnSubmit() {
     const safeComment = (gameData.comments || '').replace(/[\t\n\r]+/g, ' ').slice(0, allowedCommentLength);
 
     const qrText = basePayload + safeComment + '\r\n';
-    addQrHistoryEntry(qrText);
-    showQrPopup(qrText);
+    if (showQrPopup(qrText)) {
+      addQrHistoryEntry(qrText);
+    }
   }
 
   function closePopupQR() {

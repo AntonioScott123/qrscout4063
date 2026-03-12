@@ -315,6 +315,31 @@ button {
     filter: brightness(0.9);
 }
 
+.interval-btn-group {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.interval-btn {
+    width: auto;
+    height: 26px;
+    margin: 0;
+    font-size: 11px;
+    border-radius: 5px;
+    background-color: #FF69B4;
+    color: #ffffff;
+    padding: 0;
+}
+
+.interval-btn.is-selected {
+    background-color: #c0005a;
+    outline: 2px solid #ffffff;
+    box-shadow: 0 0 0 2px rgba(192, 0, 90, 0.5);
+    font-weight: 700;
+}
+
 
 .mini-box > input,
 .mini-box > textarea,
@@ -360,7 +385,8 @@ button {
 #endgame-speed,
 #reliability,
 #fuel-score-rating,
-#overall-impact {
+#overall-impact,
+#defense-rating {
     display: block;
     width: 100%;
     max-width: 100%;
