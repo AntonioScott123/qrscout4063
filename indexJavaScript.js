@@ -824,43 +824,14 @@ function toggleHistoryPanel(show) {
   if (show) renderHistoryList();
 }
 
-function exportHistoryCsv() {
-  if (qrHistoryTexts.length === 0) return;
-  const headers = [
-    'initials', 'matchNum', 'robot', 'teamNum', 'moved',
-    'autoFuelScored', 'autoFuelMissed', 'autoClimb',
-    'teleopFuelScored', 'teleopFuelMissed',
-    'attemptedClimb', 'successfulClimb', 'rung', 'endgameSpeed',
-    'bumpCapable', 'trenchCapable',
-    'reliability', 'fuelScoringCapability', 'overallImpact', 'hopperEstimate',
-    'playsDefense', 'defenseRating', 'comments'
-  ];
-
-  const escapeCsv = (value) => `"${String(value).replace(/"/g, '""')}"`;
-  const rows = qrHistoryTexts.map((text) => {
-    const cleaned = text.replace(/\r?\n$/, '');
-    const cells = cleaned.split('\t');
-    while (cells.length < headers.length) cells.push('');
-    return cells.slice(0, headers.length).map(escapeCsv).join(',');
-  });
-
-  const csvText = [headers.join(','), ...rows].join('\n');
-  const blob = new Blob([csvText], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = 'qr-history.csv';
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
-}
-
 function showQrPopup(qrText) {
   const qrCodeContainer = document.getElementById('qr-code-popup');
   const statusText = document.getElementById('popup-status-text');
   const generateBtn = document.getElementById('popup-generate-btn');
-  if (statusText) statusText.textContent = '';
+  if (statusText) {
+    statusText.textContent = '';
+    statusText.classList.remove('popup-status-confirmed');
+  }
   if (generateBtn) generateBtn.style.display = 'none';
   qrCodeContainer.innerHTML = '';
   try {
@@ -888,6 +859,7 @@ function showSubmitConfirmationPopup(qrText) {
   pendingSubmittedQrText = qrText;
   qrCodeContainer.innerHTML = '';
   statusText.textContent = 'Entry Confirmed';
+  statusText.classList.add('popup-status-confirmed');
   generateBtn.style.display = 'inline-block';
   popup.style.display = 'flex';
 }
@@ -1011,7 +983,10 @@ function submitEntryToHistory() {
     document.getElementById('popupQR').style.display = 'none';
     const statusText = document.getElementById('popup-status-text');
     const generateBtn = document.getElementById('popup-generate-btn');
-    if (statusText) statusText.textContent = '';
+    if (statusText) {
+      statusText.textContent = '';
+      statusText.classList.remove('popup-status-confirmed');
+    }
     if (generateBtn) generateBtn.style.display = 'none';
     document.getElementById('qr-code-popup').innerHTML = '';
   }

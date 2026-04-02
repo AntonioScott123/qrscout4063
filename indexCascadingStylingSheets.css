@@ -575,6 +575,19 @@ button:active {
     margin-bottom: 10px;
 }
 
+#popup-status-text.popup-status-confirmed::after {
+    content: " ✓";
+    color: #1fbf5b;
+    display: inline-block;
+    animation: popupCheckPop 0.42s ease-out 0.12s both;
+}
+
+@keyframes popupCheckPop {
+    0% { transform: scale(0.4); opacity: 0; }
+    55% { transform: scale(1.25); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
 .close {
     cursor: pointer;
 }
@@ -600,6 +613,11 @@ button:active {
 }
 
 #popup-generate-btn {
+    width: auto;
+    min-width: max-content;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 8px 14px;
     min-height: 38px;
     margin-bottom: 10px;
@@ -812,7 +830,6 @@ input:focus, textarea:focus, select:focus {
     gap: 8px;
 }
 
-#export-csv-btn,
 #share-history-btn,
 #clear-history-btn,
 #close-history-btn,
@@ -826,10 +843,6 @@ input:focus, textarea:focus, select:focus {
     margin: 0;
     padding: 0 10px;
     font-size: 14px;
-}
-
-#export-csv-btn {
-    background-color: #0083AE;
 }
 
 #share-history-btn,
