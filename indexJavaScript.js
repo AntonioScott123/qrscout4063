@@ -794,8 +794,6 @@ async function shareSelectedHistory() {
 function deleteSelectedHistory() {
   const selectedIndexes = Array.from(selectedHistoryEntries).sort((a, b) => b - a);
   if (selectedIndexes.length === 0) return;
-  const shouldDelete = window.confirm(`Delete ${selectedIndexes.length} selected entr${selectedIndexes.length === 1 ? 'y' : 'ies'}?`);
-  if (!shouldDelete) return;
   selectedIndexes.forEach((index) => {
     qrHistoryTexts.splice(index, 1);
   });
