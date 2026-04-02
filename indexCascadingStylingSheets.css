@@ -797,7 +797,9 @@ input:focus, textarea:focus, select:focus {
 #clear-history-btn,
 #close-history-btn,
 #share-selected-btn,
-#cancel-share-btn {
+#cancel-share-btn,
+#history-select-all-btn,
+#history-selection-action-btn {
     width: 100%;
     min-width: 0;
     height: 38px;
@@ -812,6 +814,14 @@ input:focus, textarea:focus, select:focus {
 
 #share-history-btn,
 #share-selected-btn {
+    background-color: #2a9d54;
+}
+
+#history-select-all-btn {
+    background-color: #4460aa;
+}
+
+#history-selection-action-btn {
     background-color: #2a9d54;
 }
 

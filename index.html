@@ -228,13 +228,13 @@
       </div>
       <div class="mini-box">
         <h3>COMMENTS</h3>
-        <textarea id="Comments" rows="10" cols="29" maxlength="900"></textarea>
+        <textarea id="Comments" rows="10" cols="29"></textarea>
       </div>
     </div>
     <div class="widget action-widget" id="actions-widget">
       <h2>Actions</h2>
       <div class="button-container">
-        <button id="submit-btn">Generate QR Code</button>
+        <button id="submit-btn">Submit Entry</button>
         <button id="clear-all-btn" onclick="ClearAll()">Clear All / Next Match</button>
         <button id="history-btn" onclick="toggleHistoryPanel(true)">History</button>
       </div>
@@ -257,14 +257,15 @@
     <div class="history-panel-content">
       <div class="history-panel-header">
         <button id="export-csv-btn" onclick="exportHistoryCsv()">Export as CSV</button>
-        <button id="share-history-btn" onclick="toggleHistoryShareMode(true)">Share</button>
-        <button id="clear-history-btn" onclick="clearHistory()">Clear History</button>
+        <button id="share-history-btn" onclick="toggleHistorySelectionMode('share')">Share</button>
+        <button id="clear-history-btn" onclick="toggleHistorySelectionMode('delete')">Delete Entries</button>
         <button id="close-history-btn" onclick="toggleHistoryPanel(false)">Close</button>
       </div>
-      <div id="history-share-toolbar" class="history-share-toolbar" style="display:none;">
-        <span>Select entries to share</span>
-        <button id="share-selected-btn" onclick="shareSelectedHistory()">Share Selected</button>
-        <button id="cancel-share-btn" onclick="toggleHistoryShareMode(false)">Cancel</button>
+      <div id="history-selection-toolbar" class="history-share-toolbar" style="display:none;">
+        <span id="history-selection-label">Select entries</span>
+        <button id="history-select-all-btn" onclick="toggleSelectAllHistoryEntries()">Select All</button>
+        <button id="history-selection-action-btn" onclick="performHistorySelectionAction()">Apply</button>
+        <button id="cancel-share-btn" onclick="toggleHistorySelectionMode(null)">Cancel</button>
       </div>
       <div id="history-list" class="history-list"></div>
     </div>
