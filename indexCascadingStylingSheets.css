@@ -567,6 +567,14 @@ button:active {
 .popup-content {
     padding: 20px;
 }
+
+#popup-status-text {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a2e3f;
+    margin-bottom: 10px;
+}
+
 .close {
     cursor: pointer;
 }
@@ -589,6 +597,18 @@ button:active {
 #close-popup:hover {
     background-color: #007399;
     transform: scale(1.03);
+}
+
+#popup-generate-btn {
+    padding: 8px 14px;
+    min-height: 38px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    background-color: #0083AE;
+    color: #ffffff;
+    font-weight: 700;
 }
 
 .overlay {

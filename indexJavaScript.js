@@ -33,6 +33,7 @@
   const QR_HISTORY_STORAGE_KEY = "qrScoutHistory";
   let qrHistoryTexts = [];
   let historySelectionMode = null; // "share" | "delete" | null
+  let pendingSubmittedQrText = null;
   const selectedHistoryEntries = new Set();
 
   // Optional smallify object for abbreviating common values
@@ -857,6 +858,10 @@ function exportHistoryCsv() {
 
 function showQrPopup(qrText) {
   const qrCodeContainer = document.getElementById('qr-code-popup');
+  const statusText = document.getElementById('popup-status-text');
+  const generateBtn = document.getElementById('popup-generate-btn');
+  if (statusText) statusText.textContent = '';
+  if (generateBtn) generateBtn.style.display = 'none';
   qrCodeContainer.innerHTML = '';
   try {
     new QRCode(qrCodeContainer, {
@@ -872,6 +877,24 @@ function showQrPopup(qrText) {
     alert('QR code generation failed.\n\nError: ' + err.message);
     return false;
   }
+}
+
+function showSubmitConfirmationPopup(qrText) {
+  const popup = document.getElementById('popupQR');
+  const statusText = document.getElementById('popup-status-text');
+  const generateBtn = document.getElementById('popup-generate-btn');
+  const qrCodeContainer = document.getElementById('qr-code-popup');
+  if (!popup || !statusText || !generateBtn || !qrCodeContainer) return;
+  pendingSubmittedQrText = qrText;
+  qrCodeContainer.innerHTML = '';
+  statusText.textContent = 'Entry Confirmed';
+  generateBtn.style.display = 'inline-block';
+  popup.style.display = 'flex';
+}
+
+function generateSubmittedEntryQr() {
+  if (!pendingSubmittedQrText) return;
+  showQrPopup(pendingSubmittedQrText);
 }
 
 function buildQrPayloadFromGameData() {
@@ -977,7 +1000,7 @@ function submitEntryToHistory() {
     if (checkIfTeam(gameData.teamNum)) {
       const qrText = buildQrPayloadFromGameData();
       addQrHistoryEntry(qrText);
-      alert('Entry submitted to History. Open History and tap an entry any time to generate its QR code.');
+      showSubmitConfirmationPopup(qrText);
       ClearAll();
     } else {
       alert('That team is not in the allowed list for this event.');
@@ -986,5 +1009,9 @@ function submitEntryToHistory() {
 
   function closePopupQR() {
     document.getElementById('popupQR').style.display = 'none';
+    const statusText = document.getElementById('popup-status-text');
+    const generateBtn = document.getElementById('popup-generate-btn');
+    if (statusText) statusText.textContent = '';
+    if (generateBtn) generateBtn.style.display = 'none';
     document.getElementById('qr-code-popup').innerHTML = '';
   }
