@@ -30,10 +30,10 @@
   // Interval step per counter group (auto / teleop)
   const fuelIntervals = { auto: 1, teleop: 1 };
 
-  const MAX_QR_TEXT_LENGTH = 900;
   const QR_HISTORY_STORAGE_KEY = "qrScoutHistory";
   let qrHistoryTexts = [];
-  let historyShareMode = false;
+  let historySelectionMode = null; // "share" | "delete" | null
+  let pendingSubmittedQrText = null;
   const selectedHistoryEntries = new Set();
 
   // Optional smallify object for abbreviating common values
@@ -47,14 +47,6 @@
     "yes": "yes",
     "no": "no"
   };
-  
-  function openPopup() {
-    document.getElementById('popupQR').style.display = 'flex';
-  }
-  
-  function closePopup() {
-    document.getElementById('popupQR').style.display = 'none';
-  }
   
   function checkIfTeam(enteredTeam) {
     if (window.allowAllTeams === true) return true;
@@ -614,7 +606,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault(); // stop the synthetic click from firing
       if (submitPending) return;
       submitPending = true;
-      updateQRCodeOnSubmit();
+      submitEntryToHistory();
       setTimeout(() => { submitPending = false; }, 600);
     }, { passive: false });
     submitBtn.addEventListener('click', (e) => {
@@ -622,7 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.detail === 0) return; // detail=0 means synthesized / non-mouse
       if (submitPending) return;
       submitPending = true;
-      updateQRCodeOnSubmit();
+      submitEntryToHistory();
       setTimeout(() => { submitPending = false; }, 600);
     });
   }
@@ -685,12 +677,13 @@ function formatHistoryLabel(qrText, index) {
 
 function renderHistoryList() {
   const list = document.getElementById('history-list');
-  const shareToolbar = document.getElementById('history-share-toolbar');
+  const selectionToolbar = document.getElementById('history-selection-toolbar');
   if (!list) return;
   list.innerHTML = '';
-  if (shareToolbar) {
-    shareToolbar.style.display = historyShareMode ? 'flex' : 'none';
+  if (selectionToolbar) {
+    selectionToolbar.style.display = historySelectionMode ? 'grid' : 'none';
   }
+  syncHistorySelectionToolbar();
 
   if (qrHistoryTexts.length === 0) {
     const empty = document.createElement('div');
@@ -700,7 +693,7 @@ function renderHistoryList() {
   }
 
   qrHistoryTexts.forEach((text, index) => {
-    if (historyShareMode) {
+    if (historySelectionMode) {
       const row = document.createElement('label');
       row.className = 'history-item-select';
 
@@ -726,7 +719,7 @@ function renderHistoryList() {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'history-item-btn';
-    button.textContent = formatHistoryLabel(text, index);
+    button.textContent = `${formatHistoryLabel(text, index)} • Tap to generate QR`;
     button.addEventListener('click', () => {
       const panel = document.getElementById('history-panel');
       if (panel) panel.style.display = 'none';
@@ -736,18 +729,39 @@ function renderHistoryList() {
   });
 }
 
-function toggleHistoryShareMode(show) {
-  historyShareMode = show;
+function toggleHistorySelectionMode(mode) {
+  historySelectionMode = mode;
   selectedHistoryEntries.clear();
   renderHistoryList();
 }
 
-function clearHistory() {
-  if (qrHistoryTexts.length === 0) return;
-  qrHistoryTexts = [];
+function syncHistorySelectionToolbar() {
+  const label = document.getElementById('history-selection-label');
+  const actionBtn = document.getElementById('history-selection-action-btn');
+  const selectAllBtn = document.getElementById('history-select-all-btn');
+  if (!label || !actionBtn || !selectAllBtn) return;
+
+  const allSelected = qrHistoryTexts.length > 0 && selectedHistoryEntries.size === qrHistoryTexts.length;
+  selectAllBtn.textContent = allSelected ? 'Deselect All' : 'Select All';
+
+  if (historySelectionMode === 'delete') {
+    label.textContent = 'Select entries to delete';
+    actionBtn.textContent = 'Delete Selected';
+    actionBtn.style.backgroundColor = '#cc4545';
+  } else {
+    label.textContent = 'Select entries to share';
+    actionBtn.textContent = 'Share Selected';
+    actionBtn.style.backgroundColor = '#2a9d54';
+  }
+}
+
+function toggleSelectAllHistoryEntries() {
+  if (!historySelectionMode) return;
+  const shouldSelectAll = selectedHistoryEntries.size !== qrHistoryTexts.length;
   selectedHistoryEntries.clear();
-  historyShareMode = false;
-  saveQrHistory();
+  if (shouldSelectAll) {
+    qrHistoryTexts.forEach((_, index) => selectedHistoryEntries.add(index));
+  }
   renderHistoryList();
 }
 
@@ -771,10 +785,29 @@ async function shareSelectedHistory() {
       await navigator.clipboard.writeText(shareText);
       alert('Share is not available here. Selected entries were copied to clipboard.');
     }
-    toggleHistoryShareMode(false);
+    toggleHistorySelectionMode(null);
   } catch (error) {
     // Ignore cancel/error from system share sheet.
   }
+}
+
+function deleteSelectedHistory() {
+  const selectedIndexes = Array.from(selectedHistoryEntries).sort((a, b) => b - a);
+  if (selectedIndexes.length === 0) return;
+  selectedIndexes.forEach((index) => {
+    qrHistoryTexts.splice(index, 1);
+  });
+  selectedHistoryEntries.clear();
+  saveQrHistory();
+  toggleHistorySelectionMode(null);
+}
+
+function performHistorySelectionAction() {
+  if (historySelectionMode === 'delete') {
+    deleteSelectedHistory();
+    return;
+  }
+  shareSelectedHistory();
 }
 
 function toggleHistoryPanel(show) {
@@ -783,46 +816,21 @@ function toggleHistoryPanel(show) {
   panel.style.display = show ? 'flex' : 'none';
   panel.setAttribute('aria-hidden', show ? 'false' : 'true');
   if (!show) {
-    historyShareMode = false;
+    historySelectionMode = null;
     selectedHistoryEntries.clear();
   }
   if (show) renderHistoryList();
 }
 
-function exportHistoryCsv() {
-  if (qrHistoryTexts.length === 0) return;
-  const headers = [
-    'initials', 'matchNum', 'robot', 'teamNum', 'moved',
-    'autoFuelScored', 'autoFuelMissed', 'autoClimb',
-    'teleopFuelScored', 'teleopFuelMissed',
-    'attemptedClimb', 'successfulClimb', 'rung', 'endgameSpeed',
-    'bumpCapable', 'trenchCapable',
-    'reliability', 'fuelScoringCapability', 'overallImpact', 'hopperEstimate',
-    'playsDefense', 'defenseRating', 'comments'
-  ];
-
-  const escapeCsv = (value) => `"${String(value).replace(/"/g, '""')}"`;
-  const rows = qrHistoryTexts.map((text) => {
-    const cleaned = text.replace(/\r?\n$/, '');
-    const cells = cleaned.split('\t');
-    while (cells.length < headers.length) cells.push('');
-    return cells.slice(0, headers.length).map(escapeCsv).join(',');
-  });
-
-  const csvText = [headers.join(','), ...rows].join('\n');
-  const blob = new Blob([csvText], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = 'qr-history.csv';
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
-}
-
 function showQrPopup(qrText) {
   const qrCodeContainer = document.getElementById('qr-code-popup');
+  const statusText = document.getElementById('popup-status-text');
+  const generateBtn = document.getElementById('popup-generate-btn');
+  if (statusText) {
+    statusText.textContent = '';
+    statusText.classList.remove('popup-status-confirmed');
+  }
+  if (generateBtn) generateBtn.style.display = 'none';
   qrCodeContainer.innerHTML = '';
   try {
     new QRCode(qrCodeContainer, {
@@ -835,12 +843,61 @@ function showQrPopup(qrText) {
     return true;
   } catch (err) {
     qrCodeContainer.innerHTML = '';
-    alert('QR code generation failed. Your data may be too long — try shortening the Comments field and try again.\n\nError: ' + err.message);
+    alert('QR code generation failed.\n\nError: ' + err.message);
     return false;
   }
 }
 
-function updateQRCodeOnSubmit() {
+function showSubmitConfirmationPopup(qrText) {
+  const popup = document.getElementById('popupQR');
+  const statusText = document.getElementById('popup-status-text');
+  const generateBtn = document.getElementById('popup-generate-btn');
+  const qrCodeContainer = document.getElementById('qr-code-popup');
+  if (!popup || !statusText || !generateBtn || !qrCodeContainer) return;
+  pendingSubmittedQrText = qrText;
+  qrCodeContainer.innerHTML = '';
+  statusText.textContent = 'Entry Confirmed';
+  statusText.classList.add('popup-status-confirmed');
+  generateBtn.style.display = 'inline-block';
+  popup.style.display = 'flex';
+}
+
+function generateSubmittedEntryQr() {
+  if (!pendingSubmittedQrText) return;
+  showQrPopup(pendingSubmittedQrText);
+}
+
+function buildQrPayloadFromGameData() {
+    const payloadFields = [
+      gameData.initials.toUpperCase(),
+      gameData.matchNum,
+      gameData.robot,
+      gameData.teamNum,
+      gameData.moved,
+      gameData.autoFuelScored,
+      gameData.autoFuelMissed,
+      gameData.autoClimb,
+      gameData.teleopFuelScored,
+      gameData.teleopFuelMissed,
+      gameData.attemptedClimb,
+      gameData.successfulClimb,
+      gameData.rung,
+      gameData.endgameSpeed,
+      gameData.bumpCapable,
+      gameData.trenchCapable,
+      gameData.reliability,
+      gameData.fuelScoringCapability,
+      gameData.overallImpact,
+      gameData.hopperEstimate,
+      gameData.playsDefense,
+      gameData.defenseRating
+    ];
+    const basePayload = payloadFields.join('\t') + '\t';
+    const safeComment = (gameData.comments || '').replace(/[\t\n\r]+/g, ' ');
+    return basePayload + safeComment + '\r\n';
+}
+
+function submitEntryToHistory() {
     // Get required fields
     let initialsField = document.getElementById('prematch-scout-initials');
     let matchNumField = document.getElementById('prematch-match-number');
@@ -907,82 +964,27 @@ function updateQRCodeOnSubmit() {
     gameData.playsDefense = document.getElementById('playsDefense').checked;
     gameData.defenseRating = gameData.playsDefense ? document.getElementById('defense-rating').value : 'NA';
     const commentsField = document.getElementById('Comments');
-    const payloadFields = [
-      gameData.initials.toUpperCase(),
-      gameData.matchNum,
-      gameData.robot,
-      gameData.teamNum,
-      gameData.moved,
-      gameData.autoFuelScored,
-      gameData.autoFuelMissed,
-      gameData.autoClimb,
-      gameData.teleopFuelScored,
-      gameData.teleopFuelMissed,
-      gameData.attemptedClimb,
-      gameData.successfulClimb,
-      gameData.rung,
-      gameData.endgameSpeed,
-      gameData.bumpCapable,
-      gameData.trenchCapable,
-      gameData.reliability,
-      gameData.fuelScoringCapability,
-      gameData.overallImpact,
-      gameData.hopperEstimate,
-      gameData.playsDefense,
-      gameData.defenseRating
-    ];
-    const basePayload = payloadFields.join('	') + '	';
-    const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - (basePayload.length + 2));
-    commentsField.maxLength = allowedCommentLength;
-    gameData.comments = commentsField.value.replace(/[\t\n\r]+/g, ' ').slice(0, allowedCommentLength);
+    gameData.comments = commentsField.value.replace(/[\t\n\r]+/g, ' ');
 
 
     if (checkIfTeam(gameData.teamNum)) {
-      generateQRCode();
-    } else {
-      openPopup();
-    }
-  }
-
-  function generateQRCode() {
-    // Keep output format scanner-friendly with tab-delimited fields.
-    const payloadFields = [
-      gameData.initials.toUpperCase(),
-      gameData.matchNum,
-      gameData.robot,
-      gameData.teamNum,
-      gameData.moved,
-      gameData.autoFuelScored,
-      gameData.autoFuelMissed,
-      gameData.autoClimb,
-      gameData.teleopFuelScored,
-      gameData.teleopFuelMissed,
-      gameData.attemptedClimb,
-      gameData.successfulClimb,
-      gameData.rung,
-      gameData.endgameSpeed,
-      gameData.bumpCapable,
-      gameData.trenchCapable,
-      gameData.reliability,
-      gameData.fuelScoringCapability,
-      gameData.overallImpact,
-      gameData.hopperEstimate,
-      gameData.playsDefense,
-      gameData.defenseRating
-    ];
-    const basePayload = payloadFields.join('	') + '	';
-
-    // Truncate comments when needed so long notes stay QR-friendly.
-    const allowedCommentLength = Math.max(0, MAX_QR_TEXT_LENGTH - (basePayload.length + 2));
-    const safeComment = (gameData.comments || '').replace(/[\t\n\r]+/g, ' ').slice(0, allowedCommentLength);
-
-    const qrText = basePayload + safeComment + '\r\n';
-    if (showQrPopup(qrText)) {
+      const qrText = buildQrPayloadFromGameData();
       addQrHistoryEntry(qrText);
+      showSubmitConfirmationPopup(qrText);
+      ClearAll();
+    } else {
+      alert('That team is not in the allowed list for this event.');
     }
   }
 
   function closePopupQR() {
     document.getElementById('popupQR').style.display = 'none';
+    const statusText = document.getElementById('popup-status-text');
+    const generateBtn = document.getElementById('popup-generate-btn');
+    if (statusText) {
+      statusText.textContent = '';
+      statusText.classList.remove('popup-status-confirmed');
+    }
+    if (generateBtn) generateBtn.style.display = 'none';
     document.getElementById('qr-code-popup').innerHTML = '';
   }

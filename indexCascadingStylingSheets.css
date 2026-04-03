@@ -19,7 +19,9 @@ body {
     min-height: 100%;
     max-width: 100%;
     margin: 0;
-    overscroll-behavior: none;
+    overscroll-behavior-x: none;
+    overscroll-behavior-y: contain;
+    overflow-y: auto;
     overflow-x: hidden;
 }
 
@@ -40,7 +42,8 @@ body {
     text-align: center;
     min-height: 100svh;
     min-height: 100dvh;
-    overscroll-behavior-y: none;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
     overflow-x: hidden;
     padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
     box-sizing: border-box;
@@ -564,6 +567,27 @@ button:active {
 .popup-content {
     padding: 20px;
 }
+
+#popup-status-text {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a2e3f;
+    margin-bottom: 10px;
+}
+
+#popup-status-text.popup-status-confirmed::after {
+    content: " ✓";
+    color: #1fbf5b;
+    display: inline-block;
+    animation: popupCheckPop 0.42s ease-out 0.12s both;
+}
+
+@keyframes popupCheckPop {
+    0% { transform: scale(0.4); opacity: 0; }
+    55% { transform: scale(1.25); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
 .close {
     cursor: pointer;
 }
@@ -586,6 +610,23 @@ button:active {
 #close-popup:hover {
     background-color: #007399;
     transform: scale(1.03);
+}
+
+#popup-generate-btn {
+    width: auto;
+    min-width: max-content;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+    min-height: 38px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    background-color: #0083AE;
+    color: #ffffff;
+    font-weight: 700;
 }
 
 .overlay {
@@ -789,12 +830,13 @@ input:focus, textarea:focus, select:focus {
     gap: 8px;
 }
 
-#export-csv-btn,
 #share-history-btn,
 #clear-history-btn,
 #close-history-btn,
 #share-selected-btn,
-#cancel-share-btn {
+#cancel-share-btn,
+#history-select-all-btn,
+#history-selection-action-btn {
     width: 100%;
     min-width: 0;
     height: 38px;
@@ -803,12 +845,16 @@ input:focus, textarea:focus, select:focus {
     font-size: 14px;
 }
 
-#export-csv-btn {
-    background-color: #0083AE;
-}
-
 #share-history-btn,
 #share-selected-btn {
+    background-color: #2a9d54;
+}
+
+#history-select-all-btn {
+    background-color: #4460aa;
+}
+
+#history-selection-action-btn {
     background-color: #2a9d54;
 }
 
