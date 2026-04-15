@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="QRScout 4063">
@@ -45,6 +45,7 @@
         <li><strong>Match Number:</strong> Official match number.</li>
         <li><strong>Team Number:</strong> Team being scouted.</li>
         <li><strong>Robot Type:</strong> Match station assignment (Red/Blue position).</li>
+        <li><strong>No Show?:</strong> Robot did not appear for the match (true/false).</li>
         <li><strong>Moved?:</strong> Robot moved in auto (true/false).</li>
         <li><strong>Auto Fuel Scored/Missed:</strong> Count made/missed in auto.</li>
         <li><strong>Climb? (Auto):</strong> Auto climb occurred (true/false).</li>
@@ -89,6 +90,11 @@
           <button type="button" class="robot-choice robot-choice-blue" data-robot="Blue_3">Blue 3</button>
           <button type="button" class="robot-choice robot-choice-red" data-robot="Red_3">Red 3</button>
         </div>
+      </div>
+      <div class="mini-box">
+        <h3>NO SHOW?</h3>
+        <input type="checkbox" class="custom-checkbox" id="noShow">
+        <label for="noShow"></label>
       </div>
     </div>
 
