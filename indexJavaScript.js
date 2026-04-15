@@ -6,6 +6,7 @@
     matchNum: 0,
     robot: "",
     teamNum: 0,
+    noShow: false,
     moved: false,
     autoFuelScored: 0,
     autoFuelMissed: 0,
@@ -70,6 +71,7 @@
 
     const teamField = document.getElementById('prematch-team-number');
     teamField.value = '';
+    document.getElementById('noShow').checked = false;
     document.getElementById('moved').checked = false;
 
     ['autoFuelScored', 'autoFuelMissed', 'teleopFuelScored', 'teleopFuelMissed', 'hopperEstimate'].forEach(id => {
@@ -873,6 +875,7 @@ function buildQrPayloadFromGameData() {
       gameData.matchNum,
       gameData.robot,
       gameData.teamNum,
+      gameData.noShow,
       gameData.moved,
       gameData.autoFuelScored,
       gameData.autoFuelMissed,
@@ -941,6 +944,7 @@ function submitEntryToHistory() {
     const selectedRobot = getSelectedRobot();
     gameData.robot = smallify[selectedRobot] || selectedRobot;
     gameData.teamNum = parseInt(teamNumField.value.trim(), 10);
+    gameData.noShow = document.getElementById('noShow').checked;
     gameData.moved = document.getElementById('moved').checked;
 
     gameData.autoFuelScored = getCounterValue('autoFuelScored');
